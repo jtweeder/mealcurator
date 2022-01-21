@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h@f8ah7p6j_ati9j1im$2977@v4b7*)uc(#)^csb+4m84z@j)l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['mealcurator.azurewebsites.net']
-
+#ALLOWED_HOSTS = ['mealcurator.azurewebsites.net']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -76,8 +78,12 @@ WSGI_APPLICATION = 'mealcurator.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PW'),
+        'HOST': os.getenv('POSTGRESIP'),
+        'PORT': '5432',
     }
 }
 
