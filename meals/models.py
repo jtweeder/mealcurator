@@ -1,8 +1,3 @@
-from distutils.spawn import spawn
-from hashlib import blake2b
-from pydoc import source_synopsis
-from unittest.util import _MAX_LENGTH
-from winreg import REG_CREATED_NEW_KEY
 from django.db import models
 
 meal_time_choices = [
@@ -32,6 +27,8 @@ cooking_method_choices = [
         ('af', 'Air Fryer'),
     ]
 # Create your models here.
+
+
 class raw_recipe(models.Model):
     title = models.TextField('Recipie Title')
     rec_url = models.URLField('Recpie URL')
@@ -46,4 +43,3 @@ class raw_recipe(models.Model):
     cooking_method = models.CharField('Cooking Method',
                                       max_length=2,
                                       choices=cooking_method_choices)
-
