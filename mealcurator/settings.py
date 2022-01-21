@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-h@f8ah7p6j_ati9j1im$2977@v4b7*)uc(#)^csb+4m84z@j)l
 #DEBUG = False
 DEBUG = True
 
-#ALLOWED_HOSTS = ['mealcurator.azurewebsites.net']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mealcurator.azurewebsites.net']
+
 
 # Application definition
 INSTALLED_APPS = [
