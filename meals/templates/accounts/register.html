@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+
+{% block page_content %}
+<h2>Register for your Own Profile</h2>
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <p>
+    <b>Username:</b> {{form.username}} <br> 
+    <b>{{form.username.errors}}</b>
+    <b>Email:</b> {{form.email}} <br>
+    <b>{{form.email.errors}}</b>
+    <b>First Name:</b> {{form.first_name}} <i>Optional</i> <br>
+    <b>{{form.first_name.errors}}</b>
+    <b>Last Name:</b> {{form.last_name}}  <i>Optional</i> <br>
+    <b>{{form.last_name.errors}}</b>
+    <b>Password: </b> {{form.password1}} <i>At leaset 8 characters</i><br>
+    <b>{{form.password1.errors}}</b>
+    <b>Verify Password: </b> {{form.password2}}<i>Must Match</i></p>
+    <b>{{form.password2.errors}}</b>
+  
+    <input type="submit" Value="Register">
+    
+
+
+</form>
+
+{% endblock%}
+
