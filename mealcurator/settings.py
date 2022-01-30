@@ -23,8 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGOSEC')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = False
-DEBUG = True
+DEBUG = False
+#DEBUG = True
 
 ALLOWED_HOSTS = ['mealcurator.azurewebsites.net', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://mealcurator.azurewebsites.net']
