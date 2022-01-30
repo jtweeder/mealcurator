@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+
+{% block page_content %}
+
+<h1>Welcome {{username}}</h1>
+
+<h4>{{welcome}}</h4>
+
+<p>Logout:</p>  <a href="{% url 'logout' %}">Click here to logout</a>
+
+{% endblock %}

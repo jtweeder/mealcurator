@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path
+from cooks import views as cook_views
 
 
 urlpatterns = [
     path('', include('meals.urls')),
     path('recipe/', include('meals.urls')),
     path('admin/', admin.site.urls),
+    path('register/', include('cooks.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

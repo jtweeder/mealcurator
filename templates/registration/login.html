@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h1>Welcome Back to Meal Curator</h1>
+
+<h2>Please Log In:</h2>
+<form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+    <button type="submit">Log In</button>
+</form>
+<br>
+<a href="{% url 'register' %}">Create a New Account</a>
+
+{% endblock %}
