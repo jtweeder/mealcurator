@@ -23,5 +23,6 @@ urlpatterns = [
     path('', include('meals.urls')),
     path('recipe/', include('meals.urls')),
     path('admin/', admin.site.urls),
-    path('register/', cook_views.register_cook, name='register'),
+    path('register/', include('cooks.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

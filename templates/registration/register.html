@@ -20,11 +20,11 @@
     <b>Verify Password: </b> {{form.password2}}<i>Must Match</i></p>
     <b>{{form.password2.errors}}</b>
   
-    <input type="submit" Value="Register">
-    
-
-
+    <input type="submit" Value="Register"> 
 </form>
+<br>
+<h4>Already Registered?<br>
+<a href="{% url 'login' %}">Login Here</a> </h4>
 
 {% endblock%}
 
