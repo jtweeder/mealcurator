@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h1>Create a Meal Plan</h1>
+
+<h2>Name Your New Meal Plan:</h2>
+<form action="" method="post">
+      {% csrf_token %}
+      <p>{{ form.name }}</p>
+    <input type="submit" value="Create Meal Plan">
+</form>
+<br>
+
+
+{% endblock %}

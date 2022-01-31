@@ -57,7 +57,7 @@ class raw_recipe(models.Model):
                                     choices=cook_time_choices)
 
     def __str__(self):
-        self.rec_url
+        return self.rec_url
 
 
 class mstr_recipe(models.Model):
@@ -87,7 +87,7 @@ class mstr_recipe(models.Model):
                                             name='downvote', default=0)
 
     def __str__(self):
-        self.title
+        return self.title
 
 
 class recipe_taxonomy(models.Model):

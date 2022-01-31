@@ -5,8 +5,18 @@
 
 <h1>Welcome {{username}}</h1>
 
-<h4>{{welcome}}</h4>
+<h2>{{welcome}}</h2>
 
+
+<h4>Meal Plans</h4>
+<p>{% for plan in plans %}
+    <li>{{ plan.name }}</li>
+{% empty %}
+No meal plans found.  Create one to get started
+{% endfor %}
+</p>
+<a href="{% url 'make-plan' %}">Create a Meal Plan</a>
+<br>
 <p>Logout:</p>  <a href="{% url 'logout' %}">Click here to logout</a>
 
 {% endblock %}
