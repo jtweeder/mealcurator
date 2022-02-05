@@ -26,8 +26,8 @@ SECRET_KEY = os.getenv('DJANGOSEC')
 DEBUG = False
 #DEBUG = True
 
-ALLOWED_HOSTS = ['mealcurator.azurewebsites.net', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://mealcurator.azurewebsites.net']
+ALLOWED_HOSTS = ['mealcurator.azurewebsites.net', '127.0.0.1', 'jtweed.pythonanywhere.com', 'www.mealcurator.com']
+CSRF_TRUSTED_ORIGINS = ['https://mealcurator.azurewebsites.net', 'https://jtweed.pythonanywhere.com', 'https://www.mealcurator.com']
 
 # Application definition
 INSTALLED_APPS = [
@@ -81,7 +81,7 @@ DATABASES = {
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PW'),
         'HOST': os.getenv('POSTGRESIP'),
-        'PORT': '5432',
+        'PORT': os.getenv('POSTGRESPORT'),
     }
 }
 
