@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+from cooks.models import plan
 from .forms import create_cook_form
+
 
 # Create your views here.
 
@@ -28,7 +33,24 @@ def cook_profile(request):
         welcome_id = email
     if len(email) > 1 and len(name) > 1:
         welcome_id = f'{name} : {email}'
+    meal_plans = plan.objects.filter(owner=request.user)
+
     context = {'username': user.username,
                'welcome': welcome_id,
+               'plans': meal_plans
                }
     return render(request, 'registration/welcome.html', context=context)
+
+
+class make_plan(CreateView):
+    login_required = True
+    model = plan
+    fields = ['name']
+    success_url = reverse_lazy('welcome')
+    template_name_suffix = '_make'
+
+    def form_valid(self, form):
+        cook = form.save(commit=False)
+        cook.owner = User.objects.get(id=self.request.user.id)
+        cook.save()
+        return redirect('welcome')

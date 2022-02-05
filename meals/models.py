@@ -40,7 +40,7 @@ cook_time_choices = [
 
 class raw_recipe(models.Model):
     title = models.CharField('Recipe Title', max_length=255)
-    rec_url = models.URLField('Recpie URL')
+    rec_url = models.URLField('Recpie URL', unique=True)
     vegan = models.BooleanField('Vegan')
     vegetarian = models.BooleanField('Vegetarian')
     meal_time = models.CharField('Meal Type',
@@ -55,13 +55,15 @@ class raw_recipe(models.Model):
     cooking_time = models.CharField('Cooking Time',
                                     max_length=2,
                                     choices=cook_time_choices)
+    mstr_flag = models.BooleanField(default=False)
+    error_flag = models.BooleanField(default=False)
 
     def __str__(self):
-        self.rec_url
+        return self.rec_url
 
 
 class mstr_recipe(models.Model):
-    meal_id = models.UUIDField(primary_key=True, default=uuid.uuid1,
+    meal_id = models.UUIDField(primary_key=True, default=uuid.uuid1(),
                                editable=False)
     title = models.CharField('Recipe Title', max_length=255)
     rec_url = models.URLField('Recipe URL')
@@ -85,9 +87,10 @@ class mstr_recipe(models.Model):
                                           default=0)
     downvotes = models.PositiveIntegerField('Would Not Make Again',
                                             name='downvote', default=0)
+    words = models.JSONField('Found Words', name='found_words', default=None)
 
     def __str__(self):
-        self.title
+        return self.title
 
 
 class recipe_taxonomy(models.Model):
