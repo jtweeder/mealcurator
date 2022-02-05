@@ -8,5 +8,4 @@ urlpatterns = [
     path('makeplan', cook_views.make_plan.as_view(), name='make-plan'),
     path('viewplans', cook_views.view_plans, name='view-plans'),
     path('viewplans/<int:plan_id>', cook_views.view_plan, name='view-plan'),
-    path('updateplan/<meal_id>/', cook_views.update_plan, name='update-plan'),
     ]
