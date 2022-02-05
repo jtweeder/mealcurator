@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+
+{% if plan_view %}
+<h1>Recipes in: {{ mp_name }}</h1>
+{% else %}
+<h1>Browse Recipes</h1>
+{% endif %}
+
+{% for meal in meals %}
+<div>
+    <table>
+        <th>{{ meal.title }}</th>
+    <tr><td>Vegan: {{ meal.vegan|yesno:"Yes,No" }} </td><td>Vegetarian: {{ meal.vegetarian|yesno:"Yes,No" }}</td></tr>
+    <tr><td>Meal Time:</td><td>{{ meal.get_meal_time_display }}</td></tr>
+    <tr><td>Cooking Time:</td><td>{{ meal.get_cooking_time_display }}</td></tr>
+    <tr><td>Method:</td><td>{{ meal.get_cooking_method_display }}</td></tr>
+    <tr><td>Dish Type:</td><td>{{ meal.get_dish_type_display }}</td></tr>
+    <tr><td><a href="{{ meal.rec_url }}", target="_blank">Link to Recipe</a></td></tr>
+    </table>
+    <br>
+    <br>
+</div>
+{% endfor %}
+{% endblock %}
