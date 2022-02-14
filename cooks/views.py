@@ -69,8 +69,8 @@ def view_plan(request, plan_id):
     return render(request, template, context)
 
 @login_required
-def update_plan(request, cart_id, meal_id):
-    meal_plan = plan.objects.get(id=5)
+def update_plan(request, plan_id, meal_id):
+    
     try:
         meal = mstr_recipe.objects.get(meal_id=meal_id)
     except mstr_recipe.DoesNotExist:

@@ -17,11 +17,13 @@ dish_type_choices = [
         ('st', 'Stews'),
         ('sa', 'Salad'),
         ('lt', 'Light Dishes'),
+        ('sm', 'Smoothie')
         ('na', 'None of those'),
     ]
 cooking_method_choices = [
         ('st', 'Stovetop'),
         ('mi', 'Microwave'),
+        ('bl', 'Blender'),
         ('gr', 'Grill'),
         ('ov', 'Oven'),
         ('pr', 'Pressure Cooker'),
