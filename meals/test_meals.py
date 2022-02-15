@@ -1,4 +1,3 @@
-from turtle import down
 from django.test import TestCase
 from .models import raw_recipe, mstr_recipe
 import uuid
