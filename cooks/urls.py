@@ -8,4 +8,7 @@ urlpatterns = [
     path('makeplan', cook_views.make_plan.as_view(), name='make-plan'),
     path('viewplans', cook_views.view_plans, name='view-plans'),
     path('viewplans/<int:plan_id>', cook_views.view_plan, name='view-plan'),
+    path('mod_plan/<int:plan_id>', cook_views.add_to_plan, name='add_to_plan'),
+    path('mod_plan/<int:plan_id>/<str:meal_id>', cook_views.add_to_plan, name='add_meal_to_plan')
     ]
+

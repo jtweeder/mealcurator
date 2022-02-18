@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from cooks.models import plan
+from cooks.models import plan, plan_meal
 from meals.models import mstr_recipe
 from .forms import create_cook_form
 
@@ -39,7 +39,6 @@ def cook_profile(request):
                }
     return render(request, 'registration/welcome.html', context=context)
 
-
 class make_plan(CreateView):
     login_required = True
     model = plan
@@ -63,22 +62,23 @@ def view_plans(request):
 @login_required
 def view_plan(request, plan_id):
     meal_plans = plan.objects.get(owner=request.user, id=plan_id)
-    meals = meal_plans.meals.all()
-    context = {'meals': meals, 'plan_view': True, 'mp_name': meal_plans.name}
+    meals_on_plan = meal_plans.meals_on_plan.all()
+    meals = mstr_recipe.objects.filter(meal_id__in=meals_on_plan.values_list(
+                                       'meal_id', flat=True))
+    context = {'meals': meals, 'plan_view': True, 'mp': meal_plans}
     template = 'meals/showmeals.html'
     return render(request, template, context)
 
 @login_required
-def update_plan(request, plan_id, meal_id):
-    
-    try:
-        meal = mstr_recipe.objects.get(meal_id=meal_id)
-    except mstr_recipe.DoesNotExist:
-        pass
-    except:
-        pass
-    if meal not in meal_plan.meals.all():
-        meal_plan.meals.add(meal)
-    else:
-        meal_plan.meals.remove(meal)
-    return redirect('view-plan')
+def add_to_plan(request, plan_id, meal_id=None):
+    meal_plan = plan.objects.get(owner=request.user, id=plan_id)
+    if meal_id:
+        meal_to_add = mstr_recipe.objects.get(meal_id=meal_id)
+        plan_meal.objects.create(meal=meal_to_add, plan=meal_plan)
+        meal_plan = plan.objects.get(owner=request.user, id=plan_id)
+    meals_on_plan = meal_plan.meals_on_plan.all()
+    meals = mstr_recipe.objects.exclude(meal_id__in=meals_on_plan.values_list(
+                                        'meal_id', flat=True))
+    context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan}
+    template = 'meals/showmeals.html'
+    return render(request, template, context)

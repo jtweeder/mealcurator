@@ -3,11 +3,14 @@
 {% block page_content %}
 
 {% if plan_view %}
-<h1>Recipes in: {{ mp_name }}</h1>
+<h1>Recipes in: {{ mp.name }}</h1>
+{% elif add_to_plan_view %}
+<h1>Browsing Recipes for: {{ mp.name }}</h1> 
 {% else %}
 <h1>Browse Recipes</h1>
 {% endif %}
 
+<h3><a href="{% url 'get-recipe' %}">Submit Recipes</a></h3>
 {% for meal in meals %}
 <div>
     <table>
@@ -17,10 +20,19 @@
     <tr><td>Cooking Time:</td><td>{{ meal.get_cooking_time_display }}</td></tr>
     <tr><td>Method:</td><td>{{ meal.get_cooking_method_display }}</td></tr>
     <tr><td>Dish Type:</td><td>{{ meal.get_dish_type_display }}</td></tr>
-    <tr><td><a href="{{ meal.rec_url }}", target="_blank">Link to Recipe</a></td></tr>
+    <tr><td><a href="{{ meal.rec_url }}", target="_blank">Link to Recipe</a></td><td>
+            {% if add_to_plan_view %}
+            <a href="{% url 'add_meal_to_plan' mp.id meal.meal_id %}">Add this to Meal Plan</a>
+            {% endif %}
+        </td></tr>
     </table>
     <br>
     <br>
 </div>
 {% endfor %}
+{% if plan_view %}
+<h4><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h4>
+{% endif %}
+<br>
+<h4><a href="{% url 'welcome' %}">Account Home</a></h4>
 {% endblock %}

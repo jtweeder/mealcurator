@@ -17,7 +17,7 @@ dish_type_choices = [
         ('st', 'Stews'),
         ('sa', 'Salad'),
         ('lt', 'Light Dishes'),
-        ('sm', 'Smoothie')
+        ('sm', 'Smoothie'),
         ('na', 'None of those'),
     ]
 cooking_method_choices = [
@@ -62,6 +62,11 @@ class raw_recipe(models.Model):
 
     def __str__(self):
         return self.rec_url
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['mstr_flag', 'error_flag'])
+        ]
 
 
 class mstr_recipe(models.Model):

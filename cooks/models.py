@@ -19,7 +19,6 @@ class plan(models.Model):
     name = models.CharField('Meal Plan Name', max_length=255)
     date_created = models.DateTimeField(auto_now=True)
     soft_delete = models.BooleanField(default=False)
-    meals = models.ManyToManyField(mstr_recipe, blank=True)
 
     def __str__(self):
         return self.name
@@ -27,14 +26,18 @@ class plan(models.Model):
 
 class plan_meal(models.Model):
     meal = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
-    plan = models.ForeignKey(plan, on_delete=models.CASCADE)
+    plan = models.ForeignKey(plan, on_delete=models.CASCADE,
+                             related_name='meals_on_plan')
     date_added = models.DateTimeField(auto_now=True)
-    meal_day = models.CharField('Day of Week for Meal',
-                                max_length=2,
-                                choices=dow)
-    meal_time = models.CharField('Meal Time',
-                                 max_length=2,
-                                 choices=meal_time_choices)
+    #meal_day = models.CharField('Day of Week for Meal',
+    #                            max_length=2,
+    #                            choices=dow)
+    #meal_time = models.CharField('Meal Time',
+    #                             max_length=2,
+    #                             choices=meal_time_choices)
 
     def __str__(self):
         return self.meal.title
+
+    class Meta:
+        unique_together = ['meal', 'plan']
