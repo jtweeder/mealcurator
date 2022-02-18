@@ -4,5 +4,6 @@ from meals import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('recipe/submit/', views.get_recipe.as_view(), name='get-recipe')
+    path('submit', views.get_recipe.as_view(), name='get-recipe'),
+    path('browse', views.show_recipe, name='view-recipes'),
 ]

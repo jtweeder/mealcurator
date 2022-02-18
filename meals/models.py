@@ -17,11 +17,13 @@ dish_type_choices = [
         ('st', 'Stews'),
         ('sa', 'Salad'),
         ('lt', 'Light Dishes'),
+        ('sm', 'Smoothie'),
         ('na', 'None of those'),
     ]
 cooking_method_choices = [
         ('st', 'Stovetop'),
         ('mi', 'Microwave'),
+        ('bl', 'Blender'),
         ('gr', 'Grill'),
         ('ov', 'Oven'),
         ('pr', 'Pressure Cooker'),
@@ -61,9 +63,14 @@ class raw_recipe(models.Model):
     def __str__(self):
         return self.rec_url
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['mstr_flag', 'error_flag'])
+        ]
+
 
 class mstr_recipe(models.Model):
-    meal_id = models.UUIDField(primary_key=True, default=uuid.uuid1(),
+    meal_id = models.UUIDField(primary_key=True,
                                editable=False)
     title = models.CharField('Recipe Title', max_length=255)
     rec_url = models.URLField('Recipe URL')

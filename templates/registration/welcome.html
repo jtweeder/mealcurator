@@ -9,14 +9,17 @@
 
 
 <h4>Meal Plans</h4>
+
 <p>{% for plan in plans %}
-    <li>{{ plan.name }}</li>
+    <li><a href="{% url 'view-plan' plan.id %}">{{ plan.name }}</li></a>
 {% empty %}
 No meal plans found.  Create one to get started
 {% endfor %}
 </p>
 <a href="{% url 'make-plan' %}">Create a Meal Plan</a>
 <br>
+<br>
+<a href="{% url 'view-plans' %}">Detail Meal Plan View</a>
 <p>Logout:</p>  <a href="{% url 'logout' %}">Click here to logout</a>
 
 {% endblock %}

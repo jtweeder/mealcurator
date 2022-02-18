@@ -25,7 +25,6 @@ SECRET_KEY = os.getenv('DJANGOSEC')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-# DEBUG = True
 
 ALLOWED_HOSTS = ['mealcurator.azurewebsites.net', '127.0.0.1', 'jtweed.pythonanywhere.com', 'www.mealcurator.com']
 CSRF_TRUSTED_ORIGINS = ['https://mealcurator.azurewebsites.net', 'https://jtweed.pythonanywhere.com', 'https://www.mealcurator.com']

@@ -14,30 +14,30 @@ dow = [
     ]
 
 
+class plan(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField('Meal Plan Name', max_length=255)
+    date_created = models.DateTimeField(auto_now=True)
+    soft_delete = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
 class plan_meal(models.Model):
-    meal = models.OneToOneField(mstr_recipe, on_delete=models.CASCADE)
+    meal = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
+    plan = models.ForeignKey(plan, on_delete=models.CASCADE,
+                             related_name='meals_on_plan')
     date_added = models.DateTimeField(auto_now=True)
-    meal_day = models.CharField('Day of Week for Meal',
-                                max_length=2,
-                                choices=dow)
-    meal_time = models.CharField('Meal Time',
-                                 max_length=2,
-                                 choices=meal_time_choices)
+    #meal_day = models.CharField('Day of Week for Meal',
+    #                            max_length=2,
+    #                            choices=dow)
+    #meal_time = models.CharField('Meal Time',
+    #                             max_length=2,
+    #                             choices=meal_time_choices)
 
     def __str__(self):
         return self.meal.title
 
-
-class plan(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField('Meal Plan Name', max_length=255)
-    # TODO: When Plan is deleted delete the plan_meals
-    selected_meals = models.ManyToManyField(plan_meal)
-    date_created = models.DateTimeField(auto_now=True)
-    soft_delete = models.BooleanField(default=False)
-
-    def get_plan_meals(self):
-        return self.selected_meals.all()
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        unique_together = ['meal', 'plan']
