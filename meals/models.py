@@ -70,7 +70,7 @@ class raw_recipe(models.Model):
 
 
 class mstr_recipe(models.Model):
-    meal_id = models.UUIDField(primary_key=True, default=uuid.uuid1(),
+    meal_id = models.UUIDField(primary_key=True,
                                editable=False)
     title = models.CharField('Recipe Title', max_length=255)
     rec_url = models.URLField('Recipe URL')
