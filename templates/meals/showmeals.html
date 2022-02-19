@@ -14,7 +14,11 @@
 {% for meal in meals %}
 <div>
     <table>
-        <th>{{ meal.title }}</th>
+        <th>{{ meal.title }}{% if plan_view %} 
+            <br> 
+        <a href="{% url 'view-plan-vote' plan_id=mp.id review=1 meal_id=meal.meal_id %}">Would Make Again</a> | <a href="{% url 'view-plan-vote' plan_id=mp.id review=2 meal_id=meal.meal_id %}">Would <b>NOT</b> Make Again</a> 
+        {% endif %}
+            </th>
     <tr><td>Vegan: {{ meal.vegan|yesno:"Yes,No" }} </td><td>Vegetarian: {{ meal.vegetarian|yesno:"Yes,No" }}</td></tr>
     <tr><td>Meal Time:</td><td>{{ meal.get_meal_time_display }}</td></tr>
     <tr><td>Cooking Time:</td><td>{{ meal.get_cooking_time_display }}</td></tr>

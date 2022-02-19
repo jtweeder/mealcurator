@@ -29,6 +29,7 @@ class plan_meal(models.Model):
     plan = models.ForeignKey(plan, on_delete=models.CASCADE,
                              related_name='meals_on_plan')
     date_added = models.DateTimeField(auto_now=True)
+    review = models.SmallIntegerField(default=0)
     #meal_day = models.CharField('Day of Week for Meal',
     #                            max_length=2,
     #                            choices=dow)
