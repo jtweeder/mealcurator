@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from django.db.models import F
 from django.views.generic.edit import CreateView
 from cooks.models import plan, plan_meal
 from meals.models import mstr_recipe
@@ -60,11 +61,21 @@ def view_plans(request):
     return render(request, template, context)
 
 @login_required
-def view_plan(request, plan_id):
+def view_plan(request, plan_id, review=None, meal_id=None):
     meal_plans = plan.objects.get(owner=request.user, id=plan_id)
     meals_on_plan = meal_plans.meals_on_plan.all()
     meals = mstr_recipe.objects.filter(meal_id__in=meals_on_plan.values_list(
                                        'meal_id', flat=True))
+    # TODO: Make a removed from plan button
+    # TODO: Subtract Times_selected when removed from plan
+    # TODO: Limit Reviews to only time
+    if review:
+        if review == 1:
+            mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)
+            plan_meal.objects.filter(plan_id=plan_id, meal_id=meal_id).update(review=1)
+        if review == 2:
+            mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)   
+            plan_meal.objects.filter(plan_id=plan_id, meal_id=meal_id).update(review=-1)
     context = {'meals': meals, 'plan_view': True, 'mp': meal_plans}
     template = 'meals/showmeals.html'
     return render(request, template, context)
@@ -74,6 +85,8 @@ def add_to_plan(request, plan_id, meal_id=None):
     meal_plan = plan.objects.get(owner=request.user, id=plan_id)
     if meal_id:
         meal_to_add = mstr_recipe.objects.get(meal_id=meal_id)
+        meal_to_add.times_selected += 1
+        meal_to_add.save()
         plan_meal.objects.create(meal=meal_to_add, plan=meal_plan)
         meal_plan = plan.objects.get(owner=request.user, id=plan_id)
     meals_on_plan = meal_plan.meals_on_plan.all()
