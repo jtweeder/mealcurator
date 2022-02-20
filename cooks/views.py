@@ -32,13 +32,13 @@ def cook_profile(request):
         welcome_id = email
     if len(email) > 1 and len(name) > 1:
         welcome_id = f'{name} : {email}'
-    meal_plans = plan.objects.filter(owner=request.user)
-
+    meal_plans = plan.objects.filter(owner=request.user, soft_delete=False)
     context = {'username': user.username,
                'welcome': welcome_id,
                'plans': meal_plans
                }
     return render(request, 'registration/welcome.html', context=context)
+
 
 class make_plan(CreateView):
     login_required = True
@@ -53,12 +53,14 @@ class make_plan(CreateView):
         cook.save()
         return redirect('welcome')
 
+
 @login_required
 def view_plans(request):
-    meal_plans = plan.objects.filter(owner=request.user)
+    meal_plans = plan.objects.filter(owner=request.user, soft_delete=False)
     context = {'meal_plans': meal_plans}
     template = 'cooks/plan.html'
     return render(request, template, context)
+
 
 @login_required
 def view_plan(request, plan_id, review=None, meal_id=None):
@@ -66,32 +68,48 @@ def view_plan(request, plan_id, review=None, meal_id=None):
     meals_on_plan = meal_plans.meals_on_plan.all()
     meals = mstr_recipe.objects.filter(meal_id__in=meals_on_plan.values_list(
                                        'meal_id', flat=True))
-    # TODO: Make a removed from plan button
-    # TODO: Subtract Times_selected when removed from plan
-    # TODO: Limit Reviews to only time
+    # TODO: Limit Reviews to only time per MP while allowing changes
     if review:
         if review == 1:
             mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)
-            plan_meal.objects.filter(plan_id=plan_id, meal_id=meal_id).update(review=1)
+            plan_meal.objects.filter(plan_id=plan_id,
+                                     meal_id=meal_id).update(review=1)
         if review == 2:
-            mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)   
-            plan_meal.objects.filter(plan_id=plan_id, meal_id=meal_id).update(review=-1)
+            mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)
+            plan_meal.objects.filter(plan_id=plan_id,
+                                     meal_id=meal_id).update(review=-1)
     context = {'meals': meals, 'plan_view': True, 'mp': meal_plans}
     template = 'meals/showmeals.html'
     return render(request, template, context)
 
+
 @login_required
-def add_to_plan(request, plan_id, meal_id=None):
+def add_to_plan(request, plan_id):
     meal_plan = plan.objects.get(owner=request.user, id=plan_id)
-    if meal_id:
-        meal_to_add = mstr_recipe.objects.get(meal_id=meal_id)
-        meal_to_add.times_selected += 1
-        meal_to_add.save()
-        plan_meal.objects.create(meal=meal_to_add, plan=meal_plan)
-        meal_plan = plan.objects.get(owner=request.user, id=plan_id)
     meals_on_plan = meal_plan.meals_on_plan.all()
     meals = mstr_recipe.objects.exclude(meal_id__in=meals_on_plan.values_list(
                                         'meal_id', flat=True))
     context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan}
     template = 'meals/showmeals.html'
     return render(request, template, context)
+
+
+@login_required
+def add_meal_to_plan(request, plan_id, meal_id):
+    mstr_recipe.objects.filter(meal_id=meal_id).update(times_selected=F('times_selected') + 1)
+    plan_meal.objects.create(meal_id=meal_id, plan_id=plan_id)
+    return redirect('add_to_plan', plan_id=plan_id)
+
+
+@login_required
+def del_meal_from_plan(request, plan_id, meal_id):
+    plan_meal.objects.filter(meal_id=meal_id, plan_id=plan_id).delete()
+    mstr_recipe.objects.filter(meal_id=meal_id).update(times_selected=F('times_selected') - 1)
+    return redirect('view-plan', plan_id=plan_id)
+
+
+@login_required
+def del_plan(request, plan_id):
+    plan.objects.filter(id=plan_id,
+                        owner=request.user).update(soft_delete=True)
+    return redirect('welcome')
