@@ -16,7 +16,7 @@
 
     <Select>
         <option disabled="true" selected>-- Select a Meal Time --</option>
-        {% regroup meals by get_meal_time_display as mealtime %}
+        {% regroup meals|dictsort:"meal_time" by get_meal_time_display as mealtime %}
         {% for item in mealtime %}
         <option>{{ item.grouper }}</option>
         {% endfor %}
@@ -24,7 +24,7 @@
 
     <Select>
         <option disabled="true" selected>-- Select a Cooking Time --</option>
-        {% regroup meals by get_cooking_time_display as cooking_time %}
+        {% regroup meals|dictsort:"cooking_time" by get_cooking_time_display as cooking_time %}
         {% for item in cooking_time %}
         <option>{{ item.grouper }}</option>
         {% endfor %}
@@ -32,7 +32,7 @@
 
     <Select>
         <option disabled="true" selected>-- Select a Cooking Method --</option>
-        {% regroup meals by get_cooking_method_display as cooking_method %}
+        {% regroup meals|dictsort:"cooking_method" by get_cooking_method_display as cooking_method %}
         {% for item in cooking_method %}
         <option>{{ item.grouper }}</option>
         {% endfor %}
@@ -40,7 +40,7 @@
 
     <Select>
         <option disabled="true" selected>-- Select a Dish Type --</option>
-        {% regroup meals by get_dish_type_display as dish_type %}
+        {% regroup meals|dictsort:"dish_type" by get_dish_type_display as dish_type %}
         {% for item in dish_type %}
         <option>{{ item.grouper }}</option>
         {% endfor %}
