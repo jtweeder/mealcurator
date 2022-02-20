@@ -11,6 +11,43 @@
 {% endif %}
 
 <h3><a href="{% url 'get-recipe' %}">Submit Recipes</a></h3>
+
+<div>
+
+    <Select>
+        <option disabled="true" selected>-- Select a Meal Time --</option>
+        {% regroup meals by get_meal_time_display as mealtime %}
+        {% for item in mealtime %}
+        <option>{{ item.grouper }}</option>
+        {% endfor %}
+    </Select>
+
+    <Select>
+        <option disabled="true" selected>-- Select a Cooking Time --</option>
+        {% regroup meals by get_cooking_time_display as cooking_time %}
+        {% for item in cooking_time %}
+        <option>{{ item.grouper }}</option>
+        {% endfor %}
+    </Select>
+
+    <Select>
+        <option disabled="true" selected>-- Select a Cooking Method --</option>
+        {% regroup meals by get_cooking_method_display as cooking_method %}
+        {% for item in cooking_method %}
+        <option>{{ item.grouper }}</option>
+        {% endfor %}
+    </Select>
+
+    <Select>
+        <option disabled="true" selected>-- Select a Dish Type --</option>
+        {% regroup meals by get_dish_type_display as dish_type %}
+        {% for item in dish_type %}
+        <option>{{ item.grouper }}</option>
+        {% endfor %}
+    </Select>
+</div>
+
+<hr/>
 {% for meal in meals %}
 <div>
     <table>
@@ -27,6 +64,8 @@
     <tr><td><a href="{{ meal.rec_url }}", target="_blank">Link to Recipe</a></td><td>
             {% if add_to_plan_view %}
             <a href="{% url 'add_meal_to_plan' mp.id meal.meal_id %}">Add this to Meal Plan</a>
+            {% elif plan_view %}
+            <a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><b>Remove</b> from Meal Plan</a>
             {% endif %}
         </td></tr>
     </table>
@@ -35,7 +74,11 @@
 </div>
 {% endfor %}
 {% if plan_view %}
-<h4><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h4>
+<h3><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h3>
+<br>
+<h4><a href="{% url 'del_plan' mp.id %}">Delete this Plan</a></h4>
+{% elif add_to_plan_view%}
+<h3><a href="{% url 'view-plan' mp.id %}">Back to {{ mp.name }} Overview</a></h3>
 {% endif %}
 <br>
 <h4><a href="{% url 'welcome' %}">Account Home</a></h4>

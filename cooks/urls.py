@@ -10,6 +10,8 @@ urlpatterns = [
     path('viewplans/<int:plan_id>', cook_views.view_plan, name='view-plan'),
     path('viewplans/<int:plan_id>/<int:review>/<str:meal_id>', cook_views.view_plan, name='view-plan-vote'),
     path('mod_plan/<int:plan_id>', cook_views.add_to_plan, name='add_to_plan'),
-    path('mod_plan/<int:plan_id>/<str:meal_id>', cook_views.add_to_plan, name='add_meal_to_plan')
+    path('mod_plan/<int:plan_id>/<str:meal_id>', cook_views.add_meal_to_plan, name='add_meal_to_plan'),
+    path('del_meal_from_plan/<int:plan_id>/<str:meal_id>', cook_views.del_meal_from_plan, name='del_meal_from_plan'),
+    path('del_plan/<int:plan_id>', cook_views.del_plan, name='del_plan')
     ]
 
