@@ -66,10 +66,14 @@ def view_plans(request):
 @login_required
 def view_plan(request, plan_id, review=None, meal_id=None):
     meal_plans = plan.objects.get(owner=request.user, id=plan_id)
-    meals_on_plan = meal_plans.meals_on_plan.all()
-    meals = mstr_recipe.objects.filter(meal_id__in=meals_on_plan.values_list(
-                                       'meal_id', flat=True))
-    # TODO: Limit Reviews to only time per MP while allowing changes
+    meals = meal_plans.meals_on_plan.all().values('meal_id', 'meal__title',
+                                                  'meal__vegan',
+                                                  'meal__vegetarian',
+                                                  'meal__meal_time',
+                                                  'meal__cooking_time',
+                                                  'meal__dish_type',
+                                                  'meal__cooking_method',
+                                                  'meal__rec_url', 'review',)
     if review:
         if review == 1:
             mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)

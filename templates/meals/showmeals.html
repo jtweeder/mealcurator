@@ -1,5 +1,26 @@
 {% extends "base.html" %}
 
+{% block css_style %}
+.resultTbl {
+    width: 90%;
+    max-width: 1100px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-content: space-around;
+}
+.recCard {
+    width: 330px;
+    border: 1px solid #000;
+    border-radius 10px 5px;
+    background-color: #ffffee;
+    margin: 10px 0px 10px 0px;
+    padding 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+{% endblock css_style %}
+
 {% block page_content %}
 
 {% if plan_view %}
@@ -47,31 +68,108 @@
 </div>
 {% endif %}
 <hr/>
-{% for meal in meals %}
-<div>
-    <table>
-        <th>{{ meal.title }}{% if plan_view %} 
-            <br> 
-        <a href="{% url 'view-plan-vote' plan_id=mp.id review=1 meal_id=meal.meal_id %}">Would Make Again</a> | <a href="{% url 'view-plan-vote' plan_id=mp.id review=2 meal_id=meal.meal_id %}">Would <b>NOT</b> Make Again</a> 
-        {% endif %}
-            </th>
-    <tr><td>Vegan: {{ meal.vegan|yesno:"Yes,No" }} </td><td>Vegetarian: {{ meal.vegetarian|yesno:"Yes,No" }}</td></tr>
-    <tr><td>Meal Time:</td><td>{{ meal.get_meal_time_display }}</td></tr>
-    <tr><td>Cooking Time:</td><td>{{ meal.get_cooking_time_display }}</td></tr>
-    <tr><td>Method:</td><td>{{ meal.get_cooking_method_display }}</td></tr>
-    <tr><td>Dish Type:</td><td>{{ meal.get_dish_type_display }}</td></tr>
-    <tr><td><a href="{{ meal.rec_url }}", target="_blank">Link to Recipe</a></td><td>
-            {% if add_to_plan_view %}
-            <a href="{% url 'add_meal_to_plan' mp.id meal.meal_id %}">Add this to Meal Plan</a>
-            {% elif plan_view %}
+
+{% if plan_view %}
+<div class="resultTbl">
+    {% for meal in meals %}
+        <div class=recCard>
+            <table>
+                <th colspan=2>{{ meal.meal__title }}</th>
+                <tr><td>{% if meal.review == 1 %}
+                <b><i>Would Make Again</b></i>
+                {% else %}
+                <a href="{% url 'view-plan-vote' plan_id=mp.id review=1 meal_id=meal.meal_id %}" ><img src="static/images"></a>{% endif %} 
+                </td><td>
+                {% if meal.review == -1 %}
+                <b><i>Would NOT Make Again</i></b>
+                {% else %}
+                <a href="{% url 'view-plan-vote' plan_id=mp.id review=2 meal_id=meal.meal_id %}">Would <b>NOT</b> Make Again</a> 
+                {% endif %}
+                </td></tr>    
+            <tr><td>Vegan: {{ meal.meal__vegan|yesno:"Yes,No" }} </td><td>Vegetarian: {{ meal.meal__vegetarian|yesno:"Yes,No" }}</td></tr>
+            <tr><td>Meal Time:</td><td>
+                {% if meal.meal__meal_time == 'bk' %}  Breakfast
+                {% elif meal.meal__meal_time == 'lu' %}  Lunch 
+                {% elif meal.meal__meal_time == 'di' %}  Dinner 
+                {% elif meal.meal__meal_time == 'de' %}  Dessert
+                {% elif meal.meal__meal_time == 'sn' %}  Snack         
+                {% endif %}
+            </td></tr>
+            <tr><td>Cooking Time:</td><td>
+                {% if meal.meal__cooking_time == '20' %}  Less than 20 Minutes
+                {% elif meal.meal__cooking_time == '40' %}  20 to 40 Minutes
+                {% elif meal.meal__cooking_time == '60' %}  40 to 60 Minutes
+                {% elif meal.meal__cooking_time == '61' %}  Over 60 Minutes
+                {% endif %}
+            </td></tr>
+            <tr><td>Method:</td><td>
+                {% if meal.meal__cooking_method == 'st' %}  Stovetop
+                {% elif meal.meal__cooking_method == 'mi' %}  Microwave 
+                {% elif meal.meal__cooking_method == 'bl' %}  Blender 
+                {% elif meal.meal__cooking_method == 'gr' %}  Grill 
+                {% elif meal.meal__cooking_method == 'ov' %}  Oven 
+                {% elif meal.meal__cooking_method == 'pr' %}  Pressure Cooker 
+                {% elif meal.meal__cooking_method == 'sc' %}  Slow Cooker 
+                {% elif meal.meal__cooking_method == 'af' %}  Air Fryer 
+                {% endif %}
+            </td></tr>
+            <tr><td>Dish Type:</td><td>
+                {% if meal.meal__dish_type == 'sp' %}  Soup
+                {% elif meal.meal__dish_type == 'bk' %}  Baked Dish
+                {% elif meal.meal__dish_type == 'pa' %}  Pasta
+                {% elif meal.meal__dish_type == 'cu' %}  Curry 
+                {% elif meal.meal__dish_type == 'ca' %}  Cassarole
+                {% elif meal.meal__dish_type == 'st' %}  Stew
+                {% elif meal.meal__dish_type == 'sa' %}  Salad
+                {% elif meal.meal__dish_type == 'lt' %}  Light Dish
+                {% elif meal.meal__dish_type == 'sm' %}  Smoothie 
+                {% elif meal.meal__dish_type == 'na' %}  Other
+                {% endif %}
+                </td></tr>
+            <tr><td><a href="{{ meal.meal__rec_url }}", target="_blank">Link to Recipe</a></td><td>
             <a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><b>Remove</b> from Meal Plan</a>
+           
+                </td></tr>
+            </table>
+            <br>
+            <br>
+        </div>
+    {% endfor %}
+{% else %}
+
+
+
+
+<div class="resultTbl">
+{% for meal in meals %}
+    <div class=recCard>
+        <table>
+            <th>{{ meal.title }}{% if plan_view %} 
+                <br> 
+             
+            <a href="{% url 'view-plan-vote' plan_id=mp.id review=1 meal_id=meal.meal_id %}">Would Make Again</a> | <a href="{% url 'view-plan-vote' plan_id=mp.id review=2 meal_id=meal.meal_id %}">Would <b>NOT</b> Make Again</a> 
             {% endif %}
-        </td></tr>
-    </table>
-    <br>
-    <br>
-</div>
+                </th>
+        <tr><td>Vegan: {{ meal.vegan|yesno:"Yes,No" }} </td><td>Vegetarian: {{ meal.vegetarian|yesno:"Yes,No" }}</td></tr>
+        <tr><td>Meal Time:</td><td>{{ meal.get_meal_time_display }}</td></tr>
+        <tr><td>Cooking Time:</td><td>{{ meal.get_cooking_time_display }}</td></tr>
+        <tr><td>Method:</td><td>{{ meal.get_cooking_method_display }}</td></tr>
+        <tr><td>Dish Type:</td><td>{{ meal.get_dish_type_display }}</td></tr>
+        <tr><td><a href="{{ meal.rec_url }}", target="_blank">Link to Recipe</a></td><td>
+                {% if add_to_plan_view %}
+                <a href="{% url 'add_meal_to_plan' mp.id meal.meal_id %}">Add this to Meal Plan</a>
+                {% elif plan_view %}
+                <a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><b>Remove</b> from Meal Plan</a>
+                {% endif %}
+            </td></tr>
+        </table>
+        <br>
+        <br>
+    </div>
 {% endfor %}
+
+{% endif %}
+</div>
 {% if plan_view %}
 <h3><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h3>
 <br>
@@ -81,4 +179,4 @@
 {% endif %}
 <br>
 <h4><a href="{% url 'welcome' %}">Account Home</a></h4>
-{% endblock %}
+{% endblock page_content %}
