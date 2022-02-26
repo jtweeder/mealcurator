@@ -12,41 +12,40 @@
 
 <h3><a href="{% url 'get-recipe' %}">Submit Recipes</a></h3>
 
+{% if add_to_plan_view %}
 <div>
+    <form action="{% url 'add_to_plan' mp.id %}">
+    <select name="meal_time">
+        <option value="%">-- Select a Meal Time --</option>
+        {% for key, value in meal_time %}
+        <option value="{{ key }}">{{ value }}</option>    
+        {% endfor %}
+    </select>
 
-    <Select>
-        <option disabled="true" selected>-- Select a Meal Time --</option>
-        {% regroup meals|dictsort:"meal_time" by get_meal_time_display as mealtime %}
-        {% for item in mealtime %}
-        <option>{{ item.grouper }}</option>
+    <Select name="cooking_time">
+        <option value="%">-- Select a Cooking Time --</option>
+        {% for key, value in cooking_time %}
+        <option value="{{ key }}">{{ value }}</option>    
         {% endfor %}
     </Select>
 
-    <Select>
-        <option disabled="true" selected>-- Select a Cooking Time --</option>
-        {% regroup meals|dictsort:"cooking_time" by get_cooking_time_display as cooking_time %}
-        {% for item in cooking_time %}
-        <option>{{ item.grouper }}</option>
+    <Select name="cooking_method">
+        <option value="%">-- Select a Cooking Method --</option>
+        {% for key, value in cooking_method %}
+        <option value="{{ key }}">{{ value }}</option>    
         {% endfor %}
     </Select>
 
-    <Select>
-        <option disabled="true" selected>-- Select a Cooking Method --</option>
-        {% regroup meals|dictsort:"cooking_method" by get_cooking_method_display as cooking_method %}
-        {% for item in cooking_method %}
-        <option>{{ item.grouper }}</option>
+    <Select name="dish_type">
+        <option value="%">-- Select a Dish Type --</option>
+        {% for key, value in dish_type %}
+        <option value="{{ key }}">{{ value }}</option>    
         {% endfor %}
     </Select>
-
-    <Select>
-        <option disabled="true" selected>-- Select a Dish Type --</option>
-        {% regroup meals|dictsort:"dish_type" by get_dish_type_display as dish_type %}
-        {% for item in dish_type %}
-        <option>{{ item.grouper }}</option>
-        {% endfor %}
-    </Select>
+<input type="submit" value="Search">
+</form>
 </div>
-
+{% endif %}
 <hr/>
 {% for meal in meals %}
 <div>

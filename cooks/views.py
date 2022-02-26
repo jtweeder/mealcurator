@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.db.models import F
 from django.views.generic.edit import CreateView
 from cooks.models import plan, plan_meal
-from meals.models import mstr_recipe
+from meals.models import mstr_recipe, meal_time_choices, dish_type_choices, cooking_method_choices, cook_time_choices
 from .forms import create_cook_form
 
 
@@ -18,6 +18,7 @@ def register_cook(request):
             return redirect('login')
     context = {'form': form}
     return render(request, 'registration/register.html', context=context)
+
 
 @login_required
 def cook_profile(request):
@@ -88,11 +89,25 @@ def add_to_plan(request, plan_id):
     meal_plan = plan.objects.get(owner=request.user, id=plan_id)
     meals_on_plan = meal_plan.meals_on_plan.all()
     meals = mstr_recipe.objects.exclude(meal_id__in=meals_on_plan.values_list(
-                                        'meal_id', flat=True))
-    context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan}
+                                        'meal_id', flat=True)).defer('found_words')
+    search = {}
+    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type']:
+        try:
+            val = request.GET[value]
+            if val == '%':
+                continue
+            else:
+                search[f'{value}__exact'] = val
+        except:
+            continue
+    if len(search) > 0:
+        meals = meals.filter(**search)
+    context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan,
+               'meal_time': meal_time_choices, 'dish_type': dish_type_choices,
+               'cooking_method': cooking_method_choices,
+               'cooking_time': cook_time_choices}
     template = 'meals/showmeals.html'
     return render(request, template, context)
-
 
 @login_required
 def add_meal_to_plan(request, plan_id, meal_id):
@@ -113,3 +128,4 @@ def del_plan(request, plan_id):
     plan.objects.filter(id=plan_id,
                         owner=request.user).update(soft_delete=True)
     return redirect('welcome')
+
