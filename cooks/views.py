@@ -19,6 +19,7 @@ def register_cook(request):
     context = {'form': form}
     return render(request, 'registration/register.html', context=context)
 
+
 @login_required
 def cook_profile(request):
     user = request.user
@@ -101,10 +102,10 @@ def add_to_plan(request, plan_id):
             continue
     if len(search) > 0:
         meals = meals.filter(**search)
-    context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan, 
+    context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan,
                'meal_time': meal_time_choices, 'dish_type': dish_type_choices,
                'cooking_method': cooking_method_choices,
-               'cooking_time': cook_time_choices, 'search': search, 'wtf': len(search)}
+               'cooking_time': cook_time_choices}
     template = 'meals/showmeals.html'
     return render(request, template, context)
 
