@@ -27,6 +27,7 @@ cooking_method_choices = [
         ('gr', 'Grill'),
         ('ov', 'Oven'),
         ('pr', 'Pressure Cooker'),
+        ('sc', 'Slow Cooker'),
         ('af', 'Air Fryer'),
     ]
 
