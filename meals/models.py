@@ -102,20 +102,10 @@ class mstr_recipe(models.Model):
         return self.title
 
 
-class recipe_taxonomy(models.Model):
-    taxonomy_id = models.OneToOneField(mstr_recipe, models.CASCADE, 'meal_id',
-                                       primary_key=True)
-    learned_words = models.JSONField('Learned Taxonomy', name='learned_words',
-                                     default=None)
-    affirmed_words = models.JSONField('Word Up Votes', name='correct_words',
-                                      default=None)
-    negative_words = models.JSONField('Word Down Votes', name='wrong_words',
-                                      default=None)
-
-
 class recipe_sims(models.Model):
-    sim_id = models.OneToOneField(mstr_recipe, models.CASCADE, 'meal_id')
-    compare_id = models.CharField('Comparison Recipe ID', max_length=32)
+    sim = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
+    compare = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE,
+                                   related_name='compare_meal')
     score = models.DecimalField('Simularity Score', 'sim_score', 10, 10)
     affirmed_votes = models.PositiveIntegerField('Agreement Votes', 'agree',
                                                  default=0)
