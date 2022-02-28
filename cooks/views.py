@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.db.models import F
 from django.views.generic.edit import CreateView
 from cooks.models import plan, plan_meal
-from meals.models import mstr_recipe, meal_time_choices, dish_type_choices, cooking_method_choices, cook_time_choices
+from meals.models import mstr_recipe, meal_time_choices, dish_type_choices, cooking_method_choices, cook_time_choices, protein_choices
 from .forms import create_cook_form
 
 
@@ -73,13 +73,20 @@ def view_plan(request, plan_id, review=None, meal_id=None):
                                                   'meal__cooking_time',
                                                   'meal__dish_type',
                                                   'meal__cooking_method',
+                                                  'meal__protein_type',
                                                   'meal__rec_url', 'review',)
     if review:
+        cur_review = plan_meal.objects.get(meal_id=meal_id, 
+                                           plan_id=plan_id).values(review)
         if review == 1:
+            if cur_review == -1:
+                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') - 1)    
             mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)
             plan_meal.objects.filter(plan_id=plan_id,
                                      meal_id=meal_id).update(review=1)
         if review == 2:
+            if cur_review == 1:
+                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('upvote') - 1)
             mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)
             plan_meal.objects.filter(plan_id=plan_id,
                                      meal_id=meal_id).update(review=-1)
@@ -95,7 +102,7 @@ def add_to_plan(request, plan_id):
     meals = mstr_recipe.objects.exclude(meal_id__in=meals_on_plan.values_list(
                                         'meal_id', flat=True)).defer('found_words')
     search = {}
-    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type']:
+    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type', 'protein_choices']:
         try:
             val = request.GET[value]
             if val == '%':
@@ -109,7 +116,8 @@ def add_to_plan(request, plan_id):
     context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan,
                'meal_time': meal_time_choices, 'dish_type': dish_type_choices,
                'cooking_method': cooking_method_choices,
-               'cooking_time': cook_time_choices}
+               'cooking_time': cook_time_choices, 
+               'protein_choices': protein_choices}
     template = 'meals/showmeals.html'
     return render(request, template, context)
 

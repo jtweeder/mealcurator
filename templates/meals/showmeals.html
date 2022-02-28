@@ -80,7 +80,12 @@ td{
         <option value="{{ key }}">{{ value }}</option>    
         {% endfor %}
     </Select>
-
+    <Select name="protein_choices">
+        <option value="%">-- Select a Main Protein --</option>
+        {% for key, value in protein_choices %}
+        <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}
+    </Select>
     <Select name="dish_type">
         <option value="%">-- Select a Dish Type --</option>
         {% for key, value in dish_type %}
@@ -172,6 +177,21 @@ td{
                 {% else %}
                 {{ meal.get_dish_type_display }}
                 {% endif %}
+                </td></tr>
+                <tr><td class="leftTd">Protein Type:</td>
+                    <td class="rightTd">
+                    {% if plan_view %}
+                        {% if meal.meal__protein_type == 'be' %}  Beef
+                        {% elif meal.meal__protein_type == 'ch' %}  Chicken
+                        {% elif meal.meal__protein_type == 'pb' %}  Plant Based
+                        {% elif meal.meal__protein_type == 'se' %}  Fish / Shellfish 
+                        {% elif meal.meal__protein_type == 'pk' %}  Pork
+                        {% elif meal.meal__protein_type == 'na' %}  None
+                        {% elif meal.meal__protein_type == 'ot' %}  Other
+                        {% endif %}
+                    {% else %}
+                    {{ meal.get_protein_type_display }}
+                    {% endif %}
                 </td></tr>
             <tr><td><a href="{% if plan_vew %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank"><img src="{% static 'images/book-open.svg' %}" alt="Open Book" title="Open Recipe in New Tab"></a></td>
                 <td>

@@ -29,6 +29,7 @@ cooking_method_choices = [
         ('pr', 'Pressure Cooker'),
         ('sc', 'Slow Cooker'),
         ('af', 'Air Fryer'),
+        ('ot', 'Other'),
     ]
 
 cook_time_choices = [
@@ -38,7 +39,15 @@ cook_time_choices = [
         ('61', 'Over 60 Minutes'),
     ]
 
-# Create your models here.
+protein_choices = [
+        ('be', 'Beef'),
+        ('ch', 'Chicken'),
+        ('pb', 'Plant Based'),
+        ('se', 'Fish/Shellfish'),
+        ('pk', 'Pork'),
+        ('na', 'None'),
+        ('ot', 'Other')
+    ]
 
 
 class raw_recipe(models.Model):
@@ -52,6 +61,9 @@ class raw_recipe(models.Model):
     dish_type = models.CharField('Dish Type',
                                  max_length=2,
                                  choices=dish_type_choices)
+    protein_type = models.CharField('Main Protein', 
+                                    max_length=2,
+                                    choices=protein_choices)
     cooking_method = models.CharField('Cooking Method',
                                       max_length=2,
                                       choices=cooking_method_choices)
@@ -89,6 +101,9 @@ class mstr_recipe(models.Model):
     cooking_time = models.CharField('Cooking Time',
                                     max_length=2,
                                     choices=cook_time_choices)
+    protein_type = models.CharField('Main Protein', 
+                                max_length=2,
+                                choices=protein_choices)
     times_selected = models.PositiveIntegerField('Number of times Selected',
                                                  default=0)
     upvotes = models.PositiveIntegerField('Would Make Again', name='upvote',
