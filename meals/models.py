@@ -61,9 +61,10 @@ class raw_recipe(models.Model):
     dish_type = models.CharField('Dish Type',
                                  max_length=2,
                                  choices=dish_type_choices)
-    protein_type = models.CharField('Main Protein', 
+    protein_type = models.CharField('Main Protein',
                                     max_length=2,
-                                    choices=protein_choices)
+                                    choices=protein_choices,
+                                    default='na')
     cooking_method = models.CharField('Cooking Method',
                                       max_length=2,
                                       choices=cooking_method_choices)
@@ -101,9 +102,9 @@ class mstr_recipe(models.Model):
     cooking_time = models.CharField('Cooking Time',
                                     max_length=2,
                                     choices=cook_time_choices)
-    protein_type = models.CharField('Main Protein', 
-                                max_length=2,
-                                choices=protein_choices)
+    protein_type = models.CharField('Main Protein',
+                                    max_length=2,
+                                    choices=protein_choices, default='na')
     times_selected = models.PositiveIntegerField('Number of times Selected',
                                                  default=0)
     upvotes = models.PositiveIntegerField('Would Make Again', name='upvote',

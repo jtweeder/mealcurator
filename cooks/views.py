@@ -102,7 +102,7 @@ def add_to_plan(request, plan_id):
     meals = mstr_recipe.objects.exclude(meal_id__in=meals_on_plan.values_list(
                                         'meal_id', flat=True)).defer('found_words')
     search = {}
-    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type', 'protein_choices']:
+    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type', 'protein_type']:
         try:
             val = request.GET[value]
             if val == '%':
