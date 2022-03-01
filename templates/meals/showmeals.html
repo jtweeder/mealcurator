@@ -80,7 +80,12 @@ td{
         <option value="{{ key }}">{{ value }}</option>    
         {% endfor %}
     </Select>
-
+    <Select name="protein_type">
+        <option value="%">-- Select a Main Protein --</option>
+        {% for key, value in protein_choices %}
+        <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}
+    </Select>
     <Select name="dish_type">
         <option value="%">-- Select a Dish Type --</option>
         {% for key, value in dish_type %}
@@ -173,7 +178,22 @@ td{
                 {{ meal.get_dish_type_display }}
                 {% endif %}
                 </td></tr>
-            <tr><td><a href="{% if plan_vew %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank"><img src="{% static 'images/book-open.svg' %}" alt="Open Book" title="Open Recipe in New Tab"></a></td>
+                <tr><td class="leftTd">Protein Type:</td>
+                    <td class="rightTd">
+                    {% if plan_view %}
+                        {% if meal.meal__protein_type == 'be' %}  Beef
+                        {% elif meal.meal__protein_type == 'ch' %}  Chicken
+                        {% elif meal.meal__protein_type == 'pb' %}  Plant Based
+                        {% elif meal.meal__protein_type == 'se' %}  Fish / Shellfish 
+                        {% elif meal.meal__protein_type == 'pk' %}  Pork
+                        {% elif meal.meal__protein_type == 'na' %}  None
+                        {% elif meal.meal__protein_type == 'ot' %}  Other
+                        {% endif %}
+                    {% else %}
+                    {{ meal.get_protein_type_display }}
+                    {% endif %}
+                </td></tr>
+            <tr><td><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank"><img src="{% static 'images/book-open.svg' %}" alt="Open Book" title="Open Recipe in New Tab"></a></td>
                 <td>
                 {% if plan_view %}
                 <a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove from Meal Plan"></a>

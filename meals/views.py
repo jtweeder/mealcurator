@@ -12,7 +12,7 @@ class get_recipe(CreateView):
     login_required = True
     model = raw_recipe
     fields = ['title', 'rec_url', 'vegan', 'vegetarian', 'meal_time',
-              'dish_type', 'cooking_method', 'cooking_time']
+              'dish_type', 'cooking_method', 'protein_type', 'cooking_time']
     success_url = reverse_lazy('get-recipe')
 
 
