@@ -76,18 +76,22 @@ def view_plan(request, plan_id, review=None, meal_id=None):
                                                   'meal__protein_type',
                                                   'meal__rec_url', 'review',)
     if review:
-        cur_review = plan_meal.objects.get(meal_id=meal_id, 
-                                           plan_id=plan_id).values(review)
+        cur_review = plan_meal.objects.get(meal_id=meal_id,
+                                           plan_id=plan_id).review
         if review == 1:
             if cur_review == -1:
-                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') - 1)    
-            mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)
+                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') - 1,
+                                                                   upvote=F('upvote') + 1)
+            else:
+                mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)
             plan_meal.objects.filter(plan_id=plan_id,
                                      meal_id=meal_id).update(review=1)
         if review == 2:
             if cur_review == 1:
-                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('upvote') - 1)
-            mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)
+                mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') - 1,
+                                                                   downvote=F('downvote') + 1)
+            else:
+                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)
             plan_meal.objects.filter(plan_id=plan_id,
                                      meal_id=meal_id).update(review=-1)
     context = {'meals': meals, 'plan_view': True, 'mp': meal_plans}
