@@ -1,60 +1,43 @@
-<!DOCTYPE html>
-<html lang=en>
-<head>
-    <title Meal Curator Font Styles></title>
-    <meta name="viewport" content="width=device-width">
-    <link rel="icon" href="/flavicon.ico">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Antic+Slab&family=Be+Vietnam+Pro:wght@300&family=Zilla+Slab:ital,wght@0,400;0,600;1,500&display=swap');
-        h1 {
-            font-family: 'Antic Slab', serif;
-            font-size: 64px;
-        }
-        h2 {
-            font-family: 'Zilla Slab', serif;
-            font-weight: 600;
-            font-size: 32px;
-            color: #16a32e;
-        }
-        h3 {
-            font-family: 'Zilla Slab', serif;
-            font-weight: 500;
-            font-size: 28px;
-            font-style: italic;
-        }
-        h4 {
-            font-family: 'Zilla Slab', serif;
-            font-weight: 400;
-            font-size: 24px;
-            color: #1005ff;
-        }
-        
-        p {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            font-weight: 300;
-            font-size: 18px;
-        }
-        body {
-            background-color: #fff2ee;
-            color: #000;
-            }
-    </style>
+{% extends "base.html" %}
 
-</head>
+{% block css_style %}
+li {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 300;
+    font-size: 18px; 
+}
+{% endblock css_style %}
 <body>
-    <h1>Meal Curator - Recipe Name</h1>
-    <h2>H2 - Section Names</h2>
-    <h3>H3 - Subname/Call out</h3>
-    <h4>H4 - Sub-SubHeading - Style</h4>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Maecenas ultricies mi eget mauris pharetra et ultrices neque ornare. Fringilla ut morbi tincidunt augue interdum. Leo duis ut diam quam. Pulvinar etiam non quam lacus suspendisse. Libero nunc consequat interdum varius sit amet mattis vulputate enim. Mattis enim ut tellus elementum. Ut enim blandit volutpat maecenas. Purus sit amet volutpat consequat. Vitae semper quis lectus nulla at volutpat diam. Rhoncus aenean vel elit scelerisque mauris. Fringilla est ullamcorper eget nulla facilisi etiam. Faucibus purus in massa tempor nec feugiat nisl pretium fusce. Eget magna fermentum iaculis eu non. Maecenas accumsan lacus vel facilisis.</p>
-    <p>Ut diam quam nulla porttitor massa. Lorem sed risus ultricies tristique nulla. Enim nulla aliquet porttitor lacus luctus. Vulputate mi sit amet mauris commodo quis. Arcu bibendum at varius vel pharetra vel turpis. Ornare aenean euismod elementum nisi quis. Risus pretium quam vulputate dignissim suspendisse in. Dictum fusce ut placerat orci nulla pellentesque dignissim enim. Nibh tellus molestie nunc non blandit massa enim. Non odio euismod lacinia at quis risus sed vulputate. Mi ipsum faucibus vitae aliquet. Pulvinar mattis nunc sed blandit. Sit amet nulla facilisi morbi tempus. Fringilla est ullamcorper eget nulla facilisi. </p>
+    {% block navbar %}
+    <div class="navbar">
+        <ul class="navlist">
+        <li><a class="button" href="{% url 'register' %}">Sign Up</a></li>
+        <li><a class="button" href="{% url 'welcome' %}">Login</a></li>
+        </ul>
+    </div>
+    {% endblock navbar %}
+
+    {% block page_content %}
+    <h1>Welcome to mealCurator!</h1>
     
-    <h4>Create a Profile:</h4>
-    <a href="{% url 'register' %}">Registration Page</a>
+    <p>
+        Do you enjoy cooking at home, but have trouble wrangling online recipes each week?  Then you are in luck, mealCurator is here to help!
+    </p>
+    <h2>What is mealCurator?</h2>
+    <p>mealCurator is built to help you:
+       <li>Plan out your meals for whatever period of time ahead need</li>
+       <li>Provide a safe space to stash your planned meals</li>
+       <li>Links out to your planned meal so you can easily find that recipe</li>
+       <li>Do the hard work for you and find recipes for you</li>
+       
+    <h2>Getting Started</h2>
+    <p>Getting started with mealCurator is easy.  Simply create or login to your account.  You can start building your first meal plan today.  
+        <br>
+        <br>
+        Once logged in you can submit recipes you find around around the internet.  Submitting recipes helps us build or databases and makes the overall platform more powerful.  It typically takes about 10 minutes from submission of recipe until it is ready to be added to a meal plan.  Sometimes certain websites will not allow us to collect enough information, or are behind a paywall.  At this time these recipes wont be able to be added to a meal-plan.
+    </p>
+    <h2>Issues</h2>
+    <p>The best place to look for a resolution to any problems will be in the <a href="{% url 'welcome' %}">'how-to'</a> section.  Bugs are definatly going to appear.  So if you have an issue that you cant solve with the how-to documentationa, feel free to submit an issue to the <a href="https://github.com/jtweeder/mealcurator" target="_blank">github repository</a> and we can take a look.
+    
 
-    <h4>Login:</h4>
-    <a href="{% url 'welcome' %}">Login Page</a>
-</body>
-
-
-</html>
+    {% endblock page_content %}

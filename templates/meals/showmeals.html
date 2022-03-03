@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css_style %}
+
 .resultTbl {
     width: 90%;
     max-width: 1100px;
@@ -43,19 +44,27 @@ td{
     text-align: left;
 }
 
+.recCard a {
+    font-size: 20px; 
+    font-family: 'Zilla Slab', serif;
+    color: #16a32e;
+    text-decoration: none;
+}
+
 {% endblock css_style %}
 
 {% block page_content %}
 
 {% if plan_view %}
 <h1>Recipes in: {{ mp.name }}</h1>
+<h3><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h3>
 {% elif add_to_plan_view %}
 <h1>Browsing Recipes for: {{ mp.name }}</h1> 
 {% else %}
 <h1>Browse Recipes</h1>
 {% endif %}
 
-<h3><a href="{% url 'get-recipe' %}">Submit Recipes</a></h3>
+
 
 {% if add_to_plan_view %}
 <div>
@@ -103,7 +112,7 @@ td{
     {% for meal in meals %}
         <div class=recCard>
             <table>
-                <th colspan=2>{% if plan_view %}{{ meal.meal__title }}{% else %}{{ meal.title }}{% endif %}</th>
+                <th colspan=2><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank">{% if plan_view %}{{ meal.meal__title }}{% else %}{{ meal.title }}{% endif %}</a></th>
                 {% if plan_view %}
                 <tr><td>{% if meal.review == 1 %}
                 <img src="{% static 'images/thumbs-up-selected.svg' %}" alt="Selected Thumbs Up Rating" title="You have selected a thumbs up rating for this recipe">
@@ -208,12 +217,9 @@ td{
     {% endfor %}
 </div>
 {% if plan_view %}
-<h3><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h3>
-<br>
 <h4><a href="{% url 'del_plan' mp.id %}">Delete this Plan</a></h4>
 {% elif add_to_plan_view%}
 <h3><a href="{% url 'view-plan' mp.id %}">Back to {{ mp.name }} Overview</a></h3>
 {% endif %}
-<br>
-<h4><a href="{% url 'welcome' %}">Account Home</a></h4>
+
 {% endblock page_content %}
