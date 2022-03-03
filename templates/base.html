@@ -43,12 +43,63 @@
             margin-left: auto;
             text-align: ceter;;
         }
+
+        .navbar{
+        background-color:#16a32e ;
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+        align-content: space-around;
+        }
+
+        
+        .button {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 300;
+            font-size: 18px;
+            text-decoration: none;
+            background-color: #fffffe;
+            color: #000;
+            padding: 2px 6px 2px 6px;
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
+            border-left: 1px solid #CCCCCC;
+            margin: 6px;
+        }
+
+        ul > li {
+            display: inline-block;
+            margin: 6px 2px 6px 2px;
+        }
+
         {% block css_style %}
         {% endblock css_style %}
     </style>
 
 </head>
 <body>
+    {% block navbar %}
+    <div class="navbar">
+        <ul class="navlist">
+        <li><a class="button" href="{% url 'welcome' %}">Account Home</a></li>
+        <li><a class="button" href="{% url 'get-recipe' %}">Submit Recipe</a></li>
+        <li><a class="button" href="{% url 'view-plans' %}">View Plans</a></li>
+        <li><a class="button" href="{% url 'make-plan' %}">Create New Plan</a></li>
+        <li><a class="button" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+    {% endblock %}
     {% block page_content %} {% endblock %}
+    {% block botnavbar %}
+    <div class="navbar">
+        <ul class="navlist">
+        <li><a class="button" href="{% url 'welcome' %}">About</a></li>
+        <li><a class="button" href="{% url 'welcome' %}">How-To</a></li>
+        <li><a class="button" href="https://github.com/jtweeder/mealcurator" target="_blank">Git Hub Repo</a></li>
+        </ul>
+    </div>
+    {% endblock %}
 </body>
 </html>
