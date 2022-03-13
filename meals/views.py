@@ -8,6 +8,14 @@ def index(request):
     return render(request, 'font_style.html', context=None)
 
 
+def howto(request):
+    return render(request, 'howto.html', context=None)
+
+
+def about(request):
+    return render(request, 'about.html', context=None)
+
+
 class get_recipe(CreateView):
     login_required = True
     model = raw_recipe

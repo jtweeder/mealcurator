@@ -5,6 +5,7 @@ meal_time_choices = [
         ('bk', 'Breakfast'),
         ('lu', 'Lunch'),
         ('di', 'Dinner'),
+        ('sd', 'Side Dish'),
         ('de', 'Dessert'),
         ('sn', 'Snack'),
 ]
@@ -29,6 +30,7 @@ cooking_method_choices = [
         ('pr', 'Pressure Cooker'),
         ('sc', 'Slow Cooker'),
         ('af', 'Air Fryer'),
+        ('ra', 'Raw/Uncooked'),
         ('ot', 'Other'),
     ]
 

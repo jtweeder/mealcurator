@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load cooks_extras %}
 {% block css_style %}
 
 .resultTbl {
@@ -70,35 +71,62 @@ td{
 <div>
     <form action="{% url 'add_to_plan' mp.id %}">
     <select name="meal_time">
-        <option value="%">-- Select a Meal Time --</option>
+        {% if request.GET.meal_time and request.GET.meal_time != '%' %}
+        <option value={{ request.GET.meal_time }}>{{ meal_time | val_ret_lstp:request.GET.meal_time }}</option>
+        {% endif %}
+        <option value="%">-- All Meal Times --</option>
         {% for key, value in meal_time %}
+            {% if key != request.GET.meal_time %}
         <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
         {% endfor %}
     </select>
 
     <Select name="cooking_time">
-        <option value="%">-- Select a Cooking Time --</option>
+        {% if request.GET.cooking_time and request.GET.cooking_time != '%' %}
+        <option value={{ request.GET.cooking_time }}>{{ cooking_time | val_ret_lstp:request.GET.cooking_time }}</option>
+        {% endif %}
+        <option value="%">-- All Cooking Times --</option>
         {% for key, value in cooking_time %}
-        <option value="{{ key }}">{{ value }}</option>    
+            {% if key != request.GET.cooking_time %}
+            <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
         {% endfor %}
     </Select>
 
     <Select name="cooking_method">
-        <option value="%">-- Select a Cooking Method --</option>
+        {% if request.GET.cooking_method and request.GET.cooking_method != '%' %}
+        <option value={{ request.GET.cooking_method }}>{{ cooking_method | val_ret_lstp:request.GET.cooking_method }}</option>
+        {% endif %}
+        <option value="%">-- All Cooking Methods --</option>
         {% for key, value in cooking_method %}
-        <option value="{{ key }}">{{ value }}</option>    
+            {% if key != request.GET.cooking_method %}
+            <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
         {% endfor %}
     </Select>
+
     <Select name="protein_type">
-        <option value="%">-- Select a Main Protein --</option>
+        {% if request.GET.protein_type and request.GET.protein_type != '%' %}
+        <option value={{ request.GET.protein_type }}>{{ protein_choices | val_ret_lstp:request.GET.protein_type }}</option>
+        {% endif %}       
+        <option value="%">-- All Main Proteins --</option>
         {% for key, value in protein_choices %}
-        <option value="{{ key }}">{{ value }}</option>
+            {% if key != request.GET.protein_type %}        
+            <option value="{{ key }}">{{ value }}</option>
+            {% endif %}
         {% endfor %}
     </Select>
+
     <Select name="dish_type">
-        <option value="%">-- Select a Dish Type --</option>
+        {% if request.GET.dish_type and request.GET.dish_type != '%' %}
+        <option value={{ request.GET.dish_type }}>{{ dish_type | val_ret_lstp:request.GET.dish_type }}</option>
+        {% endif %}  
+        <option value="%">-- All Dish Types --</option>
         {% for key, value in dish_type %}
-        <option value="{{ key }}">{{ value }}</option>    
+            {% if key != request.GET.dish_type %}     
+            <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
         {% endfor %}
     </Select>
 <input type="submit" value="Search">
@@ -134,6 +162,7 @@ td{
                     {% if meal.meal__meal_time == 'bk' %}  Breakfast
                     {% elif meal.meal__meal_time == 'lu' %}  Lunch 
                     {% elif meal.meal__meal_time == 'di' %}  Dinner 
+                    {% elif meal.meal__meal_time == 'sd' %}  Side Dish 
                     {% elif meal.meal__meal_time == 'de' %}  Dessert
                     {% elif meal.meal__meal_time == 'sn' %}  Snack         
                     {% endif %}
@@ -164,6 +193,7 @@ td{
                     {% elif meal.meal__cooking_method == 'pr' %}  Pressure Cooker 
                     {% elif meal.meal__cooking_method == 'sc' %}  Slow Cooker 
                     {% elif meal.meal__cooking_method == 'af' %}  Air Fryer 
+                    {% elif meal.meal__cooking_method == 'ra' %}  Raw/Uncooked 
                     {% endif %}
                 {% else %}
                 {{ meal.get_cooking_method_display }}
