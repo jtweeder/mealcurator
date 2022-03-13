@@ -104,7 +104,8 @@ def add_to_plan(request, plan_id):
     meal_plan = plan.objects.get(owner=request.user, id=plan_id)
     meals_on_plan = meal_plan.meals_on_plan.all()
     meals = mstr_recipe.objects.exclude(meal_id__in=meals_on_plan.values_list(
-                                        'meal_id', flat=True)).defer('found_words')
+                                        'meal_id',
+                                        flat=True)).defer('found_words')
     search = {}
     for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type', 'protein_type']:
         try:
@@ -120,8 +121,9 @@ def add_to_plan(request, plan_id):
     context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan,
                'meal_time': meal_time_choices, 'dish_type': dish_type_choices,
                'cooking_method': cooking_method_choices,
-               'cooking_time': cook_time_choices, 
-               'protein_choices': protein_choices}
+               'cooking_time': cook_time_choices,
+               'protein_choices': protein_choices,
+               'request': request}
     template = 'meals/showmeals.html'
     return render(request, template, context)
 
