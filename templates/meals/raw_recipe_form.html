@@ -1,12 +1,73 @@
 {% extends "base.html" %}
+{% block css_style %}
+.subCard {
+        width: 350px;
+        border: 1px solid #000;
+        border-radius 5px 5px;
+        background-color: #fffffe;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 10px;
 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    }
+
+th{
+    font-size: 20px; 
+    font-family: 'Zilla Slab', serif;
+    color: #16a32e;
+}
+
+.err{
+    text-align: center;
+}
+td{
+    text-align: center;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.leftTd{
+    text-align: right;
+    font-weight: bold;
+}
+
+.rightTd{
+    text-align: left;
+}
+
+{% endblock css_style %}
 {% block page_content %}
 <h1>Meal Curator - Recipe Submission</h1>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <br>
-    <br>
-    <input type="submit" value="Submit">
-</form>
+{% if form.errors %}
+{% for err in form.errors %}
+<h2 class="err">{% if err == 'rec_url' %} Recipe Already Submitted {% else %} Error: {{ err }} {% endif %} </h2>
+{% endfor %}
+{% endif %}
+<div class=subCard>
+    <table>
+    <form action="" method="post">
+        {% csrf_token %}
+        <th colspan="2">Recipe Title: {{ form.title }}</th>
+        <tr><td class="leftTd">URL: </td><td class="rightTd">{{ form.rec_url }}</td></tr>
+        <tr><td>Vegan: {{ form.vegan }}</td><td>Vegetarian: {{ form.vegetarian}}</td></tr>
+        <tr><td class="leftTd">Meal Time: </td><td class="rightTd">{{ form.meal_time }}</td></tr>
+        <tr><td class="leftTd">Dish Type: </td><td class="rightTd">{{ form.dish_type }}</td></tr>
+        <tr><td class="leftTd">Cooking Method: </td><td class="rightTd">{{ form.cooking_method }}</td></tr>
+        <tr><td class="leftTd">Protein Type: </td><td class="rightTd">{{ form.protein_type }}</td></tr>
+        <tr><td class="leftTd">Cooking Time: </td><td class="rightTd">{{ form.cooking_time }}</td></tr>
+        <tr></tr>
+        <tfoot><input type="submit" value="Submit"></tfoot>
+    </form>
+</table>
+
+</div>
+<div>
+    <h3>Instructions for Recipe Submission:</h3>
+    <p>Complete and submit the form above to add recipes to our databases.  Once we get a moment to analyze the recipe we will make it availible to add to meal plans.  Not all recipe sites allow autmoated crawling, and if we hit an error we will not be able to add it to our recipe databases.  </p>
+     <p>The form will clear if the submission was successful and allow for more submissions.  If the URL is already found a message will appear.  Please complete all applicable fields. </p>
+</div>
 {% endblock %}
