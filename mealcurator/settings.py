@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'meals',
     'cooks',
+    'stewpot',
 ]
 
 MIDDLEWARE = [
