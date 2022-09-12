@@ -9,9 +9,6 @@
     <thead>
         <th><a href="{% url 'view-plan' plan.id %}">{{ plan.name }}</a></th>
     </thead>
-    {% for meal in plan.meals.all %}
-<tr><td>{{ meal }}</td><td>{{ meal.rec_url }}</td></tr> 
-    {% endfor %}
 </table>
 </div>
 {% endfor %}

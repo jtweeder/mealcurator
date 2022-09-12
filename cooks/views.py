@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.db.models import F
 from django.views.generic.edit import CreateView
-from cooks.models import plan, plan_meal
-from meals.models import mstr_recipe, meal_time_choices, dish_type_choices, cooking_method_choices, cook_time_choices, protein_choices
+from cooks.models import plan, plan_meal, plan_list
+from meals.models import meal_item, mstr_recipe, meal_time_choices, dish_type_choices, cooking_method_choices, cook_time_choices, protein_choices
 from .forms import create_cook_form
 
 
@@ -95,7 +96,10 @@ def view_plan(request, plan_id, review=None, meal_id=None):
             plan_meal.objects.filter(plan_id=plan_id,
                                      meal_id=meal_id).update(review=-1)
     context = {'meals': meals, 'plan_view': True, 'mp': meal_plans}
-    template = 'meals/showmeals.html'
+    if 'viewplans' in request.path_info:
+        template = 'meals/showmeals.html'
+    else:
+        template = 'cooks/list.html'
     return render(request, template, context)
 
 
@@ -127,10 +131,16 @@ def add_to_plan(request, plan_id):
     template = 'meals/showmeals.html'
     return render(request, template, context)
 
+
 @login_required
 def add_meal_to_plan(request, plan_id, meal_id):
     mstr_recipe.objects.filter(meal_id=meal_id).update(times_selected=F('times_selected') + 1)
     plan_meal.objects.create(meal_id=meal_id, plan_id=plan_id)
+    lists = plan_list.objects.filter(owner=request.user, plan_id=plan_id,
+                                     meal_id=meal_id)
+    if len(lists) < 1:
+        plan_list.objects.create(owner=request.user, plan_id=plan_id,
+                                 meal_id=meal_id, item_id=1)
     return redirect('add_to_plan', plan_id=plan_id)
 
 
@@ -147,3 +157,54 @@ def del_plan(request, plan_id):
                         owner=request.user).update(soft_delete=True)
     return redirect('welcome')
 
+@xframe_options_sameorigin
+@login_required
+def list_idx(request, plan_id):
+    list = plan_list.objects.filter(owner=request.user, plan_id=plan_id)
+    context = {'list': list}
+    if 'shp_list' in request.path_info:
+        template = 'cooks/listshop.html'
+    else:
+        template = 'cooks/listedit.html'
+    return render(request, template, context)
+
+
+@login_required
+def list_add(request, plan_id, meal_id):
+    if request.method == 'POST':
+        sent_item = request.POST.get('new-item').lower()
+        item_qty = request.POST.get('item-qty')
+        try:
+            item = meal_item.objects.get(item_name=sent_item)
+        except meal_item.DoesNotExist:
+            meal_item.objects.create(item_name=sent_item)
+            item = meal_item.objects.get(item_name=sent_item)
+        plan_list.objects.create(owner=request.user, plan_id=plan_id,
+                                 meal_id=meal_id, item=item, qty=item_qty)
+    return redirect('list-idx', plan_id=plan_id)
+
+
+@login_required
+def list_del(request, plan_id, meal_id, item_id):
+    plan_list.objects.filter(owner=request.user,
+                             plan_id=plan_id,
+                             meal_id=meal_id,
+                             item_id=item_id).delete()
+    return redirect('list-idx', plan_id=plan_id)
+
+
+@login_required
+def shp_got(request, plan_id, meal_id, item_id):
+    item = plan_list.objects.get(owner=request.user,
+                                 plan_id=plan_id,
+                                 meal_id=meal_id,
+                                 item_id=item_id)
+    if item.got:
+        item.got = False
+        item.save()
+    else:
+        item.got = True
+        item.save()
+    list = plan_list.objects.filter(owner=request.user, plan_id=plan_id)
+    context = {'list': list}
+    return render(request, 'cooks/listshop.html', context=context)

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from meals.models import mstr_recipe, meal_time_choices
+from meals.models import mstr_recipe, meal_item
 
 
 dow = [
@@ -30,15 +30,21 @@ class plan_meal(models.Model):
                              related_name='meals_on_plan')
     date_added = models.DateTimeField(auto_now=True)
     review = models.SmallIntegerField(default=0)
-    #meal_day = models.CharField('Day of Week for Meal',
-    #                            max_length=2,
-    #                            choices=dow)
-    #meal_time = models.CharField('Meal Time',
-    #                             max_length=2,
-    #                             choices=meal_time_choices)
 
     def __str__(self):
         return self.meal.title
 
     class Meta:
         unique_together = ['meal', 'plan']
+
+
+class plan_list(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    plan = models.ForeignKey(plan, on_delete=models.CASCADE)
+    meal = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
+    item = models.ForeignKey(meal_item, on_delete=models.CASCADE)
+    qty = models.PositiveSmallIntegerField(default=1)
+    got = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['plan', 'meal', 'item']

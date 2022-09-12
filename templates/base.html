@@ -74,11 +74,51 @@
             margin: 6px 2px 6px 2px;
         }
 
+        .recCard {
+            width: 250px;
+            border: 1px solid #000;
+            border-radius 5px 5px;
+            background-color: #fffffe;
+            margin: 10px 0px 10px 0px;
+            padding: 30px 10px 0px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+
+        th{
+            font-size: 20px; 
+            font-family: 'Zilla Slab', serif;
+            color: #16a32e;
+        }
+
+        td{
+            text-align: center;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+        }
+
+        .leftTd{
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .rightTd{
+            text-align: left;
+        }
+
+        .recCard a {
+            font-size: 20px; 
+            font-family: 'Zilla Slab', serif;
+            color: #16a32e;
+            text-decoration: none;
+        }
+        
         {% block css_style %}
         {% endblock css_style %}
     </style>
 
 </head>
+
 <body>
     {% block navbar %}
     <div class="navbar">
