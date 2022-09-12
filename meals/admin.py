@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import meal_item
+
+
+class meal_itemAdmin(admin.ModelAdmin):
+    class Meta:
+        model = meal_item
+
+admin.site.register(meal_item, meal_itemAdmin)

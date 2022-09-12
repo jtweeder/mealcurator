@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_content %}
+
+<h2>Shopping List:</h2>
+<div class="list">
+    {% regroup list by meal as meal_list %}
+
+    {% for meal, items in meal_list %}
+    <table>
+      <th colspan="3">{{ meal }}</th>
+      {% for item in items %}
+      <tr>
+        {% if item.item_id != 1 %}
+        <td><a href="{% url 'chg-list-item' item.plan_id meal.meal_id item.item_id %}"> 
+          {% if item.got %}
+          <img src="{% static 'images\got-checkbx.svg' %}" alt="Completed Check Box" height="18"></a></td>
+          {% else %}
+          <img src="{% static 'images\notgot-checkbx.svg' %}" alt="Empty Check Box"  height="18"></a></td>
+          {% endif %}
+        <td>{{ item.qty }}</td>
+        <td>{{ item.item }}</td>
+        {% endif %}
+      {% endfor %}
+    </table>
+    {% endfor %}
+</div>
+
+{% endblock %}

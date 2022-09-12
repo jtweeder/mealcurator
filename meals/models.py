@@ -1,5 +1,5 @@
 from django.db import models
-import uuid
+
 
 meal_time_choices = [
         ('bk', 'Breakfast'),
@@ -85,6 +85,13 @@ class raw_recipe(models.Model):
         ]
 
 
+class meal_item(models.Model):
+    item_name = models.CharField('Item Name', max_length=255)
+
+    def __str__(self):
+        return self.item_name
+
+
 class mstr_recipe(models.Model):
     meal_id = models.UUIDField(primary_key=True,
                                editable=False)
@@ -120,10 +127,19 @@ class mstr_recipe(models.Model):
         return self.title
 
 
+class mstr_recipe_list(models.Model):
+    meal = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
+    item = models.ForeignKey(meal_item, on_delete=models.CASCADE)
+    qty = models.PositiveBigIntegerField('Quantity', default=1)
+
+    class Meta:
+        unique_together = ['meal', 'item']
+
+
 class recipe_sims(models.Model):
     sim = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
     compare = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE,
-                                   related_name='compare_meal')
+                                related_name='compare_meal')
     score = models.DecimalField('Simularity Score', 'sim_score', 10, 10)
     affirmed_votes = models.PositiveIntegerField('Agreement Votes', 'agree',
                                                  default=0)

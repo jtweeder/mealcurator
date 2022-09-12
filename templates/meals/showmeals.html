@@ -13,44 +13,7 @@
 }
 
 
-.recCard {
-    width: 250px;
-    border: 1px solid #000;
-    border-radius 5px 5px;
-    background-color: #fffffe;
-    margin: 10px 0px 10px 0px;
-    padding: 30px 10px 0px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
 
-th{
-    font-size: 20px; 
-    font-family: 'Zilla Slab', serif;
-    color: #16a32e;
-}
-
-td{
-    text-align: center;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-weight: 300;
-    font-size: 14px;
-}
-
-.leftTd{
-    text-align: right;
-    font-weight: bold;
-}
-
-.rightTd{
-    text-align: left;
-}
-
-.recCard a {
-    font-size: 20px; 
-    font-family: 'Zilla Slab', serif;
-    color: #16a32e;
-    text-decoration: none;
-}
 
 {% endblock css_style %}
 
@@ -59,6 +22,8 @@ td{
 {% if plan_view %}
 <h1>Recipes in: {{ mp.name }}</h1>
 <h3><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h3>
+<h3><a href="{% url 'mod-list' mp.id %}">Make a List</a></h3>
+<h3><a href="{% url 'shop-list' mp.id %}">View List Mode</a></h3>
 {% elif add_to_plan_view %}
 <h1>Browsing Recipes for: {{ mp.name }}</h1> 
 {% else %}

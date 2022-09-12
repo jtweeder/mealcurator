@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block navbar %} {% endblock %}
+{% block page_content %}
+
+<h2>Make a shopping List:</h2>
+<div class="list">
+    {% regroup list by meal as meal_list %}
+
+    {% for meal, items in meal_list %}
+    <table>
+      <th colspan="3">{{ meal }}</th>
+      {% for item in items %}
+      <tr>
+        {% if item.item_id != 1 %}
+        <td>{{ item.qty }}</td>
+        <td>{{ item.item }}</td>
+        <td><a href="{% url 'del-list-item' item.plan_id meal.meal_id item.item_id %}"> <img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove {{ item.item }} from list" height="18"></a></td>
+      </tr>
+        {% elif item.item_id == 1 %}
+      <tr><form action="{% url 'add-list-item' item.plan_id meal.meal_id %}", method="post">{% csrf_token %}
+        <td><label>Qty: </label>
+           <input type='number' style='width: 30px;' name ='item-qty' value="1" min="1" max="10"> </td>
+        <td><label>Item: </label>
+            <input type='text' style='width: 200px;' name='new-item'></td>
+            <td><button type="submit" value="Add"><img src="{% static 'images/file-plus.svg' %}" alt="Trash Can" title="Add item to list" height="14"></button></td></tr></form>
+        {% endif %}
+      {% endfor %}
+    </table>
+    {% endfor %}
+</div>
+
+{% endblock %}
+{% block botnavbar %}{% endblock %}
