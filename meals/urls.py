@@ -8,4 +8,5 @@ urlpatterns = [
     path('browse', views.show_recipe, name='view-recipes'),
     path('howto', views.howto, name='howto'),
     path('about', views.about, name='about'),
+    path('changelog', views.change_log', name='change_log'),
 ]

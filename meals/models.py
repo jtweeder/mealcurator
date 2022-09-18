@@ -75,6 +75,7 @@ class mstr_recipe(models.Model):
                                           default=0)
     downvotes = models.PositiveIntegerField('Would Not Make Again',
                                             name='downvote', default=0)
+    dummy = models.BooleanField(default=False)
     # TODO: Make this into another model vs tagging along here
     words = models.JSONField('Found Words', name='found_words', default=None)
 
@@ -103,3 +104,14 @@ class recipe_sims(models.Model):
                                                  default=0)
     disagree_votes = models.PositiveIntegerField('Disagreement Votes',
                                                  'disagree', default=0)
+
+class change_log(models.Model):
+    version = models.CharField('Version', max_length='256', primary_key=True)
+    implemented = models.DateField()
+
+class changes(models.Model):
+    version = models.ForeignKey(change_log, on_delete=models.CASCADE)
+    change = models.CharField('Change Type', max_length='2',
+                              choices=choices.change)
+    change_desc = models.CharField('Change Description', max_length='256')
+    entry_date = models.DateField(auto_now_add=True)

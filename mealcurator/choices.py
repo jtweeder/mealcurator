@@ -1,4 +1,12 @@
 
+change = [
+    ('ad', 'Added'),
+    ('ch', 'Changed'),
+    ('de', 'Deprecated'),
+    ('re', 'Removed'),
+    ('fx', 'Fixed'),
+    ('se', 'Security'),
+]
 
 meal_time_choices = [
         ('bk', 'Breakfast'),

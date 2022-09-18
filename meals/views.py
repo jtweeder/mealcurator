@@ -1,20 +1,22 @@
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render
-from .models import raw_recipe, mstr_recipe
+from .models import raw_recipe, mstr_recipe, changes
 
 
 def index(request):
     return render(request, 'font_style.html', context=None)
 
-
 def howto(request):
     return render(request, 'howto.html', context=None)
-
 
 def about(request):
     return render(request, 'about.html', context=None)
 
+def change_log(request):
+    change_list = changes.objects.all()
+    context = {'changes': change_list}
+    return render(request, 'change.html', context=context)
 
 class get_recipe(CreateView):
     login_required = True
