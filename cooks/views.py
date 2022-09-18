@@ -3,10 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
-from django.db.models import F
+from django.db.models import F, Sum, Max, Case, When, Value
 from django.views.generic.edit import CreateView
 from cooks.models import plan, plan_meal, plan_list
-from meals.models import meal_item, mstr_recipe, meal_time_choices, dish_type_choices, cooking_method_choices, cook_time_choices, protein_choices
+from meals.models import meal_item, mstr_recipe
+from mealcurator import choices
 from .forms import create_cook_form
 
 
@@ -120,14 +121,19 @@ def add_to_plan(request, plan_id):
                 search[f'{value}__exact'] = val
         except:
             continue
+
     if len(search) > 0:
         meals = meals.filter(**search)
-    context = {'meals': meals, 'add_to_plan_view': True, 'mp': meal_plan,
-               'meal_time': meal_time_choices, 'dish_type': dish_type_choices,
-               'cooking_method': cooking_method_choices,
-               'cooking_time': cook_time_choices,
-               'protein_choices': protein_choices,
-               'request': request}
+    context = {'meals': meals,
+               'add_to_plan_view': True,
+               'mp': meal_plan,
+               'meal_time': choices.meal_time_choices,
+               'dish_type': choices.dish_type_choices,
+               'cooking_method': choices.cooking_method_choices,
+               'cooking_time': choices.cook_time_choices,
+               'protein_choices': choices.protein_choices,
+               'request': request,
+               }
     template = 'meals/showmeals.html'
     return render(request, template, context)
 
@@ -160,12 +166,27 @@ def del_plan(request, plan_id):
 @xframe_options_sameorigin
 @login_required
 def list_idx(request, plan_id):
-    list = plan_list.objects.filter(owner=request.user, plan_id=plan_id)
-    context = {'list': list}
-    if 'shp_list' in request.path_info:
-        template = 'cooks/listshop.html'
-    else:
+    if 'iframe' in request.headers.get('Sec-Fetch-Dest'):
+        # list = plan_list.objects.filter(owner=request.user, plan_id=plan_id).defer('meal__found_words')
+        list = (plan_list.objects.values('item_id', 'item__item_name',
+                                         'uom', 'qty', 'meal__meal_id', 'meal__title',
+                                         'plan_id')
+                                 .filter(owner=request.user, plan_id=plan_id))
         template = 'cooks/listedit.html'
+    else:
+        template = 'cooks/listshop.html'
+        list = (plan_list.objects.values('item_id', 'item__item_name', 'uom',
+                                         'item__item_location', 'plan_id')
+                         .filter(owner=request.user, plan_id=plan_id)
+                         .annotate(total_qty=Sum('qty'),
+                                   got=Max(Case(
+                                           When(got=True, then=1),
+                                           default=Value(0))
+                                           )
+                                   )
+                         .order_by('item__item_location', 'item', 'uom')
+                )
+    context = {'list': list, 'uoms': choices.uoms}
     return render(request, template, context)
 
 
@@ -173,14 +194,32 @@ def list_idx(request, plan_id):
 def list_add(request, plan_id, meal_id):
     if request.method == 'POST':
         sent_item = request.POST.get('new-item').lower()
-        item_qty = request.POST.get('item-qty')
+        item_qty = int(request.POST.get('item-qty'))
+        item_dec = request.POST.get('item-qty-dec')
+        item_uom = request.POST.get('item-uom')
+
+        # Dict to look up fraction to decimal
+        qty_lu = {'1/8': 0.125,
+                  '1/4': 0.25,
+                  '1/3': 0.334,
+                  '1/2': 0.5,
+                  '2/3': 0.667,
+                  '3/4': 0.75,
+                  }
+        if item_dec == '%':
+            item_dec = 0
+        else:
+            item_dec = qty_lu[item_dec]
+        item_qty += item_dec
+
         try:
             item = meal_item.objects.get(item_name=sent_item)
         except meal_item.DoesNotExist:
             meal_item.objects.create(item_name=sent_item)
             item = meal_item.objects.get(item_name=sent_item)
         plan_list.objects.create(owner=request.user, plan_id=plan_id,
-                                 meal_id=meal_id, item=item, qty=item_qty)
+                                 meal_id=meal_id, item=item, qty=item_qty,
+                                 uom=item_uom)
     return redirect('list-idx', plan_id=plan_id)
 
 
@@ -194,17 +233,13 @@ def list_del(request, plan_id, meal_id, item_id):
 
 
 @login_required
-def shp_got(request, plan_id, meal_id, item_id):
-    item = plan_list.objects.get(owner=request.user,
-                                 plan_id=plan_id,
-                                 meal_id=meal_id,
-                                 item_id=item_id)
-    if item.got:
-        item.got = False
-        item.save()
-    else:
-        item.got = True
-        item.save()
-    list = plan_list.objects.filter(owner=request.user, plan_id=plan_id)
-    context = {'list': list}
-    return render(request, 'cooks/listshop.html', context=context)
+def shp_got(request, plan_id, item_id, direction):
+    new_val = True
+    if direction == 0:
+        new_val = False
+    plan_list.objects.filter(owner=request.user,
+                             plan_id=plan_id,
+                             item_id=item_id).update(got=new_val)
+
+    return redirect('list-idx', plan_id)
+
