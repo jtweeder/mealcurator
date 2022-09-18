@@ -15,6 +15,8 @@ urlpatterns = [
     path('shp_list/<int:plan_id>/<int:item_id>/<int:direction>',
          cook_views.shp_got, name='chg-list-item'),
     path('idx_list/<int:plan_id>', cook_views.list_idx, name='list-idx'),
+    path('idx_list/<int:plan_id>/<int:shp>', cook_views.list_idx, 
+         name='list-idx-shp'),
     path('add_list/<int:plan_id>/<str:meal_id>',
          cook_views.list_add, name='add-list-item'),
     path('del_list/<int:plan_id>/<str:meal_id>/<int:item_id>',
