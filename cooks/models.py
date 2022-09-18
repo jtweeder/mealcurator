@@ -1,17 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from meals.models import mstr_recipe, meal_item
-
-
-dow = [
-        ('su', 'Sunday'),
-        ('mo', 'Monday'),
-        ('tu', 'Tuesday'),
-        ('we', 'Wednesday'),
-        ('th', 'Thursday'),
-        ('fr', 'Friday'),
-        ('sa', 'Saturday'),
-    ]
+from mealcurator import choices
 
 
 class plan(models.Model):
@@ -43,7 +33,9 @@ class plan_list(models.Model):
     plan = models.ForeignKey(plan, on_delete=models.CASCADE)
     meal = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE)
     item = models.ForeignKey(meal_item, on_delete=models.CASCADE)
-    qty = models.PositiveSmallIntegerField(default=1)
+    qty = models.DecimalField(default=1, max_digits=8, decimal_places=3)
+    uom = models.CharField('Unit of Measure', max_length=2,
+                           choices=choices.uoms, default='qt')
     got = models.BooleanField(default=False)
 
     class Meta:

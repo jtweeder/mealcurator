@@ -12,7 +12,7 @@ urlpatterns = [
          cook_views.view_plan, name='view-plan-vote'),
     path('mod_list/<int:plan_id>', cook_views.view_plan, name='mod-list'),
     path('shp_list/<int:plan_id>', cook_views.list_idx, name='shop-list'),
-    path('shp_list/<int:plan_id>/<str:meal_id>/<int:item_id>',
+    path('shp_list/<int:plan_id>/<int:item_id>/<int:direction>',
          cook_views.shp_got, name='chg-list-item'),
     path('idx_list/<int:plan_id>', cook_views.list_idx, name='list-idx'),
     path('add_list/<int:plan_id>/<str:meal_id>',

@@ -1,27 +1,58 @@
 {% extends "base.html" %}
 {% load static %}
+{% load cooks_extras %}
+
+
+{% block css_style %}
+.list{
+  text-align: center;
+}
+{% endblock css_style %}
+
 {% block navbar %} {% endblock %}
 {% block page_content %}
 
 <h2>Make a shopping List:</h2>
 <div class="list">
-    {% regroup list by meal as meal_list %}
+    {% regroup list by meal__title as meal_list %}
 
     {% for meal, items in meal_list %}
+    <h3>{{ meal }}</h3>
     <table>
-      <th colspan="3">{{ meal }}</th>
+      <th colspan="2">Quantity</th>
+      <th>Unit</th>
+      <th>Item</th>
+      
       {% for item in items %}
       <tr>
         {% if item.item_id != 1 %}
-        <td>{{ item.qty }}</td>
-        <td>{{ item.item }}</td>
-        <td><a href="{% url 'del-list-item' item.plan_id meal.meal_id item.item_id %}"> <img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove {{ item.item }} from list" height="18"></a></td>
+        <td colspan="2"> {{ item.qty | dec_cleaner }}</td>
+        
+        <td>{{ item.uom | choice_finder:"uoms" }}</td>
+        <td>{{ item.item__item_name | title }}</td>
+        <td><a href="{% url 'del-list-item' plan_id=item.plan_id meal_id=item.meal__meal_id item_id=item.item_id %}"> <img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove {{ item.item__item_name }} from list" height="18"></a></td>
       </tr>
         {% elif item.item_id == 1 %}
-      <tr><form action="{% url 'add-list-item' item.plan_id meal.meal_id %}", method="post">{% csrf_token %}
-        <td><label>Qty: </label>
-           <input type='number' style='width: 30px;' name ='item-qty' value="1" min="1" max="10"> </td>
-        <td><label>Item: </label>
+      <tr><form action="{% url 'add-list-item' plan_id=item.plan_id meal_id=item.meal__meal_id %}", method="post">{% csrf_token %}
+        <td> 
+           <input type='number' style='width: 40px;' name ='item-qty' value="0" min="0" max="1000"> </td>
+           <td>
+            <select style='width: 45px;' name ='item-qty-dec'>
+              <option value="%"> --- </option>
+              <option value="1/8"> 1/8 </option>
+              <option value="1/4"> 1/4 </option>
+              <option value="1/3"> 1/3 </option>
+              <option value="1/2"> 1/2 </option>
+              <option value="2/3"> 2/3 </option>
+              <option value="3/4"> 3/4 </option>
+            </td>
+        <td>
+          <select style='width: 70px' name='item-uom'>
+          {% for key, value in uoms %}
+            <option value="{{ key }}">{{ value }}</option>
+          {% endfor %}
+          </select></td>
+        <td>
             <input type='text' style='width: 200px;' name='new-item'></td>
             <td><button type="submit" value="Add"><img src="{% static 'images/file-plus.svg' %}" alt="Trash Can" title="Add item to list" height="14"></button></td></tr></form>
         {% endif %}
