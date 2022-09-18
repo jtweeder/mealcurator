@@ -165,8 +165,10 @@ def del_plan(request, plan_id):
 
 @xframe_options_sameorigin
 @login_required
-def list_idx(request, plan_id):
-    if 'iframe' in request.headers.get('Sec-Fetch-Dest'):
+def list_idx(request, plan_id, shp=0):
+    if 'shp_list' in request.path_info:
+        shp = 1
+    if shp == 0:
         # list = plan_list.objects.filter(owner=request.user, plan_id=plan_id).defer('meal__found_words')
         list = (plan_list.objects.values('item_id', 'item__item_name',
                                          'uom', 'qty', 'meal__meal_id', 'meal__title',
@@ -241,5 +243,4 @@ def shp_got(request, plan_id, item_id, direction):
                              plan_id=plan_id,
                              item_id=item_id).update(got=new_val)
 
-    return redirect('list-idx', plan_id)
-
+    return redirect('list-idx-shp', plan_id, 1)
