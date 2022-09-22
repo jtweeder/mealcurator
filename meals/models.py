@@ -41,6 +41,7 @@ class meal_item(models.Model):
                                      max_length=2,
                                      choices=choices.sections,
                                      default='un')
+    poss_duplicate = models.BooleanField('Possible Duplicate', default=False)
 
     def __str__(self):
         return self.item_name
@@ -105,13 +106,15 @@ class recipe_sims(models.Model):
     disagree_votes = models.PositiveIntegerField('Disagreement Votes',
                                                  'disagree', default=0)
 
+
 class change_log(models.Model):
-    version = models.CharField('Version', max_length='256', primary_key=True)
+    version = models.CharField('Version', max_length=256, primary_key=True)
     implemented = models.DateField()
+
 
 class changes(models.Model):
     version = models.ForeignKey(change_log, on_delete=models.CASCADE)
-    change = models.CharField('Change Type', max_length='2',
+    change = models.CharField('Change Type', max_length=2,
                               choices=choices.change)
-    change_desc = models.CharField('Change Description', max_length='256')
+    change_desc = models.CharField('Change Description', max_length=256)
     entry_date = models.DateField(auto_now_add=True)

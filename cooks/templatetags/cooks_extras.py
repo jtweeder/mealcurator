@@ -34,6 +34,7 @@ def dec_cleaner(qty):
 def choice_finder(key, list):
     list = {'sections': choices.sections,
             'uoms': choices.uoms,
+            'change': choices.change,
             }[list]
     choice_dict = {a: b for a, b in list}
     return(choice_dict[key])

@@ -7,16 +7,22 @@ from .models import raw_recipe, mstr_recipe, changes
 def index(request):
     return render(request, 'font_style.html', context=None)
 
+
 def howto(request):
     return render(request, 'howto.html', context=None)
+
 
 def about(request):
     return render(request, 'about.html', context=None)
 
+
 def change_log(request):
-    change_list = changes.objects.all()
+    change_list = (changes.objects
+                          .values('version', 'change', 'entry_date', 'change_desc', 'version__implemented')
+                          .order_by('-version__implemented', 'version', 'change',  'entry_date'))
     context = {'changes': change_list}
-    return render(request, 'change.html', context=context)
+    return render(request, 'changelog.html', context=context)
+
 
 class get_recipe(CreateView):
     login_required = True

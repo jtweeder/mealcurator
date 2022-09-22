@@ -83,6 +83,9 @@ sections = [
     ('un', 'Unknown'),
     ('pr', 'Produce'),
     ('dr', 'Dry Goods'),
+    ('co', 'Condiments/Oils'),
+    ('pi', 'Pickled/Olives'),
+    ('ge', 'General Grocery'),
     ('cv', 'Canned Veg'),
     ('cm', 'Canned Meat'),
     ('sp', 'Soups'),
@@ -92,4 +95,5 @@ sections = [
     ('dl', 'Deli/Cheese'),
     ('da', 'Dairy'),
     ('mt', 'Meat/Seafood'),
+    ('ho', 'Household Item')
 ]
