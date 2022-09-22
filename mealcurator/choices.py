@@ -88,7 +88,7 @@ sections = [
     ('ge', 'General Grocery'),
     ('cv', 'Canned Veg'),
     ('cm', 'Canned Meat'),
-    ('sp', 'Soups'),
+    ('so', 'Soups'),
     ('in', 'International'),
     ('fr', 'Frozen'),
     ('sp', 'Spices'),
