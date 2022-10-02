@@ -36,6 +36,7 @@
 <div id="content">
     <div class="mealTbl">
         {% for meal in meals %}
+        {% if not meal.meal__dummy %}
         <div class="recCard">
             <table>
                 <th colspan=2><a href="{{ meal.meal__rec_url }}", target="_blank">{{ meal.meal__title }}</a></th>
@@ -98,6 +99,7 @@
                 </td></tr>
             </table>        
         </div>
+        {% endif %}
         {% endfor %}
     </div>
     <div class="list">
