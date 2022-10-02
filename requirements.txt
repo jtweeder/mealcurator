@@ -1,6 +1,6 @@
 Django==4.0.1
 psycopg2==2.9.3
 django-debug-toolbar
-requests
+requests==2.27.1
 beautifulsoup4
 nltk
