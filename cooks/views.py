@@ -176,9 +176,9 @@ def list_idx(request, plan_id, shp=0):
     if 'shp_list' in request.path_info:
         shp = 1
     if shp == 0:
-        # list = plan_list.objects.filter(owner=request.user, plan_id=plan_id).defer('meal__found_words')
         list = (plan_list.objects.values('item_id', 'item__item_name',
-                                         'uom', 'qty', 'meal__meal_id', 'meal__title',
+                                         'uom', 'qty', 'meal__meal_id',
+                                         'meal__title',
                                          'plan_id')
                                  .filter(owner=request.user, plan_id=plan_id))
         template = 'cooks/listedit.html'
@@ -195,7 +195,8 @@ def list_idx(request, plan_id, shp=0):
                                    )
                          .order_by('item__item_location', 'item', 'uom')
                 )
-    context = {'list': list, 'uoms': choices.uoms}
+    items = meal_item.objects.all()
+    context = {'list': list, 'uoms': choices.uoms, 'items_search': items}
     return render(request, template, context)
 
 

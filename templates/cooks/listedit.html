@@ -53,7 +53,16 @@
           {% endfor %}
           </select></td>
         <td>
-            <input type='text' style='width: 200px;' name='new-item'></td>
+            <input list="new_items" style='width: 200px;' name='new-item'>
+            <datalist id="new_items">
+              {% for poss_item in items_search %}
+              {% if poss_item.id != 1 %}
+                <option value="{{ poss_item | title }}"></option>
+              {% endif %}
+              {% endfor %}
+            </datalist>
+          
+          </td>
             <td><button type="submit" value="Add"><img src="{% static 'images/file-plus.svg' %}" alt="Trash Can" title="Add item to list" height="14"></button></td></tr></form>
         {% endif %}
       {% endfor %}
