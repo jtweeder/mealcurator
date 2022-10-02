@@ -1,6 +1,8 @@
 Django==4.0.1
 psycopg2==2.9.3
-django-debug-toolbar
+python-dotenv==0.21.0
+django-debug-toolbar==3.6.0
 requests==2.27.1
-beautifulsoup4
-nltk
+beautifulsoup4==4.10.0
+nltk==3.6.7
+tst
