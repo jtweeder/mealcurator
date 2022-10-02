@@ -54,6 +54,11 @@ class make_plan(CreateView):
         cook = form.save(commit=False)
         cook.owner = User.objects.get(id=self.request.user.id)
         cook.save()
+        dummy_plan = plan_meal.objects.create(
+                        meal_id=mstr_recipe.objects.get(dummy=True).meal_id,
+                        plan_id=cook.id)
+        plan_list.objects.create(owner=cook.owner, plan_id=cook.id,
+                                 meal_id=dummy_plan.meal_id, item_id=1)
         return redirect('welcome')
 
 
@@ -76,7 +81,9 @@ def view_plan(request, plan_id, review=None, meal_id=None):
                                                   'meal__dish_type',
                                                   'meal__cooking_method',
                                                   'meal__protein_type',
-                                                  'meal__rec_url', 'review',)
+                                                  'meal__rec_url',
+                                                  'meal__dummy',
+                                                  'review',)
     if review:
         cur_review = plan_meal.objects.get(meal_id=meal_id,
                                            plan_id=plan_id).review

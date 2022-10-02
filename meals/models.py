@@ -76,7 +76,7 @@ class mstr_recipe(models.Model):
                                           default=0)
     downvotes = models.PositiveIntegerField('Would Not Make Again',
                                             name='downvote', default=0)
-    dummy = models.BooleanField(default=False)
+    dummy = models.BooleanField(default=False, null=True)
     # TODO: Make this into another model vs tagging along here
     words = models.JSONField('Found Words', name='found_words', default=None)
 

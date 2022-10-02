@@ -103,6 +103,7 @@
 
 <div class="resultTbl">
     {% for meal in meals %}
+    {% if not meal.meal__dummy %}
         <div class=recCard>
             <table>
                 <th colspan=2><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank">{% if plan_view %}{{ meal.meal__title }}{% else %}{{ meal.title }}{% endif %}</a></th>
@@ -209,6 +210,7 @@
             <br>
             <br>
         </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% if plan_view %}
