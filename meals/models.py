@@ -1,3 +1,10 @@
+import requests
+from bs4 import BeautifulSoup
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import uuid
+
 from django.db import models
 from mealcurator import choices
 
@@ -28,6 +35,44 @@ class raw_recipe(models.Model):
 
     def __str__(self):
         return self.rec_url
+
+    def pull_mstr(self):
+        try:
+            self.soup = self._make_soup()
+            title = self.soup.title.string
+            learned_words = self._make_tkns()
+
+            mstr_recipe.objects.create(
+                meal_id=uuid.uuid1(),
+                title=title,
+                rec_url=self.rec_url,
+                vegan=self.vegan,
+                vegetarian=self.vegetarian,
+                meal_time=self.meal_time,
+                dish_type=self.dish_type,
+                cooking_method=self.cooking_method,
+                cooking_time=self.cooking_time,
+                protein_type=self.protein_type,
+                found_words=learned_words,
+            )
+            return True
+
+        except ValueError:
+            return False
+
+    def _make_soup(self):
+        page = requests.get(self.rec_url)
+        if not page.ok:
+            raise ValueError(f'URL did not resolve to OK: {page.status_code}')
+        return BeautifulSoup(page.content, 'html.parser')
+
+    def _make_tkns(self):
+        # Returns JSON represtnation of lemented word list
+        raw_tkns = [w for w in word_tokenize(self.soup.get_text().lower())
+                    if w.isalpha() and w not in stopwords.words('english')]
+        lemmatizer = WordNetLemmatizer()
+        lemented = [lemmatizer.lemmatize(w) for w in raw_tkns]
+        return lemented
 
     class Meta:
         indexes = [
