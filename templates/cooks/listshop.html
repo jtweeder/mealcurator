@@ -45,13 +45,13 @@
       <th colspan=2 class="smallth">Quantity</th>
       <th class="smallth">Item</th>
       {% for item in items %}
-      <tr id="{{ forloop.counter }}">
+      <tr id="{{ forloop.parentloop.counter }}{{ forloop.counter }}">
         {% if item.item_id != 1 %}
           {% if item.got > 0 %}
-          <td class="rhtd"><a href="{% url 'chg-list-item' item.plan_id item.item_id 0 %}#{{ forloop.counter }}"> 
+          <td class="rhtd"><a href="{% url 'chg-list-item' item.plan_id item.item_id 0 %}#{{ forloop.parentloop.counter }}{{ forloop.counter }}"> 
           <img src="{% static 'images\got-checkbx.svg' %}" alt="Completed Check Box" height="18"></a></td>
           {% else %}
-          <td class="rhtd"><a href="{% url 'chg-list-item' item.plan_id item.item_id 1 %}#{{ forloop.counter }}"> 
+          <td class="rhtd"><a href="{% url 'chg-list-item' item.plan_id item.item_id 1 %}#{{ forloop.parentloop.counter }}{{ forloop.counter }}"> 
           <img src="{% static 'images\notgot-checkbx.svg' %}" alt="Empty Check Box"  height="18"></a></td>
           {% endif %}
         <td class="rhtd">{{ item.total_qty | dec_cleaner }}</td>
