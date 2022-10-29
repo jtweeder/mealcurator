@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'meals',
     'cooks',
     'stewpot',
+    'mailer',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +138,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'welcome'
 LOGOUT_REDIRECT_URL = 'login'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "dev_static")]
+
+# Email settings
+# https://github.com/pinax/django-mailer/blob/master/docs/usage.rst#usage
+EMAIL_BACKEND = 'mailer.backend.DbBackend'
+EMAIL_HOST = os.getenv('em_smtp')
+EMAIL_HOST_USER = os.getenv('em_user')
+EMAIL_HOST_PASSWORD = os.getenv('em_pw')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
