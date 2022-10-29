@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.db.models import F, Sum, Max, Case, When, Value
 from django.views.generic.edit import CreateView
 from cooks.models import plan, plan_meal, plan_list
-from meals.models import meal_item, mstr_recipe
+from meals.models import meal_item, mstr_recipe, mstr_recipe_list
 from mealcurator import choices
 from .forms import create_cook_form
 
@@ -149,9 +149,25 @@ def add_to_plan(request, plan_id):
 def add_meal_to_plan(request, plan_id, meal_id):
     mstr_recipe.objects.filter(meal_id=meal_id).update(times_selected=F('times_selected') + 1)
     plan_meal.objects.create(meal_id=meal_id, plan_id=plan_id)
-    lists = plan_list.objects.filter(owner=request.user, plan_id=plan_id,
-                                     meal_id=meal_id)
-    if len(lists) < 1:
+    mstr_list = mstr_recipe_list.objects.filter(meal_id=meal_id)
+    if len(mstr_list) > 0:
+        objs = [plan_list(owner=request.user,
+                          plan_id=plan_id,
+                          meal_id=meal_id,
+                          item_id=1)
+                ]
+        for itm in mstr_list:
+            objs.append(plan_list(
+                            owner=request.user,
+                            plan_id=plan_id,
+                            meal_id=meal_id,
+                            item=itm.item,
+                            qty=itm.qty,
+                            uom=itm.uom,
+                                )
+                        )
+        out = plan_list.objects.bulk_create(objs)
+    else:
         plan_list.objects.create(owner=request.user, plan_id=plan_id,
                                  meal_id=meal_id, item_id=1)
     return redirect('add_to_plan', plan_id=plan_id)
@@ -229,7 +245,7 @@ def list_add(request, plan_id, meal_id):
             item = meal_item.objects.get(item_name=sent_item)
         plan_list.objects.create(owner=request.user, plan_id=plan_id,
                                  meal_id=meal_id, item=item, qty=item_qty,
-                                 uom=item_uom)
+                                 uom=item_uom) 
     return redirect('list-idx', plan_id=plan_id)
 
 
