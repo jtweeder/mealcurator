@@ -245,7 +245,7 @@ def list_add(request, plan_id, meal_id):
             item = meal_item.objects.get(item_name=sent_item)
         plan_list.objects.create(owner=request.user, plan_id=plan_id,
                                  meal_id=meal_id, item=item, qty=item_qty,
-                                 uom=item_uom) 
+                                 uom=item_uom)
     return redirect('list-idx', plan_id=plan_id)
 
 
