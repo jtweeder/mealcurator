@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
-from .models import raw_recipe, mstr_recipe, changes
+from .models import raw_recipe, mstr_recipe, changes, mstr_recipe_list
 
 
 def index(request):
@@ -63,3 +63,22 @@ def show_recipe(request):
     context = {'meals': meals}
     template = 'meals/showmeals.html'
     return render(request, template, context)
+
+def mstr_lst(request):
+    meals = (mstr_recipe_list.objects.values('meal_id', 'meal__title')
+                                     .annotate(num_items=Count('item_id'))
+            )
+    context = {'meals': meals}
+    template = 'meals/mstr_lst.html'
+    return render(request, template, context)
+
+def mstr_lst_idx(request, meal_id):
+    items = (mstr_recipe_list.objects.values('item_id')
+                                     .filter(meal_id=meal_id))
+    context = {'items': items}
+    template = 'meals/mstr_list_idx.html'
+
+    return
+
+def mstr_lst_add(request, meal_id, item_id):
+    if request.method == 'POST'    
