@@ -176,6 +176,8 @@ def add_meal_to_plan(request, plan_id, meal_id):
 @login_required
 def del_meal_from_plan(request, plan_id, meal_id):
     plan_meal.objects.filter(meal_id=meal_id, plan_id=plan_id).delete()
+    plan_list.objects.filter(owner=request.user, 
+                             plan_id=plan_id, meal_id=meal_id).delete()
     mstr_recipe.objects.filter(meal_id=meal_id).update(times_selected=F('times_selected') - 1)
     return redirect('view-plan', plan_id=plan_id)
 
