@@ -1,4 +1,4 @@
-from distutils.command.config import config
+
 import requests
 from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
