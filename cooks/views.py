@@ -138,8 +138,8 @@ def add_to_plan(request, plan_id):
     if len(search) > 0:
         meals = meals.filter(**search)
     if 'query' in locals():
-        meals = meals.annotate(#search='mstr_search__search_vector',
-                               rank=SearchRank('mstr_search__search_vector', query)).filter(mstr_search__search_vector=query).order_by('-rank')
+        meals = meals.annotate(rank=SearchRank('mstr_search__search_vector', 
+                               query)).filter(mstr_search__search_vector=query).order_by('-rank')
     
     context = {'meals': meals,
                'add_to_plan_view': True,
