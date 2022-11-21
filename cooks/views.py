@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.db.models import F, Sum, Max, Case, When, Value
 from django.views.generic.edit import CreateView
+from django.contrib.postgres.search import SearchQuery, SearchRank
 from cooks.models import plan, plan_meal, plan_list
 from meals.models import meal_item, mstr_recipe, mstr_recipe_list
 from mealcurator import choices
@@ -119,11 +120,16 @@ def add_to_plan(request, plan_id):
                                         'meal_id',
                                         flat=True)).defer('found_words')
     search = {}
-    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type', 'protein_type']:
+    for value in ['meal_time', 'cooking_time', 'cooking_method', 'dish_type', 'protein_type', 'q']:
         try:
             val = request.GET[value]
             if val == '%':
                 continue
+            elif value == 'q':
+                if val == '':
+                    continue
+                else:
+                    query = SearchQuery(val)
             else:
                 search[f'{value}__exact'] = val
         except:
@@ -131,6 +137,10 @@ def add_to_plan(request, plan_id):
 
     if len(search) > 0:
         meals = meals.filter(**search)
+    if 'query' in locals():
+        meals = meals.annotate(#search='mstr_search__search_vector',
+                               rank=SearchRank('mstr_search__search_vector', query)).filter(mstr_search__search_vector=query).order_by('-rank')
+    
     context = {'meals': meals,
                'add_to_plan_view': True,
                'mp': meal_plan,
