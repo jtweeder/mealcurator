@@ -1,3 +1,4 @@
+
 import requests
 from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
@@ -6,6 +7,8 @@ from nltk.stem import WordNetLemmatizer
 import uuid
 
 from django.db import models
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from mealcurator import choices
 
 
@@ -40,20 +43,23 @@ class raw_recipe(models.Model):
         try:
             self.soup = self._make_soup()
             title = self.soup.title.string
-            learned_words = self._make_tkns()
-
-            mstr_recipe.objects.create(
-                meal_id=uuid.uuid1(),
-                title=title,
-                rec_url=self.rec_url,
-                vegan=self.vegan,
-                vegetarian=self.vegetarian,
-                meal_time=self.meal_time,
-                dish_type=self.dish_type,
-                cooking_method=self.cooking_method,
-                cooking_time=self.cooking_time,
-                protein_type=self.protein_type,
-                found_words=learned_words,
+            learned_tkns, words = self._make_tkns()
+            mstr = mstr_recipe.objects.create(
+                    meal_id=uuid.uuid1(),
+                    title=title,
+                    rec_url=self.rec_url,
+                    vegan=self.vegan,
+                    vegetarian=self.vegetarian,
+                    meal_time=self.meal_time,
+                    dish_type=self.dish_type,
+                    cooking_method=self.cooking_method,
+                    cooking_time=self.cooking_time,
+                    protein_type=self.protein_type,
+                    found_words=learned_tkns,
+                   )
+            mstr_search.objects.create(
+                meal_id=mstr,
+                raw_words=words
             )
             return True
 
@@ -68,11 +74,12 @@ class raw_recipe(models.Model):
 
     def _make_tkns(self):
         # Returns JSON represtnation of lemented word list
-        raw_tkns = [w for w in word_tokenize(self.soup.get_text().lower())
-                    if w.isalpha() and w not in stopwords.words('english')]
+        words = [w for w in word_tokenize(self.soup.get_text().lower()) if w.isalpha()]
+        raw_tkns = [w for w in words
+                    if w not in stopwords.words('english')]
         lemmatizer = WordNetLemmatizer()
         lemented = [lemmatizer.lemmatize(w) for w in raw_tkns]
-        return lemented
+        return lemented, words
 
     class Meta:
         indexes = [
@@ -127,6 +134,16 @@ class mstr_recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class mstr_search(models.Model):
+    meal_id = models.OneToOneField(mstr_recipe, on_delete=models.CASCADE,
+                                   primary_key=True)
+    raw_words = models.TextField('Recipe Text')
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = [GinIndex(fields=['search_vector'])]
 
 
 class mstr_recipe_list(models.Model):
