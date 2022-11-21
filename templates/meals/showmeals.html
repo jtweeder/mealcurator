@@ -10,8 +10,14 @@
     flex-flow: row wrap;
     justify-content: space-evenly;
     align-content: space-around;
+    margin: auto;
 }
 
+.searchinput {
+    margin: auto;
+    text-align: center;
+
+}
 
 
 
@@ -33,7 +39,7 @@
 
 
 {% if add_to_plan_view %}
-<div>
+<div class="searchinput"> 
     <form action="{% url 'add_to_plan' mp.id %}">
     <select name="meal_time">
         {% if request.GET.meal_time and request.GET.meal_time != '%' %}
@@ -94,7 +100,9 @@
             {% endif %}
         {% endfor %}
     </Select>
-<input type="submit" value="Search">
+    <br><br>
+<input type="search" name="q" placeholder="Search by free-text..."/>
+<input type="submit" value="Search"/>
 </form>
 </div>
 {% endif %}
