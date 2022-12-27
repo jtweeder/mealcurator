@@ -77,6 +77,10 @@ uoms = [
     ('lb', 'Pounds'),
     ('ml', 'Milliliter'),
     ('ll', 'Liter'),
+    ('ea', 'Each'),
+    ('bu', 'Bunch'),
+    ('st', 'Stalks'),
+    ('cl', 'Cloves'),
 ]
 
 sections = [
