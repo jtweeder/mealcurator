@@ -13,7 +13,7 @@ def val_ret_lstp(values, key):
 
 
 @register.filter
-def dec_cleaner(qty):
+def dec_cleaner(qty, list=False):
     dec, num = modf(qty)
     dec = Fraction(round(dec, 3)).limit_denominator(8)
     num = int(num)
@@ -26,7 +26,9 @@ def dec_cleaner(qty):
     elif dec == 0:
         out = f'{str(num)}'
     else:
-        out = f'{str(num)} {str(dec)}'
+        out = f'{str(num)}-{str(dec)}'
+    if list:
+        out = out.split('-')
     return out
 
 

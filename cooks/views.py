@@ -206,7 +206,7 @@ def list_idx(request, plan_id, shp=0):
     if 'shp_list' in request.path_info:
         shp = 1
     if shp == 0:
-        list = (plan_list.objects.values('item_id', 'item__item_name',
+        list = (plan_list.objects.values('id', 'item_id', 'item__item_name',
                                          'uom', 'qty', 'meal__meal_id',
                                          'meal__title',
                                          'plan_id')
@@ -231,9 +231,8 @@ def list_idx(request, plan_id, shp=0):
 
 
 @login_required
-def list_add(request, plan_id, meal_id):
+def list_add(request, plan_id, meal_id=None, plan_itm_id=None):
     if request.method == 'POST':
-        sent_item = request.POST.get('new-item').lower()
         item_qty = int(request.POST.get('item-qty'))
         item_dec = request.POST.get('item-qty-dec')
         item_uom = request.POST.get('item-uom')
@@ -251,24 +250,26 @@ def list_add(request, plan_id, meal_id):
         else:
             item_dec = qty_lu[item_dec]
         item_qty += item_dec
-
-        try:
-            item = meal_item.objects.get(item_name=sent_item)
-        except meal_item.DoesNotExist:
-            meal_item.objects.create(item_name=sent_item)
-            item = meal_item.objects.get(item_name=sent_item)
-        plan_list.objects.create(owner=request.user, plan_id=plan_id,
-                                 meal_id=meal_id, item=item, qty=item_qty,
-                                 uom=item_uom)
+        if plan_itm_id:
+            (plan_list.objects.filter(id=plan_itm_id, owner=request.user)
+                              .update(qty=item_qty, uom=item_uom)
+             )
+        elif meal_id:
+            sent_item = request.POST.get('new-item').lower()
+            try:
+                item = meal_item.objects.get(item_name=sent_item)
+            except meal_item.DoesNotExist:
+                meal_item.objects.create(item_name=sent_item)
+                item = meal_item.objects.get(item_name=sent_item)
+            plan_list.objects.create(owner=request.user, plan_id=plan_id,
+                                     meal_id=meal_id, item=item, qty=item_qty,
+                                     uom=item_uom)
     return redirect('list-idx', plan_id=plan_id)
 
 
 @login_required
-def list_del(request, plan_id, meal_id, item_id):
-    plan_list.objects.filter(owner=request.user,
-                             plan_id=plan_id,
-                             meal_id=meal_id,
-                             item_id=item_id).delete()
+def list_del(request, plan_id, id):
+    plan_list.objects.filter(id=id, owner=request.user).delete()
     return redirect('list-idx', plan_id=plan_id)
 
 
