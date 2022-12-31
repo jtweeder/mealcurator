@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
 from django.db.models import Count
 from mealcurator import choices
+from mealcurator.helperfuncs import check_blank
 from .models import raw_recipe, mstr_recipe, changes, mstr_recipe_list, meal_item
 
 
@@ -109,7 +110,7 @@ def mstr_lst_idx(request, meal_id):
 def mstr_lst_add(request, meal_id):
     if request.method == 'POST':
         sent_item = request.POST.get('new-item').lower()
-        item_qty = int(request.POST.get('item-qty'))
+        item_qty = int(check_blank(request.POST.get('item-qty'), 0))
         item_dec = request.POST.get('item-qty-dec')
         item_uom = request.POST.get('item-uom')
         # Dict to look up fraction to decimal
