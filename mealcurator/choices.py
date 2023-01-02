@@ -78,6 +78,7 @@ uoms = [
     ('ml', 'Milliliter'),
     ('ll', 'Liter'),
     ('ea', 'Each'),
+    ('dz', 'Dozen'),
     ('bu', 'Bunch'),
     ('st', 'Stalks'),
     ('cl', 'Cloves'),
