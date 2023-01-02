@@ -13,6 +13,7 @@ urlpatterns = [
     path('register/', include('cooks.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('cooks/', include('cooks.urls')),
+    path('share/', include('stewpot.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.views.sitemap'),

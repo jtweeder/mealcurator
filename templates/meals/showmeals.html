@@ -105,6 +105,7 @@
 <input type="submit" value="Search"/>
 </form>
 </div>
+<h3><a href="{% url 'view-plan' mp.id %}">Back to {{ mp.name }} Overview</a></h3>
 {% endif %}
 <hr/>
 
@@ -209,7 +210,9 @@
             <tr><td><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank"><img src="{% static 'images/book-open.svg' %}" alt="Open Book" title="Open Recipe in New Tab"></a></td>
                 <td>
                 {% if plan_view %}
-                <a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove from Meal Plan"></a>
+                <!--TODO: Center the buttons-->
+                <a href="{% url 'start-shared' meal.meal_id %}"><img src="{% static 'images/share.svg' %}" alt="Share Icon" title="Share this recipe"></a></td>
+                <td><a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove from Meal Plan"></a>
                 {% elif add_to_plan_view %}
                 <a href="{% url 'add_meal_to_plan' mp.id meal.meal_id %}"><img src="{% static 'images/file-plus.svg' %}" alt="File with add sign" tite="Add Recipe to Meal Plan"></a>
                 {% endif %}
@@ -223,8 +226,6 @@
 </div>
 {% if plan_view %}
 <h4><a href="{% url 'del_plan' mp.id %}">Delete this Plan</a></h4>
-{% elif add_to_plan_view%}
-<h3><a href="{% url 'view-plan' mp.id %}">Back to {{ mp.name }} Overview</a></h3>
 {% endif %}
 
 {% endblock page_content %}
