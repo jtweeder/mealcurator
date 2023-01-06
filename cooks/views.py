@@ -9,6 +9,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank
 from cooks.models import plan, plan_meal, plan_list
 from meals.models import meal_item, mstr_recipe, mstr_recipe_list
 from mealcurator import choices
+from mealcurator.helperfuncs import check_blank
 from .forms import create_cook_form
 
 
@@ -233,7 +234,7 @@ def list_idx(request, plan_id, shp=0):
 @login_required
 def list_add(request, plan_id, meal_id=None, plan_itm_id=None):
     if request.method == 'POST':
-        item_qty = int(request.POST.get('item-qty'))
+        item_qty = int(check_blank(request.POST.get('item-qty'), 0))
         item_dec = request.POST.get('item-qty-dec')
         item_uom = request.POST.get('item-uom')
 
