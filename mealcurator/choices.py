@@ -21,7 +21,7 @@ dish_type_choices = [
         ('bk', 'Baked Dishes'),
         ('pa', 'Pasta Dishes'),
         ('cu', 'Curry Dishes'),
-        ('ca', 'Cassarole Dishes'),
+        ('ca', 'Casserole Dishes'),
         ('st', 'Stews'),
         ('sa', 'Salad'),
         ('lt', 'Light Dishes'),
@@ -29,7 +29,7 @@ dish_type_choices = [
         ('na', 'None of those'),
     ]
 cooking_method_choices = [
-        ('st', 'Stovetop'),
+        ('st', 'Stove Top'),
         ('mi', 'Microwave'),
         ('bl', 'Blender'),
         ('gr', 'Grill'),

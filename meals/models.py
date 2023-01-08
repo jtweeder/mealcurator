@@ -74,7 +74,8 @@ class raw_recipe(models.Model):
 
     def _make_tkns(self):
         # Returns JSON represtnation of lemented word list
-        words = [w for w in word_tokenize(self.soup.get_text().lower()) if w.isalpha()]
+        words = [w for w in word_tokenize(self.soup.get_text().lower())
+                 if w.isalpha()]
         raw_tkns = [w for w in words
                     if w not in stopwords.words('english')]
         lemmatizer = WordNetLemmatizer()
@@ -180,3 +181,11 @@ class changes(models.Model):
                               choices=choices.change)
     change_desc = models.CharField('Change Description', max_length=256)
     entry_date = models.DateField(auto_now_add=True)
+
+
+class creative_commons(models.Model):
+    title = models.CharField(max_length=256)
+    internal = models.CharField(max_length=256)
+    description = models.CharField(max_length=256)
+    link_text = models.CharField(max_length=256)
+    link = models.URLField()

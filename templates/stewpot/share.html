@@ -30,7 +30,8 @@ input[type=text], select, textarea {
 {% if start %}
 
 <h1>Sharing a recipe from MealCurator</h1>
-<p>Thank you for sharing the recipe <i>{{meal.title}}</i>.  Please fill out a short title and description you would like added to share with someone.  
+<p>Thank you for wanting to share the recipe, <i>{{meal.title}}</i>.  Please fill out a short title and description below about the recipe you want to share.  
+  On the next page a link will be generated that you can copy and paste into an email, message, or social media platform.  This link will be good for at least 90 days from the date of creation.
   
 </p>
 <div class="container">
@@ -77,7 +78,7 @@ input[type=text], select, textarea {
   </td></tr>
   <tr><td class="leftTd">Method:</td>
       <td class="rightTd">
-          {% if meal.meal__cooking_method == 'st' %}  Stovetop
+          {% if meal.meal__cooking_method == 'st' %}  Stove Top
           {% elif meal.meal__cooking_method == 'mi' %}  Microwave 
           {% elif meal.meal__cooking_method == 'bl' %}  Blender 
           {% elif meal.meal__cooking_method == 'gr' %}  Grill 
@@ -94,7 +95,7 @@ input[type=text], select, textarea {
           {% elif meal.meal__dish_type == 'bk' %}  Baked Dish
           {% elif meal.meal__dish_type == 'pa' %}  Pasta
           {% elif meal.meal__dish_type == 'cu' %}  Curry 
-          {% elif meal.meal__dish_type == 'ca' %}  Cassarole
+          {% elif meal.meal__dish_type == 'ca' %}  Casserole
           {% elif meal.meal__dish_type == 'st' %}  Stew
           {% elif meal.meal__dish_type == 'sa' %}  Salad
           {% elif meal.meal__dish_type == 'lt' %}  Light Dish

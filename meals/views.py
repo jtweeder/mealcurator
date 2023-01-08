@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Count
 from mealcurator import choices
 from mealcurator.helperfuncs import check_blank
-from .models import raw_recipe, mstr_recipe, changes, mstr_recipe_list, meal_item
+from meals import models as mm
 
 
 def staff_check(user):
@@ -25,18 +25,24 @@ def about(request):
 
 
 def change_log(request):
-    change_list = (changes.objects
-                          .values('version', 'change', 'entry_date',
-                                  'change_desc', 'version__implemented')
-                          .order_by('-version__implemented', 'version',
-                                    'change',  'entry_date'))
+    change_list = (mm.changes.objects
+                             .values('version', 'change', 'entry_date',
+                                     'change_desc', 'version__implemented')
+                             .order_by('-version__implemented', 'version',
+                                       'change',  'entry_date'))
     context = {'changes': change_list}
     return render(request, 'changelog.html', context=context)
 
 
+def creative_commons_credit(request):
+    ccc = mm.creative_commons.objects.all()
+    context = {'ccc': ccc}
+    return render(request, 'attribution.html', context=context)
+
+
 class get_recipe(CreateView):
     login_required = True
-    model = raw_recipe
+    model = mm.raw_recipe
     fields = ['title', 'rec_url', 'vegan', 'vegetarian', 'meal_time',
               'dish_type', 'cooking_method', 'protein_type', 'cooking_time']
     success_url = reverse_lazy('get-recipe')
@@ -54,7 +60,7 @@ class get_recipe(CreateView):
 
 class update_recipe(UpdateView):
     login_required = True
-    model = raw_recipe
+    model = mm.raw_recipe
     fields = ['title', 'rec_url', 'vegan', 'vegetarian', 'meal_time',
               'dish_type', 'cooking_method', 'cooking_time']
     template_name_suffix = '_update'
@@ -62,12 +68,12 @@ class update_recipe(UpdateView):
 
 class delete_recipe(DeleteView):
     login_required = True
-    model = raw_recipe
+    model = mm.raw_recipe
     template_name_suffix = '_delete'
 
 
 def show_recipe(request):
-    meals = mstr_recipe.objects.all()
+    meals = mm.mstr_recipe.objects.all()
     context = {'meals': meals}
     template = 'meals/showmeals.html'
     return render(request, template, context)
@@ -76,25 +82,27 @@ def show_recipe(request):
 @login_required
 @user_passes_test(staff_check)
 def mstr_lst(request):
-    meals = (mstr_recipe.objects
-                        .values('title', 'meal_id')
-                        .annotate(num_items=Count('mstr_recipe_list__item'))
-                        .order_by('num_items', '-times_selected')
-                        .filter(dummy=False)
+    meals = (mm.mstr_recipe.objects
+                           .values('title', 'meal_id')
+                           .annotate(num_items=Count('mstr_recipe_list__item'))
+                           .order_by('num_items', '-times_selected')
+                           .filter(dummy=False)
              )
     context = {'meals': meals}
     template = 'meals/mstr_lst.html'
     return render(request, template, context)
 
+
 @login_required
 @user_passes_test(staff_check)
 def mstr_lst_idx(request, meal_id):
-    meal = mstr_recipe.objects.values('title', 'rec_url').get(meal_id=meal_id)
-    items = (mstr_recipe_list.objects.values('item_id', 'qty',
-                                             'uom', 'item__item_name')
-                                     .filter(meal_id=meal_id))
-    item_search = meal_item.objects.all()                          
-    context = {'items': items, 
+    meal = mm.mstr_recipe.objects.values('title',
+                                         'rec_url').get(meal_id=meal_id)
+    items = (mm.mstr_recipe_list.objects.values('item_id', 'qty',
+                                                'uom', 'item__item_name')
+                                        .filter(meal_id=meal_id))
+    item_search = mm.meal_item.objects.all()
+    context = {'items': items,
                'meal': meal,
                'items_search': item_search,
                'uoms': choices.uoms,
@@ -115,26 +123,26 @@ def mstr_lst_add(request, meal_id):
         item_uom = request.POST.get('item-uom')
         # Dict to look up fraction to decimal
         qty_lu = {'1/8': 0.125,
-                    '1/4': 0.25,
-                    '1/3': 0.334,
-                    '1/2': 0.5,
-                    '2/3': 0.667,
-                    '3/4': 0.75,
-                    }
+                  '1/4': 0.25,
+                  '1/3': 0.334,
+                  '1/2': 0.5,
+                  '2/3': 0.667,
+                  '3/4': 0.75,
+                  }
         if item_dec == '%':
             item_dec = 0
         else:
             item_dec = qty_lu[item_dec]
         item_qty += item_dec
         try:
-            item = meal_item.objects.get(item_name=sent_item)
-        except meal_item.DoesNotExist:
-            meal_item.objects.create(item_name=sent_item)
-            item = meal_item.objects.get(item_name=sent_item)
-        mstr_recipe_list.objects.create(meal_id=meal_id,
-                                        item=item,
-                                        qty=item_qty,
-                                        uom=item_uom)
+            item = mm.meal_item.objects.get(item_name=sent_item)
+        except mm.meal_item.DoesNotExist:
+            mm.meal_item.objects.create(item_name=sent_item)
+            item = mm.meal_item.objects.get(item_name=sent_item)
+        mm.mstr_recipe_list.objects.create(meal_id=meal_id,
+                                           item=item,
+                                           qty=item_qty,
+                                           uom=item_uom)
 
     return redirect('edit-mstr-list', meal_id=meal_id)
 
@@ -142,6 +150,7 @@ def mstr_lst_add(request, meal_id):
 @login_required
 @user_passes_test(staff_check)
 def mstr_lst_del(request, meal_id, item_id):
-    mstr_recipe_list.objects.filter(meal_id=meal_id, item_id=item_id).delete()
+    mm.mstr_recipe_list.objects.filter(meal_id=meal_id,
+                                       item_id=item_id).delete()
 
     return redirect('edit-mstr-list', meal_id=meal_id)
