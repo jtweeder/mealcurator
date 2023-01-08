@@ -89,22 +89,14 @@ def view_plan(request, plan_id, review=None, meal_id=None):
     if review:
         cur_review = plan_meal.objects.get(meal_id=meal_id,
                                            plan_id=plan_id).review
-        if review == 1:
-            if cur_review == -1:
-                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') - 1,
-                                                                   upvote=F('upvote') + 1)
-            else:
-                mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') + 1)
-            plan_meal.objects.filter(plan_id=plan_id,
-                                     meal_id=meal_id).update(review=1)
-        if review == 2:
-            if cur_review == 1:
-                mstr_recipe.objects.filter(meal_id=meal_id).update(upvote=F('upvote') - 1,
-                                                                   downvote=F('downvote') + 1)
-            else:
-                mstr_recipe.objects.filter(meal_id=meal_id).update(downvote=F('downvote') + 1)
-            plan_meal.objects.filter(plan_id=plan_id,
-                                     meal_id=meal_id).update(review=-1)
+        diff = review - cur_review
+        numreview = 0
+        if cur_review == 0:
+            numreview = 1
+        mstr_recipe.objects.filter(meal_id=meal_id).update(sumreview=F('sumreview') + diff,
+                                                           numreview=F('numreview') + numreview)
+        plan_meal.objects.filter(plan_id=plan_id,
+                                 meal_id=meal_id).update(review=review)
     context = {'meals': meals, 'plan_view': True, 'mp': meal_plans}
     if 'viewplans' in request.path_info:
         template = 'meals/showmeals.html'
@@ -139,9 +131,9 @@ def add_to_plan(request, plan_id):
     if len(search) > 0:
         meals = meals.filter(**search)
     if 'query' in locals():
-        meals = meals.annotate(rank=SearchRank('mstr_search__search_vector', 
+        meals = meals.annotate(rank=SearchRank('mstr_search__search_vector',
                                query)).filter(mstr_search__search_vector=query).order_by('-rank')
-    
+
     context = {'meals': meals,
                'add_to_plan_view': True,
                'mp': meal_plan,
