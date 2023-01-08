@@ -1,0 +1,145 @@
+{% load static %}
+
+<div>
+{% if rank == 0 %}
+
+{% if plan_view %}
+{% for val in '12345' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+    {% else %}
+    {% for val in '12345' %}
+    <img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+    {% endfor %}
+{% endif %}
+
+
+{% elif rank == 1 %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+
+{% if plan_view %}
+{% for val in '2345' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+    {% else %}
+    {% for val in '2345' %}
+    <img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+    {% endfor %}
+{% endif %}
+
+{% elif rank == 1.5 %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+<img src="{% static 'images/star-half.svg' %}" height="24" width="24">
+{% for val in '345' %}
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+{% endfor %}
+
+{% elif rank == 2 %}
+
+{% if plan_view %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=1 meal_id=meal_id %}">
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24" alt="Change to 1 Star Review" title="Change to 1 Star Review">
+</a>
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+{% for val in '345' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+    {% else %}
+    {% for val in '12' %}
+    <img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+    {% endfor %}
+    {% for val in '345' %}
+    <img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+    {% endfor %}
+{% endif %}
+
+{% elif rank == 2.5 %}
+{% for val in '12' %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+{% endfor %}
+<img src="{% static 'images/star-half.svg' %}" height="24" width="24">
+{% for val in '45' %}
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+{% endfor %}
+
+{% elif rank == 3 %}
+
+{% if plan_view %}
+{% for val in '12' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+{% for val in '45' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+    {% else %}
+    {% for val in '123' %}
+    <img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+    {% endfor %}
+    {% for val in '45' %}
+    <img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+    {% endfor %}
+{% endif %}
+
+{% elif rank == 3.5 %}
+{% for val in '123' %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+{% endfor %}
+<img src="{% static 'images/star-half.svg' %}" height="24" width="24">
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+
+{% elif rank == 4 %}
+{% if plan_view %}
+{% for val in '123' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=5 meal_id=meal_id %}">
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24" alt="Change to 5 Star Review" title="Change to 5 Star Review">
+</a>
+    {% else %}
+    {% for val in '1234' %}
+    <img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+    {% endfor %}
+    <img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+{% endif %}
+
+{% elif rank == 4.5 %}
+{% for val in '1234' %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+{% endfor %}
+<img src="{% static 'images/star-half.svg' %}" height="24" width="24">
+
+{% elif rank == 5 %}
+{% if plan_view %}
+{% for val in '1234' %}
+<a href="{% url 'view-plan-vote' plan_id=mp.id review=val meal_id=meal_id %}">
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24" alt="Change to {{val}} Star Review" title="Change to {{val}} Star Review">
+</a>
+{% endfor %}
+<img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+    {% else %}
+    {% for val in '12345' %}
+    <img src="{% static 'images/star-full.svg' %}" height="24" width="24">
+    {% endfor %}
+{% endif %}
+
+{% else %}
+{% for val in '12345' %}
+<img src="{% static 'images/star-empty.svg' %}" height="24" width="24">
+{% endfor %}
+
+{% endif %}
+</div>

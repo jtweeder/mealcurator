@@ -1,4 +1,4 @@
-
+from fractions import Fraction
 import requests
 from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
@@ -125,16 +125,23 @@ class mstr_recipe(models.Model):
                                     default='na')
     times_selected = models.PositiveIntegerField('Number of times Selected',
                                                  default=0)
-    upvotes = models.PositiveIntegerField('Would Make Again', name='upvote',
-                                          default=0)
-    downvotes = models.PositiveIntegerField('Would Not Make Again',
-                                            name='downvote', default=0)
+    sumreview = models.PositiveIntegerField('Sum of Reviews',
+                                            default=0)
+    numreview = models.PositiveIntegerField('Number of Reviews',
+                                            default=0)
     dummy = models.BooleanField(default=False, null=True)
     # TODO: Make this into another model vs tagging along here
     words = models.JSONField('Found Words', name='found_words', default=None)
 
     def __str__(self):
         return self.title
+
+    def avg_review(self):
+        if self.numreview == 0:
+            return 0
+        else:
+            review = Fraction(self.sumreview/self.numreview).limit_denominator(2)
+            return float(review)
 
 
 class mstr_search(models.Model):
@@ -174,6 +181,9 @@ class change_log(models.Model):
     version = models.CharField('Version', max_length=256, primary_key=True)
     implemented = models.DateField()
 
+    def __str__(self):
+        return self.version
+
 
 class changes(models.Model):
     version = models.ForeignKey(change_log, on_delete=models.CASCADE)
@@ -189,3 +199,6 @@ class creative_commons(models.Model):
     description = models.CharField(max_length=256)
     link_text = models.CharField(max_length=256)
     link = models.URLField()
+
+    def __str__(self):
+        return self.title

@@ -116,20 +116,15 @@
         <div class=recCard>
             <table>
                 <th colspan=2><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank">{% if plan_view %}{{ meal.meal__title }}{% else %}{{ meal.title }}{% endif %}</a></th>
+                <tr>
+                <td colspan=2>
                 {% if plan_view %}
-                <tr><td>{% if meal.review == 1 %}
-                <img src="{% static 'images/thumbs-up-selected.svg' %}" alt="Selected Thumbs Up Rating" title="You have selected a thumbs up rating for this recipe">
-                        {% else %}
-                <a href="{% url 'view-plan-vote' plan_id=mp.id review=1 meal_id=meal.meal_id %}" ><img src="{% static 'images/thumbs-up.svg' %}" alt="Thumbs Up Rating" title="Click to select a thumbs up rating for this recipe"></a>
-                        {% endif %} 
-                </td><td>
-                        {% if meal.review == -1 %}
-                <img src="{% static 'images/thumbs-down-selected.svg' %}" alt="Selected Thumbs Down Rating" title="You have selected a thumbs down rating for this recipe">
-                        {% else %}
-                <a href="{% url 'view-plan-vote' plan_id=mp.id review=2 meal_id=meal.meal_id %}"><img src="{% static 'images/thumbs-down.svg' %}" alt="Thumbs Down Rating" title="Click to select a thumbs down rating for this recipe"></a> 
-                        {% endif %}
-                </td></tr>
+                
+                {% include "meals/ranking.html" with rank=meal.review meal_id=meal.meal_id plan_id=mp.id plan_view=plan_view %}    
+                {% else %}
+                {% include "meals/ranking.html" with rank=meal.avg_review only %}
                 {% endif %}    
+            </td></tr>
             <tr><td><b>Vegan:</b> {% if plan_view %}{{ meal.meal__vegan|yesno:"Yes,No" }}{% else %}{{ meal.vegan|yesno:"Yes,No" }}{% endif %}</td><td><b>Vegetarian:</b> {% if plan_view %}{{ meal.meal__vegetarian|yesno:"Yes,No" }}{% else %}{{ meal.vegetarian|yesno:"Yes,No" }}{% endif %}</td></tr>
             <tr><td class="leftTd">Meal Time:</td>
                 <td class="rightTd">
