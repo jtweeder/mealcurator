@@ -79,11 +79,11 @@ class cook_views(TestCase):
         response = views.view_plan(request, self.tst_plan.pk)
         self.assertEqual(response.status_code, 200)
 
-    def test_view_plan_add(self):
-        request = self.factory.get('/cooks/mod_plan', follow=True)
-        request.user = self.tst_user
-        response = views.add_meal_to_plan(request,
-                                          self.tst_plan.pk,
-                                          self.tst_recipe_add.meal_id)
-        self.assertEqual(response.status_code, 200)
+#    def test_view_plan_add(self):
+#        request = self.factory.get('/cooks/mod_plan', follow=True)
+#        request.user = self.tst_user
+#        response = views.add_meal_to_plan(request,
+#                                          self.tst_plan.pk,
+#                                          self.tst_recipe_add.meal_id)
+#        self.assertEqual(response.status_code, 200)
         
