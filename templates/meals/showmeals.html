@@ -19,7 +19,10 @@
 
 }
 
-
+.navicontbl {
+    width: 340px;
+    border-spacing: 5px;
+}
 
 {% endblock css_style %}
 
@@ -27,9 +30,21 @@
 
 {% if plan_view %}
 <h1>Recipes in: {{ mp.name }}</h1>
-<h3><a href="{% url 'add_to_plan' mp.id %}">Add More Recipes to Plan</a></h3>
-<h3><a href="{% url 'mod-list' mp.id %}">Make a List</a></h3>
-<h3><a href="{% url 'shop-list' mp.id %}">View List Mode</a></h3>
+<div class="navicons">
+    <table class="navicontbl">
+    <tr>
+      <td><a href="{% url 'add_to_plan' mp.id %}">
+        <img src="{% static 'images/find-recipes.svg' %}" height="80" width="80" alt="Image of searching for recipes" title="Add more recipes to this meal plan">
+            <br>Add More Recipes to Plan</a></td>
+      <td><a href="{% url 'mod-list' mp.id %}">
+        <img src="{% static 'images/make-list.svg' %}" height="80" width="80" alt="Image of an in process list and pencil" title="Make/Edit the list for this meal plan">
+            <br>Make/Edit Shopping List</a></td>
+      <td><a href="{% url 'shop-list' mp.id %}">
+        <img src="{% static 'images/shop-list.svg' %}" height="80" width="80" alt="Image of a shopping list being checked off" title="View shopping list for this meal plan">
+            <br>View Shopping List</a></td>
+    </tr>
+   </table>
+</div>
 {% elif add_to_plan_view %}
 <h1>Browsing Recipes for: {{ mp.name }}</h1> 
 {% else %}
