@@ -1,6 +1,7 @@
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from . import models, views
+from .templatetags import cooks_extras
 from meals.models import mstr_recipe
 import uuid
 
@@ -87,3 +88,13 @@ class cook_views(TestCase):
 #                                          self.tst_recipe_add.meal_id)
 #        self.assertEqual(response.status_code, 200)
         
+    def test_cooks_extras_choice_finder(self):
+        sections = cooks_extras.choice_finder('pr', 'sections')
+        uom = cooks_extras.choice_finder('ts', 'uoms')
+        change = cooks_extras.choice_finder('fx', 'change')
+
+        self.assertEqual(sections, 'Produce')
+        self.assertEqual(uom, 'Tsp')
+        self.assertEqual(change, 'Fixed')
+
+
