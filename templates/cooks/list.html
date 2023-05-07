@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+{% block css_style %}
+
+#content {
+    height: 100%
+}
+
+.mealTbl {
+    float: left;
+    min-width: 290px;
+    max-height: 960px;
+    overflow: auto;
+}
+
+.list {
+    float: center;
+    min-width: 360px;
+    height: 960px;
+    overflow: auto;
+}
+
+.listframe {
+    width: 98%;
+    height: 98%;
+    overflow: auto;
+}
+
+{% endblock css_style %}
+{% block page_content %}
+
+<h1>Making Shopping List For: {{ mp.name }}</h1>
+<h3><a href="{% url 'view-plan' mp.id %}">View Plan</a></h3>
+
+<div id="content">
+    <div class="mealTbl">
+        {% for meal in meals %}
+        {% if not meal.meal__dummy %}
+        <div class="recCard">
+            <table>
+                <th colspan=2><a href="{{ meal.meal__rec_url }}", target="_blank">{{ meal.meal__title }}</a></th>
+            <tr><td><b>Vegan:</b> {{ meal.meal__vegan|yesno:"Yes,No" }}</td><td><b>Vegetarian:</b> {{ meal.meal__vegetarian|yesno:"Yes,No" }}</td></tr>
+            <tr><td class="leftTd">Meal Time:</td>
+                <td class="rightTd">
+                    {% if meal.meal__meal_time == 'bk' %}  Breakfast
+                    {% elif meal.meal__meal_time == 'lu' %}  Lunch 
+                    {% elif meal.meal__meal_time == 'di' %}  Dinner 
+                    {% elif meal.meal__meal_time == 'sd' %}  Side Dish 
+                    {% elif meal.meal__meal_time == 'de' %}  Dessert
+                    {% elif meal.meal__meal_time == 'sn' %}  Snack         
+                    {% endif %}
+            </td></tr>
+            <tr><td class="leftTd">Cooking Time:</td>
+                <td class="rightTd">
+                    {% if meal.meal__cooking_time == '20' %}  Less than 20 Minutes
+                    {% elif meal.meal__cooking_time == '40' %}  20 to 40 Minutes
+                    {% elif meal.meal__cooking_time == '60' %}  40 to 60 Minutes
+                    {% elif meal.meal__cooking_time == '61' %}  Over 60 Minutes
+                    {% endif %}
+            </td></tr>
+            <tr><td class="leftTd">Method:</td>
+                <td class="rightTd">
+                    {% if meal.meal__cooking_method == 'st' %}  Stovetop
+                    {% elif meal.meal__cooking_method == 'mi' %}  Microwave 
+                    {% elif meal.meal__cooking_method == 'bl' %}  Blender 
+                    {% elif meal.meal__cooking_method == 'gr' %}  Grill 
+                    {% elif meal.meal__cooking_method == 'ov' %}  Oven 
+                    {% elif meal.meal__cooking_method == 'pr' %}  Pressure Cooker 
+                    {% elif meal.meal__cooking_method == 'sc' %}  Slow Cooker 
+                    {% elif meal.meal__cooking_method == 'af' %}  Air Fryer 
+                    {% elif meal.meal__cooking_method == 'ra' %}  Raw/Uncooked 
+                    {% endif %}
+            </td></tr>
+            <tr><td class="leftTd">Dish Type:</td>
+                <td class="rightTd">
+                    {% if meal.meal__dish_type == 'sp' %}  Soup
+                    {% elif meal.meal__dish_type == 'bk' %}  Baked Dish
+                    {% elif meal.meal__dish_type == 'pa' %}  Pasta
+                    {% elif meal.meal__dish_type == 'cu' %}  Curry 
+                    {% elif meal.meal__dish_type == 'ca' %}  Cassarole
+                    {% elif meal.meal__dish_type == 'st' %}  Stew
+                    {% elif meal.meal__dish_type == 'sa' %}  Salad
+                    {% elif meal.meal__dish_type == 'lt' %}  Light Dish
+                    {% elif meal.meal__dish_type == 'sm' %}  Smoothie 
+                    {% elif meal.meal__dish_type == 'na' %}  Other
+                    {% endif %}
+                </td></tr>
+                <tr><td class="leftTd">Protein Type:</td>
+                    <td class="rightTd">
+                    {% if meal.meal__protein_type == 'be' %}  Beef
+                    {% elif meal.meal__protein_type == 'ch' %}  Chicken
+                    {% elif meal.meal__protein_type == 'pb' %}  Plant Based
+                    {% elif meal.meal__protein_type == 'se' %}  Fish / Shellfish 
+                    {% elif meal.meal__protein_type == 'pk' %}  Pork
+                    {% elif meal.meal__protein_type == 'na' %}  None
+                    {% elif meal.meal__protein_type == 'ot' %}  Other
+                    {% endif %}
+                </td></tr>
+            </table>        
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="list">
+        <iframe class='listframe' src="{% url 'list-idx' mp.id %}"></iframe>
+    </div>
+</div>  
+    
+{% endblock page_content %}

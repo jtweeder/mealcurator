@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .sqlite3
-
+settings.py
 # C extensions
 *.so
 
@@ -108,3 +108,6 @@ venv.bak/
 *.swo
 *.swp
 *.vscode
+manage.py
+
+dev_static/

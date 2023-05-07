@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+{% block css_style %}
+
+
+
+
+
+
+{% endblock css_style %}
+
+{% block page_content %}
+
+{% if idx %}
+<h2>{{ meal.title }}</h2>
+<h4><a href="{{ meal.rec_url }}" target="_blank">Link to Recipe</a></h4>
+
+
+
+
+<div class="list">
+    <table>
+      <th colspan="2">Quantity</th>
+      <th>Unit</th>
+      <th>Item</th>
+
+      <tr><form action="{% url 'add-list-item-meal' meal_id=meal_id %}", method="post">{% csrf_token %}
+        <td> 
+           <input type='number' style='width: 40px;' name ='item-qty' value="0" min="0" max="1000"> </td>
+           <td>
+            <select style='width: 45px;' name ='item-qty-dec'>
+              <option value="%"> --- </option>
+              <option value="1/8"> 1/8 </option>
+              <option value="1/4"> 1/4 </option>
+              <option value="1/3"> 1/3 </option>
+              <option value="1/2"> 1/2 </option>
+              <option value="2/3"> 2/3 </option>
+              <option value="3/4"> 3/4 </option>
+            </td>
+        <td>
+          <select style='width: 70px' name='item-uom'>
+          {% for key, value in uoms %}
+            <option value="{{ key }}">{{ value }}</option>
+          {% endfor %}
+          </select></td>
+        <td>
+            <input list="new_items" style='width: 200px;' name='new-item'>
+            <datalist id="new_items">
+              {% for poss_item in items_search %}
+              {% if poss_item.id != 1 %}
+            <option value="{{ poss_item | title }}"></option>
+              {% endif %}
+              {% endfor %}
+            </datalist>
+          
+          </td>
+            <td><button type="submit" value="Add"><img src="{% static 'images/file-plus.svg' %}" alt="File wit add symbol" title="Add item to list" height="14"></button></td></tr></form>     
+      
+      {% for item in items %}
+      <tr>
+        <td colspan="2"> {{ item.qty | dec_cleaner }}</td>
+        <td>{{ item.uom | choice_finder:"uoms" }}</td>
+        <td>{{ item.item__item_name | title }}</td>
+        <td><a href="{% url 'del-list-item-meal' meal_id=meal_id item_id=item.item_id %}"> <img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove {{ item.item__item_name }} from list" height="18"></a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <h3><a href="{% url 'view-mstr-list' %}">Return to Recipe Lists</a></h3>
+ 
+</div>
+
+
+
+
+
+
+
+
+
+
+{% else %}
+{% for meal in meals %}
+<p>
+<a href="{% url 'edit-mstr-list' meal.meal_id%}">{{ meal.title }}</a> number items {{ meal.num_items }}
+</p>
+{% endfor %}
+{% endif %}
+{% endblock page_content %}

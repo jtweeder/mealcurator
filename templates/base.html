@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <title>Meal Curator - Making Eating at Home Easier</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="/flavicon.ico">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Antic+Slab&family=Be+Vietnam+Pro:wght@300&family=Zilla+Slab:ital,wght@0,400;0,600;1,500&display=swap');
+        h1 {
+            font-family: 'Antic Slab', serif;
+            font-size: 64px;
+        }
+        h2 {
+            font-family: 'Zilla Slab', serif;
+            font-weight: 600;
+            font-size: 32px;
+            color: #16a32e;
+        }
+        h3 {
+            font-family: 'Zilla Slab', serif;
+            font-weight: 500;
+            font-size: 28px;
+            font-style: italic;
+        }
+        h4 {
+            font-family: 'Zilla Slab', serif;
+            font-weight: 400;
+            font-size: 24px;
+            color: #1005ff;
+        }
+        
+        p {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 300;
+            font-size: 18px;
+        }
+        body {
+            background-color: #fff2ee;
+            color: #000;
+            }
+        table {
+            margin-right: auto;
+            margin-left: auto;
+            text-align: ceter;;
+        }
+
+        .navbar{
+        background-color:#16a32e ;
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+        align-content: space-around;
+        }
+
+        
+        .button {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 300;
+            font-size: 18px;
+            text-decoration: none;
+            background-color: #fffffe;
+            color: #000;
+            padding: 2px 6px 2px 6px;
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
+            border-left: 1px solid #CCCCCC;
+            margin: 6px;
+        }
+
+        ul > li {
+            display: inline-block;
+            margin: 6px 2px 6px 2px;
+        }
+
+        .recCard {
+            width: 250px;
+            border: 1px solid #000;
+            border-radius 5px 5px;
+            background-color: #fffffe;
+            margin: 10px 0px 10px 0px;
+            padding: 30px 10px 0px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+
+        th{
+            font-size: 20px; 
+            font-family: 'Zilla Slab', serif;
+            color: #16a32e;
+        }
+
+        td{
+            text-align: center;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+        }
+
+        .leftTd{
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .rightTd{
+            text-align: left;
+        }
+
+        .recCard a {
+            font-size: 20px; 
+            font-family: 'Zilla Slab', serif;
+            color: #16a32e;
+            text-decoration: none;
+        }
+        
+        {% block css_style %}
+        {% endblock css_style %}
+    </style>
+
+</head>
+
+<body>
+    {% block navbar %}
+    <div class="navbar">
+        <ul class="navlist">
+        <li><a class="button" href="{% url 'welcome' %}">Account Home</a></li>
+        <li><a class="button" href="{% url 'get-recipe' %}">Submit Recipe</a></li>
+        <li><a class="button" href="{% url 'view-plans' %}">View Plans</a></li>
+        <li><a class="button" href="{% url 'make-plan' %}">Create New Plan</a></li>
+        <li><a class="button" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+    {% endblock %}
+    {% block page_content %} {% endblock %}
+    {% block botnavbar %}
+    <div class="navbar">
+        <ul class="navlist">
+        <li><a class="button" href="{% url 'about' %}">About</a></li>
+        <li><a class="button" href="{% url 'howto' %}">How-To</a></li>
+        <li><a class="button" href="{% url 'change_log' %}">Change-Log</a></li>
+        <li><a class="button" href="{% url 'ccc' %}">Attribution/Credits</a></li>
+        <li><a class="button" href="https://github.com/jtweeder/mealcurator" target="_blank">Git Hub Repo</a></li>
+        </ul>
+    </div>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+{% block css_style %}
+
+.resultTbl {
+    width: 90%;
+    max-width: 1100px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    align-content: space-around;
+    margin: auto;
+}
+
+.searchinput {
+    margin: auto;
+    text-align: center;
+
+}
+
+.navicontbl {
+    width: 340px;
+    border-spacing: 5px;
+}
+
+{% endblock css_style %}
+
+{% block page_content %}
+
+{% if plan_view %}
+<h1>Recipes in: {{ mp.name }}</h1>
+<div class="navicons">
+    <table class="navicontbl">
+    <tr>
+      <td><a href="{% url 'add_to_plan' mp.id %}">
+        <img src="{% static 'images/find-recipes.svg' %}" height="80" width="80" alt="Image of searching for recipes" title="Add more recipes to this meal plan">
+            <br>Add More Recipes to Plan</a></td>
+      <td><a href="{% url 'mod-list' mp.id %}">
+        <img src="{% static 'images/make-list.svg' %}" height="80" width="80" alt="Image of an in process list and pencil" title="Make/Edit the list for this meal plan">
+            <br>Make/Edit Shopping List</a></td>
+      <td><a href="{% url 'shop-list' mp.id %}">
+        <img src="{% static 'images/shop-list.svg' %}" height="80" width="80" alt="Image of a shopping list being checked off" title="View shopping list for this meal plan">
+            <br>View Shopping List</a></td>
+    </tr>
+   </table>
+</div>
+{% elif add_to_plan_view %}
+<h1>Browsing Recipes for: {{ mp.name }}</h1> 
+{% else %}
+<h1>Browse Recipes</h1>
+{% endif %}
+
+
+
+{% if add_to_plan_view %}
+<div class="searchinput"> 
+    <form action="{% url 'add_to_plan' mp.id %}">
+    <select name="meal_time">
+        {% if request.GET.meal_time and request.GET.meal_time != '%' %}
+        <option value={{ request.GET.meal_time }}>{{ meal_time | val_ret_lstp:request.GET.meal_time }}</option>
+        {% endif %}
+        <option value="%">-- All Meal Times --</option>
+        {% for key, value in meal_time %}
+            {% if key != request.GET.meal_time %}
+        <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
+        {% endfor %}
+    </select>
+
+    <Select name="cooking_time">
+        {% if request.GET.cooking_time and request.GET.cooking_time != '%' %}
+        <option value={{ request.GET.cooking_time }}>{{ cooking_time | val_ret_lstp:request.GET.cooking_time }}</option>
+        {% endif %}
+        <option value="%">-- All Cooking Times --</option>
+        {% for key, value in cooking_time %}
+            {% if key != request.GET.cooking_time %}
+            <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
+        {% endfor %}
+    </Select>
+
+    <Select name="cooking_method">
+        {% if request.GET.cooking_method and request.GET.cooking_method != '%' %}
+        <option value={{ request.GET.cooking_method }}>{{ cooking_method | val_ret_lstp:request.GET.cooking_method }}</option>
+        {% endif %}
+        <option value="%">-- All Cooking Methods --</option>
+        {% for key, value in cooking_method %}
+            {% if key != request.GET.cooking_method %}
+            <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
+        {% endfor %}
+    </Select>
+
+    <Select name="protein_type">
+        {% if request.GET.protein_type and request.GET.protein_type != '%' %}
+        <option value={{ request.GET.protein_type }}>{{ protein_choices | val_ret_lstp:request.GET.protein_type }}</option>
+        {% endif %}       
+        <option value="%">-- All Main Proteins --</option>
+        {% for key, value in protein_choices %}
+            {% if key != request.GET.protein_type %}        
+            <option value="{{ key }}">{{ value }}</option>
+            {% endif %}
+        {% endfor %}
+    </Select>
+
+    <Select name="dish_type">
+        {% if request.GET.dish_type and request.GET.dish_type != '%' %}
+        <option value={{ request.GET.dish_type }}>{{ dish_type | val_ret_lstp:request.GET.dish_type }}</option>
+        {% endif %}  
+        <option value="%">-- All Dish Types --</option>
+        {% for key, value in dish_type %}
+            {% if key != request.GET.dish_type %}     
+            <option value="{{ key }}">{{ value }}</option>    
+            {% endif %}
+        {% endfor %}
+    </Select>
+    <br><br>
+<input type="search" name="q" placeholder="Search by free-text..."/>
+<input type="submit" value="Search"/>
+</form>
+</div>
+<h3><a href="{% url 'view-plan' mp.id %}">Back to {{ mp.name }} Overview</a></h3>
+{% endif %}
+<hr/>
+
+
+<div class="resultTbl">
+    {% for meal in meals %}
+    {% if not meal.meal__dummy %}
+        <div class=recCard>
+            <table>
+                <th colspan=2><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank">{% if plan_view %}{{ meal.meal__title }}{% else %}{{ meal.title }}{% endif %}</a></th>
+                <tr>
+                <td colspan=2>
+                {% if plan_view %}
+                
+                {% include "meals/ranking.html" with rank=meal.review meal_id=meal.meal_id plan_id=mp.id plan_view=plan_view %}    
+                {% else %}
+                {% include "meals/ranking.html" with rank=meal.avg_review only %}
+                {% endif %}    
+            </td></tr>
+            <tr><td><b>Vegan:</b> {% if plan_view %}{{ meal.meal__vegan|yesno:"Yes,No" }}{% else %}{{ meal.vegan|yesno:"Yes,No" }}{% endif %}</td><td><b>Vegetarian:</b> {% if plan_view %}{{ meal.meal__vegetarian|yesno:"Yes,No" }}{% else %}{{ meal.vegetarian|yesno:"Yes,No" }}{% endif %}</td></tr>
+            <tr><td class="leftTd">Meal Time:</td>
+                <td class="rightTd">
+                {% if plan_view %}    
+                    {% if meal.meal__meal_time == 'bk' %}  Breakfast
+                    {% elif meal.meal__meal_time == 'lu' %}  Lunch 
+                    {% elif meal.meal__meal_time == 'di' %}  Dinner 
+                    {% elif meal.meal__meal_time == 'sd' %}  Side Dish 
+                    {% elif meal.meal__meal_time == 'de' %}  Dessert
+                    {% elif meal.meal__meal_time == 'sn' %}  Snack         
+                    {% endif %}
+                {% else %}
+                {{ meal.get_meal_time_display }}
+                {% endif %}
+            </td></tr>
+            <tr><td class="leftTd">Cooking Time:</td>
+                <td class="rightTd">
+                {% if plan_view %}
+                    {% if meal.meal__cooking_time == '20' %}  Less than 20 Minutes
+                    {% elif meal.meal__cooking_time == '40' %}  20 to 40 Minutes
+                    {% elif meal.meal__cooking_time == '60' %}  40 to 60 Minutes
+                    {% elif meal.meal__cooking_time == '61' %}  Over 60 Minutes
+                    {% endif %}
+                {% else %}
+                {{ meal.get_cooking_time_display }}
+                {% endif %}
+            </td></tr>
+            <tr><td class="leftTd">Method:</td>
+                <td class="rightTd">
+                {% if plan_view %}
+                    {% if meal.meal__cooking_method == 'st' %}  Stove Top
+                    {% elif meal.meal__cooking_method == 'mi' %}  Microwave 
+                    {% elif meal.meal__cooking_method == 'bl' %}  Blender 
+                    {% elif meal.meal__cooking_method == 'gr' %}  Grill 
+                    {% elif meal.meal__cooking_method == 'ov' %}  Oven 
+                    {% elif meal.meal__cooking_method == 'pr' %}  Pressure Cooker 
+                    {% elif meal.meal__cooking_method == 'sc' %}  Slow Cooker 
+                    {% elif meal.meal__cooking_method == 'af' %}  Air Fryer 
+                    {% elif meal.meal__cooking_method == 'ra' %}  Raw/Uncooked 
+                    {% endif %}
+                {% else %}
+                {{ meal.get_cooking_method_display }}
+                {% endif %}
+            </td></tr>
+            <tr><td class="leftTd">Dish Type:</td>
+                <td class="rightTd">
+                {% if plan_view %}
+                    {% if meal.meal__dish_type == 'sp' %}  Soup
+                    {% elif meal.meal__dish_type == 'bk' %}  Baked Dish
+                    {% elif meal.meal__dish_type == 'pa' %}  Pasta
+                    {% elif meal.meal__dish_type == 'cu' %}  Curry 
+                    {% elif meal.meal__dish_type == 'ca' %}  Casserole
+                    {% elif meal.meal__dish_type == 'st' %}  Stew
+                    {% elif meal.meal__dish_type == 'sa' %}  Salad
+                    {% elif meal.meal__dish_type == 'lt' %}  Light Dish
+                    {% elif meal.meal__dish_type == 'sm' %}  Smoothie 
+                    {% elif meal.meal__dish_type == 'na' %}  Other
+                    {% endif %}
+                {% else %}
+                {{ meal.get_dish_type_display }}
+                {% endif %}
+                </td></tr>
+                <tr><td class="leftTd">Protein Type:</td>
+                    <td class="rightTd">
+                    {% if plan_view %}
+                        {% if meal.meal__protein_type == 'be' %}  Beef
+                        {% elif meal.meal__protein_type == 'ch' %}  Chicken
+                        {% elif meal.meal__protein_type == 'pb' %}  Plant Based
+                        {% elif meal.meal__protein_type == 'se' %}  Fish / Shellfish 
+                        {% elif meal.meal__protein_type == 'pk' %}  Pork
+                        {% elif meal.meal__protein_type == 'na' %}  None
+                        {% elif meal.meal__protein_type == 'ot' %}  Other
+                        {% endif %}
+                    {% else %}
+                    {{ meal.get_protein_type_display }}
+                    {% endif %}
+                </td></tr>
+            <tr><td><a href="{% if plan_view %}{{ meal.meal__rec_url }}{% else %}{{ meal.rec_url }}{% endif %}", target="_blank"><img src="{% static 'images/book-open.svg' %}" alt="Open Book" title="Open Recipe in New Tab"></a></td>
+                <td>
+                {% if plan_view %}
+                <!--TODO: Center the buttons-->
+                <a href="{% url 'start-shared' meal.meal_id %}"><img src="{% static 'images/share.svg' %}" alt="Share Icon" title="Share this recipe"></a></td>
+                <td><a href="{% url 'del_meal_from_plan' mp.id meal.meal_id %}"><img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove from Meal Plan"></a>
+                {% elif add_to_plan_view %}
+                <a href="{% url 'add_meal_to_plan' mp.id meal.meal_id %}"><img src="{% static 'images/file-plus.svg' %}" alt="File with add sign" tite="Add Recipe to Meal Plan"></a>
+                {% endif %}
+                </td></tr>
+            </table>
+            <br>
+            <br>
+        </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% if plan_view %}
+<h4><a href="{% url 'del_plan' mp.id %}">Delete this Plan</a></h4>
+{% endif %}
+
+{% endblock page_content %}

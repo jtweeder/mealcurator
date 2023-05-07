@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+
+{% block css_style %}
+.lftd {
+      text-align: left;
+}
+
+.rhtd {
+      text-align: center;
+}
+
+
+.list{
+  text-align: center;
+
+
+}
+
+.mealtitle{
+  font-family: 'Zilla Slab', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #1005ff;
+}
+
+.smallth{
+    text-align: center;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+{% endblock css_style %}
+{% block page_content %}
+
+<h2>Shopping List:</h2>
+<div class="list">
+    {% regroup list by item__item_location as shp_list %}
+
+    {% for section, items in shp_list %}
+    <p class="mealtitle">{{ section | choice_finder:"sections" }}</p>
+    <table class="listtbl">
+      <th></th>
+      <th colspan=2 class="smallth">Quantity</th>
+      <th class="smallth">Item</th>
+      {% for item in items %}
+      <tr id="{{ forloop.parentloop.counter }}{{ forloop.counter }}">
+        {% if item.item_id != 1 %}
+          {% if item.got > 0 %}
+          <td class="rhtd"><a href="{% url 'chg-list-item' item.plan_id item.item_id 0 %}#{{ forloop.parentloop.counter }}{{ forloop.counter }}"> 
+          <img src="{% static 'images\got-checkbx.svg' %}" alt="Completed Check Box" height="18"></a></td>
+          {% else %}
+          <td class="rhtd"><a href="{% url 'chg-list-item' item.plan_id item.item_id 1 %}#{{ forloop.parentloop.counter }}{{ forloop.counter }}"> 
+          <img src="{% static 'images\notgot-checkbx.svg' %}" alt="Empty Check Box"  height="18"></a></td>
+          {% endif %}
+        <td class="rhtd">{{ item.total_qty | dec_cleaner }}</td>
+        <td class="lftd">{{ item.uom | choice_finder:"uoms"}}</td>
+        <td class="lftd">{{ item.item__item_name | title }}</td>
+        {% endif %}
+      {% endfor %}
+    </table>
+    {% endfor %}
+</div>
+
+{% endblock %}

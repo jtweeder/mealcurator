@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+
+
+{% block css_style %}
+.list{
+  text-align: center;
+}
+{% endblock css_style %}
+
+{% block navbar %} {% endblock %}
+{% block page_content %}
+
+<h2>Make a shopping List:</h2>
+<div class="list">
+    {% regroup list by meal__title as meal_list %}
+
+    {% for meal, items in meal_list %}
+    <h3>{{ meal }}</h3>
+    <table>
+      <th colspan="2">Quantity</th>
+      <th>Unit</th>
+      <th>Item</th>
+      
+      {% for item in items %}
+      <tr>
+        {% if item.item_id != 1 %}
+        <form action="{% url 'edit-list-item' plan_id=item.plan_id plan_itm_id=item.id %}", method="post">{% csrf_token %} 
+        <td><input type='number' style='width: 40px;' name ='item-qty' value={{item.qty|dec_cleaner:"true"|first}} min="0" max="1000"> </td>
+        {% elif item.item_id == 1 %}  
+        <form action="{% url 'add-list-item' plan_id=item.plan_id meal_id=item.meal__meal_id %}", method="post">{% csrf_token %}
+        <td><input type='number' style='width: 40px;' name ='item-qty' value=0 min="0" max="1000"> </td>
+        {% endif %}
+        <td>
+          <select style='width: 45px;' name ='item-qty-dec'>
+            <option value="%" {% if item.qty|dec_cleaner:"true"|length == 0 %}selected {% endif %}> --- </option>
+            <option value="1/8" {% if item.qty|dec_cleaner:"true"|last == "1/8" %}selected {% endif %}> 1/8 </option>
+            <option value="1/4" {% if item.qty|dec_cleaner:"true"|last == "1/4" %}selected {% endif %}> 1/4 </option>
+            <option value="1/3" {% if item.qty|dec_cleaner:"true"|last == "1/3" %}selected {% endif %}> 1/3 </option>
+            <option value="1/2" {% if item.qty|dec_cleaner:"true"|last == "1/2" %}selected {% endif %}> 1/2 </option>
+            <option value="2/3" {% if item.qty|dec_cleaner:"true"|last == "2/3" %}selected {% endif %}> 2/3 </option>
+            <option value="3/4" {% if item.qty|dec_cleaner:"true"|last == "3/4" %}selected {% endif %}> 3/4 </option>
+        </td>
+        <td>
+          <select style='width: 70px' name='item-uom'>
+            {% for key, value in uoms %}
+              <option value="{{ key }}" {% if item.uom == key %}selected {% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+        </td> 
+        
+        {% if item.item_id != 1 %}
+        <td>{{ item.item__item_name | title }}</td>
+        <td><button type="submit" value="Edit"><img src="{% static 'images/save-change.svg' %}" alt="Save Item Changes" title="Save {{ item.item__item_name }} Changes" height="18"></button></a></td></form>
+        <td><a href="{% url 'del-list-item' plan_id=item.plan_id id=item.id %}"> <img src="{% static 'images/trash-2.svg' %}" alt="Trash Can" title="Remove {{ item.item__item_name }} from list" height="18"></a></td>
+        {% elif item.item_id == 1 %}
+        <td>
+          <input list="new_items" style='width: 200px;' name='new-item'>
+          <datalist id="new_items">
+            {% for poss_item in items_search %}
+            {% if poss_item.id != 1 %}
+              <option value="{{ poss_item | title }}"></option>
+            {% endif %}
+            {% endfor %}
+          </datalist>
+        </td>
+        <td><button type="submit" value="Add"><img src="{% static 'images/file-plus.svg' %}" alt="Save Icon" title="Add item to list" height="18"></button></td></form>
+      </tr>
+      {% endif %}
+    {% endfor %}
+    </table>
+    {% endfor %}
+</div>
+
+{% endblock %}
+{% block botnavbar %}{% endblock %}
