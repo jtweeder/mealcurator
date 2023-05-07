@@ -8,3 +8,4 @@ nltk==3.6.7
 tst
 lockfile==0.12.2
 django-mailer==2.2
+coverage==7.2.5
