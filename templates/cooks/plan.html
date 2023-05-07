@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<h1>View a Meal Plan</h1>
+
+{% for plan in meal_plans %}
+<div>
+<table>
+    <thead>
+        <th><a href="{% url 'view-plan' plan.id %}">{{ plan.name }}</a></th>
+    </thead>
+</table>
+</div>
+{% endfor %}
+
+{% endblock %}
+

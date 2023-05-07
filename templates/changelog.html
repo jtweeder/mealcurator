@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load cooks_extras %}
+{% block page_content %}
+
+<h1>mealCurator Change Log</h1>
+
+{% regroup changes by version as changes_ver %}
+
+{% for change, details in changes_ver %}
+<h2>{{ change }} </h2>
+{% for det in details %}
+{% if forloop.first %}
+<h3>{{ det.version__implemented }}</h3>
+{% endif %}
+<li>{{ det.change | choice_finder:"change" }} - {{ det.change_desc }}</li>
+
+
+
+{% endfor %}
+
+
+
+{% endfor %}
+{% endblock page_content %}
