@@ -1,4 +1,7 @@
 # mealcurator
+[![Django CI](https://github.com/jtweeder/mealcurator/actions/workflows/django.yml/badge.svg)](https://github.com/jtweeder/mealcurator/actions/workflows/django.yml)
+[![codecov](https://codecov.io/gh/jtweeder/mealcurator/branch/main/graph/badge.svg?token=35FD4Y6787)](https://codecov.io/gh/jtweeder/mealcurator)
+
 Source code for Mealcurator.com
 
 This is a Django Project that runs mealcurator.com.  The source code here is just for the web-application itself.  All AI tools are in the sister repository.
