@@ -91,8 +91,11 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PW'),
         'HOST': os.getenv('POSTGRESIP'),
         'PORT': os.getenv('POSTGRESPORT'),
+        'TEST': {'NAME': 'githubtest',
+                },
+            },
+    
     }
-}
 
 
 # Password validation
