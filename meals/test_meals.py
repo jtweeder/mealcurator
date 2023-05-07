@@ -1,5 +1,6 @@
-from django.test import TestCase
-from . import models
+from django.contrib.auth.models import User
+from django.test import TestCase, RequestFactory
+from . import models, views
 import uuid
 
 
@@ -59,6 +60,7 @@ class mstr_recipe_test(TestCase):
 
     def setUp(self):
         self.mstr_rec = self.create_mstr_recipe()
+        self.factory = RequestFactory()
 
     def test_mstr_recipe_creation(self):
         self.assertTrue(isinstance(self.mstr_rec, models.mstr_recipe))
@@ -73,7 +75,14 @@ class mstr_recipe_test(TestCase):
         (models.mstr_recipe.objects.filter(meal_id=self.mstr_rec.meal_id)
                                    .update(sumreview=1, numreview=2)
          )
-        self.assertEqual(models.mstr_recipe.objects.get(meal_id=self.mstr_rec.meal_id).avg_review(), 0.5)
+        self.assertEqual(models.mstr_recipe.objects.get(
+                         meal_id=self.mstr_rec.meal_id).avg_review(),
+                         0.5)
+
+    def test_show_recipe(self):
+        request = self.factory.get('/browse')
+        response = views.show_recipe(request)
+        self.assertEqual(response.status_code, 200)
 
 
 class meal_item_test(TestCase):
@@ -90,11 +99,69 @@ class meal_item_test(TestCase):
 class creative_commons_test(TestCase):
 
     def setUp(self):
-        self.new_common = models.creative_commons.objects.create(title='creative_test',
-                                                                 internal='test',
-                                                                 description='desc',
-                                                                 link_text='urltext',
-                                                                 link='https://www.google.com')
+        self.new_common = models.creative_commons.objects.create(
+                                title='creative_test',
+                                internal='test',
+                                description='desc',
+                                link_text='urltext',
+                                link='https://www.google.com'
+                          )
 
     def test_create_common_made(self):
         self.assertEqual(self.new_common.__str__(), 'creative_test')
+
+
+class meal_views_test(TestCase):
+
+    def setUp(self):
+        self.tst_user_staff = User.objects.create_user(
+                                          'view_test2',
+                                          'views2@mealcurator.com',
+                                          'johnpassword',
+                                          is_staff=True
+        )
+        self.tst_user = User.objects.create_user('view_test3',
+                                                 'views3@mealcurator.com',
+                                                 'johnpassword')
+
+        self.factory = RequestFactory()
+
+    def test_staff_check(self):
+        self.assertFalse(views.staff_check(self.tst_user))
+        self.assertTrue(views.staff_check(self.tst_user_staff))
+
+    def test_index(self):
+        request = self.factory.get('')
+        response = views.index(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_howto(self):
+        request = self.factory.get('/howto')
+        response = views.howto(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_about(self):
+        request = self.factory.get('/about')
+        response = views.about(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_change_log(self):
+        request = self.factory.get('/changelog')
+        response = views.change_log(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_creative_commons(self):
+        request = self.factory.get('/attribution')
+        response = views.creative_commons_credit(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_mstr_lst(self):
+        request = self.factory.get('/mstr')
+
+        request.user = self.tst_user_staff
+        response = views.mstr_lst(request)
+        self.assertEqual(response.status_code, 200)
+
+        request.user = self.tst_user
+        response = views.mstr_lst(request)
+        self.assertEqual(response.status_code, 302)
