@@ -90,10 +90,11 @@ DATABASES = {
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PW'),
         'HOST': os.getenv('POSTGRESIP'),
-        'PORT': os.getenv('POSTGRESPORT'),},
-    'TEST': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'githubtest', }
+        'PORT': os.getenv('POSTGRESPORT'),
+        'TEST': {'NAME': 'githubtest',
+                },
+            },
+    
     }
 
 
