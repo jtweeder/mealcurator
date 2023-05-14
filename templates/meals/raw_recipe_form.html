@@ -23,6 +23,9 @@ th{
 .err{
     text-align: center;
 }
+.msg{
+    text-align: center;
+}
 td{
     text-align: center;
     font-family: 'Be Vietnam Pro', sans-serif;
@@ -47,6 +50,13 @@ td{
 <h2 class="err">{% if err == 'rec_url' %} Recipe Already Submitted {% else %} Error: {{ err }} {% endif %} </h2>
 {% endfor %}
 {% endif %}
+<h2 class="msg">{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}</h2>
 <div class=subCard>
     <table>
     <form action="" method="post">
