@@ -5,54 +5,54 @@
 <h1>Getting Started with mealCurator</h1>
 
 <h2>Creating a Profile</h2>
-<p>If you do not already ahve a profile, simply <a href="{% url 'register' %}">create one</a>.  The only two pieces of information we need to get started is a username and email.  Currently there is no sharing between accounts, so it is recommended to make one account per household if you would like to share access amongst multiple family members.</p>
+<p>If you do not already have a profile, simply <a href="{% url 'register' %}">create one</a>.  The only two pieces of information we need to get started is a username and email.  Currently there is no sharing between accounts, so it is recommended to make one account per household if you would like to share access amongst multiple family members.</p>
 
-<p>We do not sell your information, and at this time we do not send any automated emails so no junk mail.  We simply use your profile to tie back your previous selected recipes, and your likes/dislikes to build recomendations for your future recipes.</p>
+<p>We do not sell your information, and at this time we do not send any automated emails so no junk mail.  We simply use your profile to tie back to your previous selected recipes, and your likes/dislikes to build recommendations for your future recipes.</p>
 
 <h2>Creating a Meal Plan</h2>
-<p>The creating of meal plans is totally up to what works best for you.  Do you prefer to do one for each day, one per week, one per month, one for a special occasion?  Whatever organization system works for you need will work.  Think of the Meal Plans as folders where you stash recipes.  You can have the same recipe in multiple meal plans, but you cannot add the same recipe to the same meal plan multiple times.</p>
+<p>The creation of meal plans is totally up to what works best for you.  Do you prefer to do one for each day, one per week, one per month, one for a special occasion?  Whatever organization system works for you will work for mealCurator.  Think of the Meal Plans as folders where you stash recipes.  You can have the same recipe in multiple meal plans, but you cannot add the same recipe to the same meal plan multiple times.</p>
 
-<p>You can also name your meal plan whatever you would like from your account home page.  It is only visible to you, but not encrypted in the database so do not use your password or other sensitive information as a meal plan name.  Look on your <a href="{% url 'welcome' %}">account home</a> page for the <a href="{% url 'make-plan' %}">'Create a Meal Plan'</a> button to get started with your first meal plan.</p>
+<p>You can also name your meal plan whatever you would like from your account home page.  It is only visible to you, but not encrypted in the database so do not use your password or other sensitive information as a meal plan name.  Look on your <a href="{% url 'welcome' %}">Account Home</a> page for the <a href="{% url 'make-plan' %}">'Create a Meal Plan'</a> button to get started with your first meal plan.</p>
 
 <h3>Adding Meals to a Meal Plan</h3>
-<p>After you have created meal plan you will be returned your account home page, where you can see your new plan name listed.  Simply click the name to enter the meal plan.  This is where you can add recipes, delete recipes, retrieve saved recipes, rate recipes, and delete the meal plan.</p>
+<p>After you have created a meal plan, you will be returned your account home page where you can see your new plan name listed.  Simply click the name to enter the meal plan.  This is where you can add recipes, delete recipes, retrieve saved recipes, rate recipes, and delete the meal plan.</p>
 
-<p>Newly created meal plans will be empty.  Once inside the desired the meal plan, click on 'Add More Recipes to Plan' to browse the recipes.  At the top you can see filter options for meal time of day, cooking times, cooking methods, main proteins, and dish types.  While not everyone will categorize the same meal in the same way these should at least give you way to browse the availible recipes.</p>
+<p>Newly created meal plans will be empty.  Once inside the desired the meal plan, click on 'Add More Recipes to Plan' to browse the recipes.  At the top you can see filter options for meal time of day, cooking times, cooking methods, main proteins, and dish types.  While not everyone will categorize the same meal in the same way these should at least give you a way to browse the available recipes.</p>
 
-<p>Currently the recipes are presented in non-ordered format.  As we collect information on your interest and more informationa about the recipes suggested recipes will appear near the top of results.  To reset any of the search critera simple the 'All' option for that category and hit search again.</p>
+<p>Currently the recipes are presented in non-ordered format.  As we collect information on your interests and more information about the recipes provided, suggested recipes will appear near the top of results.  To reset any of the search criteria, simply select the 'All' option for that category and hit search again.</p>
 
-<p>The name and summary information obtained for each recipe is presented in the recipe cards.  If you would like to view more information about a particular recipe click the name, or the book icon on the recipe card.  This will open the recipe in a new tab.  More than likely the recipe will not be behind a paywall, but we direct you the last known good location for that recipe.  Our intention is collect and curator recipes, not duplicate them, so we have little control over where the link may point in the future, or if it turns into a subscription service later by the author.  In the future we hope to offer a way to report broken links so we can keep recipes pointing to the most accurate location.</p>
+<p>The name and summary information obtained for each recipe is presented in the recipe cards.  If you would like to view more information about a particular recipe, click the name or the book icon on the recipe card.  This will open the recipe in a new tab.  More than likely the recipe will not be behind a paywall, but we will direct you the last known good location for that recipe.  Our intention is collect and curate recipes, not duplicate them, so we have little control over where the link may point in the future, or if it turns into a subscription service later by the author.  In the future we hope to offer a way to report broken links so we can keep recipes pointing to the most accurate location.</p>
 
-<p>Once you find something you want to add to your meal plan, hit the file icon with a '+' symbol in it.  This will place this recipe card in your meal plan for safe keeping, and let you keep browsing the other recipes.</p>
+<p>Once you find something you want to add to your meal plan, hit the file icon with a '+' symbol in it.  This will place this recipe card in your meal plan for safe keeping and let you keep browsing the other recipes.</p>
 
-<p>When you are done, or want to review your meal plan, click the link at the bottom of recipe card results labeled 'Back to plan overview', or go back to your account home button at the top.</p>
+<p>When you are done, or want to review your meal plan, click the link at the bottom of recipe card results labeled 'Back to plan overview', or go back to your Account Home button at the top.</p>
 
 <h3>Add Recipes Not on the Site</h3>
-<p>We are always greatful for submissions.  If you have a recipe you would like to add to the site, and then later to a meal plan.  Hit the <a href="{% url 'get-recipe' %}">'Submit Recipe'</a> button at the top of the page.  Once you submit a recipe a process runs every 10 minutes that goes and records information from the submitted recipe before it is ready to be added to meal plan.  If we encounter an error in trying to access the needed information, the meal will not be added to the availbe recipes to be added.  We hope to minimze these, but at this time some sites do not allow automated crawling of their information.</p>
-<p>Not sure if you have previously submitted a recipe?  No worries, just submit it again and we will check to make sure its not a duplicate.</p>
-<p>In the future we also hope to have a way to add recipes you may have of your own that are not currently availbe on the web.</p>
+<p>We are always grateful for submissions.  If you have a recipe you would like to add to the site, and then later to a meal plan, hit the <a href="{% url 'get-recipe' %}">'Submit Recipe'</a> button at the top of the page.  Once you submit a recipe, a process runs every 10 minutes that records information from the submitted recipe before it is ready to be added to meal plan.  If we encounter an error in trying to access the needed information, the meal will not be added to the available recipes to be added.  We hope to minimize these, but at this time some sites do not allow automated crawling of their information.</p>
+<p>Not sure if you have previously submitted a recipe?  No worries, just submit it again and we will check to make sure it's not a duplicate.</p>
+<p>In the future we also hope to have a way to add recipes you may have of your own that are not currently available on the web.</p>
 
 <h2>Making a List:</h2>
-<p>Shopping list are tied to a meal plan.  Before heading out on your shopping trip, open the meal plan you need to make a list for.  On the left hand side you will see the recipes you have selected.  Click on a recipes name to launch that recipe in a new tab so you can make a list.</p>
-<p>Back on the mealCurator site you will see the list organized by meal on the right hands side of your screen.  Simply enter the quantity, unit of measure, and the name of the item.  If you have multiple items across different recipes list them in the same unit of measure to make shopping easier.</p>
+<p>Shopping lists are tied to a meal plans.  Before heading out on your shopping trip, open the meal plan you need to make a list for.  On the left-hand side you will see the recipes you have selected.  Click on the recipe name to launch it in a new tab so you can make a list.</p>
+<p>Back on the mealCurator site you will see the list organized by meal on the right-hand side of your screen.  Simply enter the quantity, unit of measure, and the name of the item.  If you have multiple items across different recipes, list them in the same unit of measure to make shopping easier.</p>
 <p>If you make a mistake, no worries, just delete the item and start that entry over again.</p>
 
-<h3>Shopping with a list:</h3>
-<p>While at the store simply navigate to the meal plan you need to shop for.  Then open the view-list link.  This will consolidate all your item across all recipes and do the math for you.</p>
+<h3>Shopping with a List:</h3>
+<p>While at the store simply navigate to the meal plan you need to shop for.  Then open the View List link.  This will consolidate all your items across all recipes and do the math for you.</p>
 <p>If you happen to measure the same item in two recipes with different units of measures they will appear right after each other, but will check off together.  Don't worry about loosing connection, or refreshing your browser. The information will be stored as you check them off.</p>
 <p>We will continually improve the way we organize items and are always open to feedback. </p>
 
 <h2>Finding Saved Meals</h2>
-<p>From your account home, simple click the meal plan name, and you will be presented with the recipe cards for saved recipes.  Click on the recipe name or the book icon to open the recipe in a new tab.  If you end up not needing, or added a recipe in error hit the trash can icon to remove the recipe card from your meal plan.</p>
+<p>From your Account Home, simply click the meal plan name and you will be presented with the recipe cards for saved recipes.  Click on the recipe name or the book icon to open the recipe in a new tab.  If you end up not needing a recipe, or added one in error, hit the trash can icon to remove the recipe card from your meal plan.</p>
 
 <h3>Rating Meals</h3>
-<p>After you have prepared and hopefully enjoyed your meal, please come back and give it a thumbs-up or thumbs-down rating.  This helps us to collect information on the popularity, quality on recipes all over the site.  At the same time it helps to collect information on your individual taste to stregnthen the individual suggestion engine.</p>
-<p>If you need to change a rating simply click the other rating icon for the particular recipe.  If you cook a recipe across different meal plans feel free to give a rating each time.  Season to season taste trends, or becoming bored of recipe overtime may change your rating across time and this information is helpful.</p>
+<p>After you have prepared and hopefully enjoyed your meal, please come back and give it a thumbs-up or thumbs-down rating.  This helps us to collect information on the popularity and quality on recipes all over the site.  At the same time it helps to collect information on your individual taste to strengthen the suggestion engine.</p>
+<p>If you need to change a rating, simply click the other rating icon for the particular recipe.  If you cook a recipe across different meal plans feel free to give a rating each time.  Season-to-season taste trends, or becoming bored of a recipe, may change your rating across time and this information is helpful.</p>
 
 <h2>Deleting Meal Plans</h2>
-<p>Once you are done with a meal plan feel free to click the 'Delete Meal Plan' button when viewing the meal plan.  This will simply keep the meal plan from showing up when you view your account home page.  We keep the records in the back-end to be able to run your customize suggestions.</p>
-<p>Prefer to keep all the meal plans forever.  Great!  Do what works for your presonal need.  Currently we do not have a limit the number of active recipes for each user.  The time may come when this limit needs to happen, but right now knock yourself out!</p>
+<p>Once you are done with a meal plan feel free to click the 'Delete Meal Plan' button when viewing the meal plan.  This will simply keep the meal plan from showing up when you view your Account Home page.  We keep the records in the back-end to be able to run your customized suggestions.</p>
+<p>Prefer to keep all the meal plans forever?  Great!  Do what works for your personal need.  Currently we do not have a limit on the number of active recipes for each user.  The time may come when this limit needs to happen, but right now knock yourself out!</p>
 
 <h2>Suggestions?</h2>
-<p>Have a suggestion? Better yet do you know a little Django, HTML/CSS, or just great at proof-reading text and want to contribute.  Visit the sites github repository and contribute.  No guarantee we will implement every suggestion, but input and contrubtions are welcome.  We are currently in pre-release so robust changes will be held until we get further along.</p>
+<p>Have a suggestion? Better yet do you know a little Django, HTML/CSS, or just great at proofreading text and want to contribute?  Visit the site's github repository and contribute.  No guarantee we will implement every suggestion, but input and contrubtions are welcome.  We are currently in pre-release so robust changes will be held until we get further along.</p>
 {% endblock page_content %}
