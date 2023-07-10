@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev" , "main"]
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "dev", "main" ]
 
 jobs:
   build:
@@ -52,4 +52,7 @@ jobs:
         POSTGRESPORT: 5432
         
       run: |
-        python manage.py test
+        coverage run --source='.' manage.py test
+        coverage xml
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v3

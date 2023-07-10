@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -52,8 +53,16 @@ class get_recipe(CreateView):
         outcome = raw.pull_mstr()
         if outcome:
             raw.mstr_flag = True
+            messages.add_message(
+                    self.request, messages.INFO,
+                    f'{raw.title} Successfully Created from: {raw.rec_url}')
         else:
             raw.error_flag = True
+            messages.add_message(
+                    self.request, messages.INFO,
+                    f'Sorry, Unable to Process {raw.title}'
+                    f' from: "{raw.rec_url}".'
+                    ' We will attempt to add manually at a later date')
         raw.save()
         return redirect('get-recipe')
 
