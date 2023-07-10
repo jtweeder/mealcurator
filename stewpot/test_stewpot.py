@@ -30,6 +30,17 @@ class share_meal(TestCase):
                                            text='shared meal test',
                                            meal=self.tst_recipe)
                            )
+        self.meal_posting = (models.meal_posting
+                             .objects.create(title='Test Posting',
+                                             creator=self.tst_user,
+                                             text='A Test Posting Post')
+                            )                 
+        self.share_meal_posting = (models.share_meal
+                                   .objects.create(title='PostingTest',
+                                                   creator=self.tst_user,
+                                                   text='Posting Meal Test',
+                                                   meal=self.tst_recipe)
+                                  )
 
         self.factory = RequestFactory()
 
@@ -40,4 +51,10 @@ class share_meal(TestCase):
         request = self.factory.get('/share/save')
         request.user = self.tst_user
         response = views.start_share(request, self.tst_recipe.meal_id)
+        self.assertEqual(response.status_code, 200)
+
+    def test_posting(self):
+        request = self.factory.get(f'share/post')
+        request.user = self.tst_user
+        response = views.view_share(request, self.meal_posting.id)
         self.assertEqual(response.status_code, 200)
