@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from meals.models import mstr_recipe
-from stewpot.models import share_meal
+from stewpot.models import share_meal, meal_posting
 from mealcurator.helperfuncs import check_blank
 
 # TODO:  Let edits happen for things people shared
@@ -55,4 +55,27 @@ def view_share(request, share_id):
                'view': True
                }
     template = 'stewpot/share.html'
+    return render(request, template, context)
+
+
+def view_posting(request, post_id):
+    posting = meal_posting.objects.get(id=post_id)
+    shared = (share_meal.objects.values('id',
+                                        'title',
+                                        'text',
+                                        'meal_id',
+                                        'meal__title',
+                                        'meal__vegan',
+                                        'meal__vegetarian',
+                                        'meal__meal_time',
+                                        'meal__cooking_time',
+                                        'meal__dish_type',
+                                        'meal__cooking_method',
+                                        'meal__protein_type',
+                                        'meal__rec_url')
+                                .filter(posting=posting))
+
+    context = {'pp': posting,
+               'shared_meals': shared}
+    template = 'stewpot/meal_post.html'
     return render(request, template, context)
