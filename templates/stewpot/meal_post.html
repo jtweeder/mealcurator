@@ -4,14 +4,11 @@
 
 
 {% block css_style %}
-.list{
-  text-align: center;
-}
 
-.container {
-  border-radius: 5px;
-  padding: 20px;
-}
+#rec {  
+    margin: auto;
+    padding: 10px
+  }
 
 {% endblock css_style %}
 
@@ -24,9 +21,9 @@
 
 {% for meal in shared_meals %}
 
-<h2>{{meal.title}}</h2>
+<h2 class="mealTitle">{{meal.title}}</h2>
 
-<div class="recCard">
+<div id="rec" class="recCard">
   <table>
       <th colspan=2><a href="{{ meal.meal__rec_url }}", target="_blank">{{ meal.meal__title }}</a></th>
   <tr><td><b>Vegan:</b> {{ meal.meal__vegan|yesno:"Yes,No" }}</td><td><b>Vegetarian:</b> {{ meal.meal__vegetarian|yesno:"Yes,No" }}</td></tr>
