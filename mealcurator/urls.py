@@ -2,9 +2,9 @@ from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path
 from django.contrib.sitemaps.views import sitemap
-from .sitemaps import StaticViewSitemap
+from .sitemaps import StaticViewSitemap, BlogSitemap
 
-sitemaps = {'static': StaticViewSitemap}
+sitemaps = {'static': StaticViewSitemap, 'blog': BlogSitemap}
 
 urlpatterns = [
     path('', include('meals.urls')),
