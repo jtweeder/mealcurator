@@ -8,22 +8,22 @@ import uuid
 class share_meal(TestCase):
     def setUp(self):
         self.tst_user = User.objects.create_user('john',
-                                            'lennon@thebeatles.com',
-                                            'johnpassword')
+                                                 'lennon@thebeatles.com',
+                                                 'johnpassword')
         self.tst_recipe = mstr_recipe.objects.create(meal_id=uuid.uuid1(),
-                                        title='TestTitle2',
-                                        rec_url="https://www.mealcurator.com",
-                                        vegan=False,
-                                        vegetarian=False,
-                                        meal_time='bk',
-                                        dish_type='sp',
-                                        cooking_method='st',
-                                        cooking_time='20',
-                                        times_selected=0,
-                                        sumreview=0,
-                                        numreview=0,
-                                        found_words="test"
-                                        )
+                                                     title='TestTitle2',
+                                                     rec_url="https://www.mealcurator.com",
+                                                     vegan=False,
+                                                     vegetarian=False,
+                                                     meal_time='bk',
+                                                     dish_type='sp',
+                                                     cooking_method='st',
+                                                     cooking_time='20',
+                                                     times_selected=0,
+                                                     sumreview=0,
+                                                     numreview=0,
+                                                     found_words="test"
+                                                     )
         self.share_meal = (models.share_meal
                            .objects.create(title='ShareTest',
                                            creator=self.tst_user,
@@ -34,13 +34,13 @@ class share_meal(TestCase):
                              .objects.create(title='Test Posting',
                                              creator=self.tst_user,
                                              text='A Test Posting Post')
-                            )                 
+                            )
         self.share_meal_posting = (models.share_meal
                                    .objects.create(title='PostingTest',
                                                    creator=self.tst_user,
                                                    text='Posting Meal Test',
                                                    meal=self.tst_recipe)
-                                  )
+                                   )
 
         self.factory = RequestFactory()
 
@@ -54,7 +54,13 @@ class share_meal(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_posting(self):
-        request = self.factory.get(f'share/post')
+        request = self.factory.get('/share/post')
         request.user = self.tst_user
         response = views.view_share(request, self.meal_posting.id)
+        self.assertEqual(response.status_code, 200)
+
+    def test_blog(self):
+        request = self.factory.get('/share/post')
+        request.user = self.tst_user
+        response = views.home_postings(request)
         self.assertEqual(response.status_code, 200)

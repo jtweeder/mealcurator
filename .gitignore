@@ -111,3 +111,4 @@ venv.bak/
 manage.py
 
 dev_static/
+meals/migrations/__pycache__/__init__.cpython-310.pyc

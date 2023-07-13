@@ -8,22 +8,22 @@ from mealcurator.helperfuncs import check_blank
 # TODO:  Let someone add a shared recipe to a list/make a list
 # TODO: Let Admins make multiple recipes and make a blogpost about them
 
-
-# Landing page for capturing title and text from user
 @login_required
 def start_share(request, meal_id):
+    """Landing page for capturing title and text from user"""
     meal = mstr_recipe.objects.get(meal_id=meal_id)
     template = 'stewpot/share.html'
     context = {'meal': meal, 'start': True}
     return render(request, template, context)
 
-
-# Create share_meal and redirect to view of it
 @login_required
 def save_share(request):
+    """Create share_meal and redirect to view of it"""
     if request.method == 'POST':
-        shared_title = check_blank(request.POST.get('shared_title'), 'A shared recipe from mealCurator')
-        shared_text = check_blank(request.POST.get('shared_text'), 'I found this on mealCurator and wanted to share it with you')
+        shared_title = check_blank(request.POST.get('shared_title'),
+                                   'A shared recipe from mealCurator')
+        shared_text = check_blank(request.POST.get('shared_text'),
+                                  'I found this on mealCurator and wanted to share it with you')
         shared_meal = mstr_recipe.objects.get(meal_id=request.POST.get('shared_meal'))
 
         shared = share_meal.objects.create(
@@ -33,7 +33,6 @@ def save_share(request):
                     meal=shared_meal,
                     )
     return redirect('view-shared', shared.id)
-
 
 # View a shared meal
 def view_share(request, share_id):
@@ -78,4 +77,10 @@ def view_posting(request, post_id):
     context = {'pp': posting,
                'shared_meals': shared}
     template = 'stewpot/meal_post.html'
+    return render(request, template, context)
+
+def home_postings(request):
+    posts = meal_posting.objects.all().order_by('created_on')
+    context = {'posts': posts}
+    template = 'stewpot/postings.html'
     return render(request, template, context)
