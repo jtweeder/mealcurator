@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+
+
+{% block css_style %}
+
+
+{% endblock css_style %}
+
+{% block page_content %}
+<div class="content">
+
+<h2>A collection of blog articles about various recipes availible on mealCurator</h2>
+
+{% for post in posts %}
+
+<h3 class="mealTitle">
+<a href="{% url 'view-posting' post.id %}">
+{{post.title}}</a>
+</h3>
+<p>{{post.text}}</p>
+
+{% endfor %}
+
+</div>
+{% endblock %}
+
