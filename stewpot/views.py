@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from meals.models import mstr_recipe
 from stewpot.models import share_meal, meal_posting
-from mealcurator.helperfuncs import check_blank
+from mealcurator.helperfuncs import check_blank, aicreatemeal
+
 
 # TODO:  Let edits happen for things people shared
 # TODO:  Let someone add a shared recipe to a list/make a list
 # TODO: Let Admins make multiple recipes and make a blogpost about them
+
+def staff_check(user):
+    return user.is_staff
 
 @login_required
 def start_share(request, meal_id):
@@ -84,3 +88,16 @@ def home_postings(request):
     context = {'posts': posts}
     template = 'stewpot/postings.html'
     return render(request, template, context)
+
+@login_required
+@user_passes_test(staff_check)
+def recipe_ai_create(request):
+    
+    if request.method == 'POST':
+        ingredients = request.POST.get('ingredient')
+        mode = request.POST.get('mode')
+        time = request.POST.get('time')
+        other = request.POST.get('other')
+    # TODO: Create DB object to story request for AI
+    
+    ai_resp = aicreatemeal()
