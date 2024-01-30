@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from meals.models import mstr_recipe
 from stewpot.models import share_meal, meal_posting
-from mealcurator.helperfuncs import check_blank, aicreatemeal
+from mealcurator.helperfuncs import check_blank, AICreateMeal
 
 
 # TODO:  Let edits happen for things people shared
@@ -94,10 +94,21 @@ def home_postings(request):
 def recipe_ai_create(request):
     
     if request.method == 'POST':
-        ingredients = request.POST.get('ingredient')
+        ing1 = request.POST.get('ing-1')
+        ing2 = request.POST.get('ing-2')
+        ing3 = request.POST.get('ing-3')
+        ing4 = request.POST.get('ing-4')
+        ing5 = request.POST.get('ing-5')
         mode = request.POST.get('mode')
         time = request.POST.get('time')
         other = request.POST.get('other')
-    # TODO: Create DB object to story request for AI
-    
-    ai_resp = aicreatemeal()
+
+        ingredients = []
+        for ing in [ing1, ing2, ing3, ing4, ing5]:
+            if len(ing) > 0:
+                ingredients.append(ing)
+        
+        ai_resp = AICreateMeal(ingredients, mode, time, other)
+    # TODO: Create DB object to story request for AI if users wants to save
+    # TODO: Create a page to hold the recipe with information about how it was generated
+       

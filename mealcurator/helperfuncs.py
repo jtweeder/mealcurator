@@ -12,12 +12,12 @@ def check_blank(input, default):
         return input
 
 # AI Configurations
-class aimealcurator:
+class AIMealCurator:
     def __init__(self):
         self.model = AI_COMPLETION_MODEL
         self.client = OpenAI()
 
-class aicreatemeal(aimealcurator):
+class AICreateMeal(AIMealCurator):
     def __init__(self, ingredients, mode, time, other):
         super().__init__()
         self.message_start = self._message_prep(ingredients, mode, time, other)
