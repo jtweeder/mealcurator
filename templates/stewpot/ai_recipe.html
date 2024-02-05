@@ -4,39 +4,69 @@
 
 
 {% block css_style %}
-
+ul {
+    list-style-type: square;
+  }
 
 {% endblock css_style %}
 
 {% block page_content %}
 
-<!--Check if loading ai recipe or first pass-->
-<!--If first pass-->
+{% if preview %}
 
-<form action="{% url 'ai-recipe=create' %}", mehod="post">{% csrf_token %}
+
+<h3>Preview of {{ title }}</h3>
+
+Please review the generated recipe below and choose to save or discard it.
+
+<!--PUT SAVE OR DISCARD Button discard returns to start of ai recipe-->
+<form action="{% url 'ai-recipe-create' %}", method="post">{% csrf_token %}
+    <input type="hidden" name="title" value="{{ title }}">
+    <input type="hidden" name="body" value="{{ body }}">
+    <input type="submit" name='discard' value="Discard">
+    <input type="submit" name='save' value="Save">
+
+
+
+
+
+{{ body|safe }}
+
+
+
+{% elif start %}
+
+<form action="{% url 'ai-recipe-create' %}", method="post">{% csrf_token %}
     <fieldset>
         <legend>Ingredients:</legend>
         <label for="ing-1">Ingredient #1</label>
-        <input type="text" id="ing-1" name="ing-1" maxlength="20">
+        <input type="text" id="ing-1" name="ing-1" maxlength="20"><br>
         <label for="ing-2">Ingredient #2</label>
-        <input type="text" id="ing-2" name="ing-2" maxlength="20">
+        <input type="text" id="ing-2" name="ing-2" maxlength="20"><br>
         <label for="ing-3">Ingredient #3</label>
-        <input type="text" id="ing-3" name="ing-3" maxlength="20">
+        <input type="text" id="ing-3" name="ing-3" maxlength="20"><br>
         <label for="ing-4">Ingredient #4</label>
-        <input type="text" id="ing-4" name="ing-4" maxlength="20">
+        <input type="text" id="ing-4" name="ing-4" maxlength="20"><br>
         <label for="ing-5">Ingredient #5</label>
         <input type="text" id="ing-5" name="ing-5" maxlength="20">
     <br>
     </fieldset>
     <br>
     <label for="mode">Cooking Mode:</label>
-    <input type="text" id="mode" name="mode" maxlength="20">
+    <input type="text" id="mode" name="mode" maxlength="20"><br>
     <label for="time">Cooking Time:</label>
-    <input type="text" id="time" name="time" maxlength="20">
+    <input type="text" id="time" name="time" maxlength="20"><br>
     <label for="other">Other Information:</label>
-    <input type="text" id="other" name="other" maxlength="30">
-    <input type="submit" value="Submit to AI">
+    <input type="text" id="other" name="other" maxlength="30"><br>
+    <input type="submit" name='submit' value="Submit">
 </form>
 
+{% elif view %}
+    <h3>{{ title }}</h3>
+    {% autoescape off %}
+        {{ body }}
+    {% endautoescape %}
+
+{% endif %}
 {% endblock %}
 

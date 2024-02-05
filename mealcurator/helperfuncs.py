@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 # Holds helper functions for various things that need solutions
 
+
 # Check for blanks and if found default value
 def check_blank(input, default):
     if input == '':
@@ -11,11 +12,13 @@ def check_blank(input, default):
     else:
         return input
 
+
 # AI Configurations
 class AIMealCurator:
     def __init__(self):
         self.model = AI_COMPLETION_MODEL
         self.client = OpenAI()
+
 
 class AICreateMeal(AIMealCurator):
     def __init__(self, ingredients, mode, time, other):
@@ -47,11 +50,11 @@ class AICreateMeal(AIMealCurator):
     def _get_response(self):
         """Send request to OpenAI API and get response"""
         response = self.client.chat.completions.create(
-            model = AI_COMPLETION_MODEL,
-            messages = [
+            model=AI_COMPLETION_MODEL,
+            messages=[
                 {
                     'role': 'system',
-                    'content': 'Create a recipe in HTML from the provided ingredients and other information.'
+                    'content': 'Create a recipe in HTML that contains no images from the provided ingredients and other information.'
                 },
                 {
                     'role': 'user',
@@ -73,4 +76,17 @@ class AICreateMeal(AIMealCurator):
             self.response.choices[0].message.content,
             'html.parser'
         )
-        return soup.body
+
+        # Get contents of body tag and create string
+        body_content = soup.body.contents
+        body_content_str = ''.join(str(x) for x in body_content)
+
+        # Find title tag and extract text
+        title_tag = soup.find('title')
+
+        if title_tag:
+            title = title_tag.text
+        else:
+            title = 'Untitled AI Recipe'
+
+        return title, body_content_str
