@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.utils.html import format_html
 from meals.models import mstr_recipe, raw_recipe
 from stewpot.models import share_meal, meal_posting, ai_html
+from cooks.models import plan
 from mealcurator.helperfuncs import check_blank, AICreateMeal
 import time
 
@@ -163,11 +164,18 @@ def recipe_ai_create(request):
                 ai_recipe_html.meal = mstr_recipe.objects.get(rec_url=rec_url)
                 ai_recipe.save()
                 ai_recipe_html.save()
+                request.session['from_save'] = True
                 return redirect('view-ai-html', slug)        
     
-def view_ai_recipe(request, ai_html_id):
-    ai_recipe = ai_html.objects.get(html_id=ai_html_id)
-    context = {'title': ai_recipe.title, 'body': ai_recipe.body, 'view': True}
+def view_ai_recipe(request, ai_html_id, from_save=False):
+    ai_recipe = ai_html.objects.get(html_id=ai_html_id)   
+    if request.session.get('from_save', False):
+        # Pull the users cooks.plan that are not soft_deleted
+        plans = plan.objects.filter(owner=request.user, soft_delete=False)
+        context = {'ai_recipe': ai_recipe, 'plans': plans, 'view': True, 'from_save': True}   
+        request.session['from_save'] = False
+    else:
+        context = {'ai_recipe': ai_recipe, 'view': True, 'from_save': False}   
     template = 'stewpot/ai_recipe.html'
     return render(request, template, context)
     

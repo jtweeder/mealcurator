@@ -119,6 +119,9 @@
 <input type="search" name="q" placeholder="Search by free-text..."/>
 <input type="submit" value="Search"/>
 </form>
+{% if user.is_staff %}
+<br><strong><a href="{% url 'ai-recipe-start' %}">Build a recipe with AI</a></strong>
+{% endif %}
 </div>
 <h3><a href="{% url 'view-plan' mp.id %}">Back to {{ mp.name }} Overview</a></h3>
 {% endif %}
