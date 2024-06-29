@@ -7,7 +7,6 @@ from stewpot.models import share_meal, meal_posting, ai_html
 from mealcurator.helperfuncs import check_blank, AICreateMeal
 import time
 
-
 # TODO:  Let edits happen for things people shared
 # TODO:  Let someone add a shared recipe to a list/make a list
 # TODO: Let Admins make multiple recipes and make a blogpost about them
@@ -135,10 +134,8 @@ def recipe_ai_create(request):
             # Create raw_recipe of ai-made recipe and then save the html to ai_html
             title = request.POST.get('title')
             body = request.POST.get('body')
-            # TODO: Make the date part of the slug with a -
-            slug = slugify(title+'-'+str(int(time.time())))
-            # TODO: make this not depend on the site - look at reverse or get script prefix       
-            rec_url = 'https://www.mealcurator.com/share/view/ai/'+slug
+            slug = slugify(title+'-'+str(int(time.time())))  
+            rec_url = request.build_absolute_uri('/share/view/ai/') + slug
 
             ai_recipe_html = ai_html.objects.create(
                 html_id=slug,
@@ -159,16 +156,14 @@ def recipe_ai_create(request):
                 cooking_time='na',
                 ai_recipe=True
             )
-            # TODO: Does not seem to be doing anything -- writes to raw but no mstr - pry fails
+           
             outcome = ai_recipe.pull_mstr()
             if outcome:
                 ai_recipe.mstr_flag = True
                 ai_recipe_html.meal = mstr_recipe.objects.get(rec_url=rec_url)
                 ai_recipe.save()
                 ai_recipe_html.save()
-                return redirect('view-ai-html', slug)
-
-        
+                return redirect('view-ai-html', slug)        
     
 def view_ai_recipe(request, ai_html_id):
     ai_recipe = ai_html.objects.get(html_id=ai_html_id)
