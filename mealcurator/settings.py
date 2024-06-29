@@ -151,3 +151,6 @@ EMAIL_HOST_PASSWORD = os.getenv('em_pw')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'admin@mealcurator.com'
+
+# OpenAI Model Settings
+AI_COMPLETION_MODEL = "gpt-3.5-turbo"

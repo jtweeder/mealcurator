@@ -23,3 +23,18 @@ class share_meal(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# Store HTML and prompts from recipe_ai_create view
+class ai_html(models.Model):
+    html_id = models.SlugField(unique=True)
+    title = models.CharField(max_length=255)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    meal = models.ForeignKey(mstr_recipe, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.title
+
+

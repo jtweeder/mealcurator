@@ -35,6 +35,7 @@ class raw_recipe(models.Model):
                                     choices=choices.cook_time_choices)
     mstr_flag = models.BooleanField(default=False)
     error_flag = models.BooleanField(default=False)
+    ai_recipe = models.BooleanField('AImade', default=False)
 
     def __str__(self):
         return self.rec_url
@@ -56,6 +57,7 @@ class raw_recipe(models.Model):
                     cooking_time=self.cooking_time,
                     protein_type=self.protein_type,
                     found_words=learned_tkns,
+                    ai_recipe=self.ai_recipe
                    )
             mstr_search.objects.create(
                 meal_id=mstr,
@@ -132,6 +134,7 @@ class mstr_recipe(models.Model):
                                     max_length=2,
                                     choices=choices.protein_choices,
                                     default='na')
+    ai_recipe = models.BooleanField('AImade', default=False)
     times_selected = models.PositiveIntegerField('Number of times Selected',
                                                  default=0)
     sumreview = models.PositiveIntegerField('Sum of Reviews',

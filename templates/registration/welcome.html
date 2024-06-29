@@ -22,6 +22,9 @@ No meal plans found.  Create one to get started
 <a href="{% url 'view-plans' %}">Detail Meal Plan View</a>
 {% if user.is_staff %}
 <h3><a href="{% url 'view-mstr-list' %}">Recipe Maintance</a></h3>
-<p>Logout:</p>  <a href="{% url 'logout' %}">Click here to logout</a>
+<h3><a href="{% url 'ai-recipe-start' %}">AI Recipe Creation</a></h3>
 {% endif %}
+
+<p>Logout:</p>  <a href="{% url 'logout' %}">Click here to logout</a>
+
 {% endblock %}

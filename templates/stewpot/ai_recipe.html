@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+{% load cooks_extras %}
+
+{% block title %} {{ ai_recipe.title }} {% endblock title %}
+
+{% block css_style %}
+ul {
+    list-style-type: square;
+  }
+.center-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+{% endblock css_style %}
+
+{% block page_content %}
+
+{% if preview %}
+
+
+<h3>Preview of {{ title }}</h3>
+
+Please review the generated recipe below and choose to save or discard it.
+
+<!--PUT SAVE OR DISCARD Button discard returns to start of ai recipe-->
+<form action="{% url 'ai-recipe-create' %}", method="post">{% csrf_token %}
+    <input type="hidden" name="title" value="{{ title }}">
+    <input type="hidden" name="body" value="{{ body }}">
+    <input type="submit" name='discard' value="Discard">
+    <input type="submit" name='save' value="Save">
+
+
+{{ body|safe }}
+
+
+
+{% elif start %}
+
+<h3>AI Recipe Generator</h3>
+<p>Enter up to 5 ingredients, a cooking method, approximate cooking time, and any other information you would like to provide as context.  Hit submit and the AI will generate a unique recipe for you.
+    <br><br>
+    This feature is still in development and may not always generate a recipe, and may generate odd recipes.  Please read the generated recipe carefully before saving it.
+</p>
+
+<div class="center-form">
+    <form action="{% url 'ai-recipe-create' %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Ingredients:</legend>
+            <label for="ing-1">Ingredient #1</label>
+            <input type="text" id="ing-1" name="ing-1" maxlength="20" placeholder="Optional 1st Ingredient"><br>
+            <label for="ing-2">Ingredient #2</label>
+            <input type="text" id="ing-2" name="ing-2" maxlength="20" placeholder="Optional 2nd Ingredient"><br>
+            <label for="ing-3">Ingredient #3</label>
+            <input type="text" id="ing-3" name="ing-3" maxlength="20" placeholder="Optional 3rd Ingredient"><br>
+            <label for="ing-4">Ingredient #4</label>
+            <input type="text" id="ing-4" name="ing-4" maxlength="20" placeholder="Optional 4th Ingredient"><br>
+            <label for="ing-5">Ingredient #5</label>
+            <input type="text" id="ing-5" name="ing-5" maxlength="20" placeholder="Optional 5th Ingredient">
+            <br>
+        </fieldset>
+        <br>
+        <strong>Optional details about the recipe you would like generated:</strong><br>
+        <label for="mode">Cooking Method:</label>
+        <input type="text" id="mode" name="mode" maxlength="30" placeholder="Preferred Cooking Method"><br>
+        <label for="time">Cooking Time:</label>
+        <input type="text" id="time" name="time" maxlength="30" placeholder="Estimated Prep Time for Meal"><br>
+        <label for="other">Other Information:</label>
+        <input type="text" id="other" name="other" maxlength="255" placeholder="Contextual information or Special Requests"><br>
+        <input type="submit" name='submit' value="Submit" onclick="this.style.display='none'; this.nextSibling.style.display='inline';" ><span style="display: none;">
+        <br>
+        <strong>Please Wait...Generating Recipe</strong>
+        <br>
+        </span>
+    </form>
+</div>
+<br>
+
+{% elif view %}
+    <h3>{{ ai_recipe.title }}</h3>
+    {% autoescape off %}
+        {{ ai_recipe.body }}
+    {% endautoescape %}
+{% if from_save %}
+
+<h3>Save This Recipe to one of your plans:</h3>
+<!--Create Drop down selection menu from plans object-->
+<form id="mealForm" action="{% url 'add_meal_to_plan' plans.0.id ai_recipe.meal.meal_id %}" method="get" data-url="{% url 'add_meal_to_plan' plan_id=0 meal_id=ai_recipe.meal.meal_id %}">
+    <select id="plan-select" name="plan_id" onchange="updatePlanId(this.value)">
+        {% for plan in plans %}
+            <option value="{{ plan.id }}">{{ plan.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Save</button>
+</form>
+
+<script>
+    function updatePlanId(planId) {
+        var form = document.querySelector('#mealForm');
+        var baseUrl = form.getAttribute('data-url');
+        form.action = baseUrl.replace('0', planId);
+    }
+</script>
+<br>
+
+
+
+{% endif %}
+{% endif %}
+{% endblock %}
+
