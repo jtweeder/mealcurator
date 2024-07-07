@@ -75,10 +75,10 @@ class AICreateMeal(AIMealCurator):
                         exclude ingredients that may seem odd in the combination to get to a result. If you are still uncertain, return what you 
                         think is a safe meal based on the information you have been provided.
                         
-                        Ensure that the response is a complete meal with possible suggestions for sides to ensure the meal has all food groups
+                        Ensure that the response is a complete meal with possible suggestions for sides to ensure the meal has all food groups and contains the anticipated number of servings in the summary.
                         The title in the HTML must be less than 30 characters long
 
-                        Your return should be a valid HTML document without images and MUST contain a head section with a title, and a body section broken into sections of <h3> size of Ingredients, Directions, Summary, and suggested sides if applicable
+                        Your return should be a valid HTML document without images and MUST contain a head section with a title, and a body section broken into sections of <h3> size of Ingredients, Directions, Summary with anticipated number of servings, and suggested sides if applicable
                         that contains no images
                         '''
                 },

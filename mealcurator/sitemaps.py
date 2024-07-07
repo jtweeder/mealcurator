@@ -1,6 +1,6 @@
 from django.contrib import sitemaps
 from django.urls import reverse
-from stewpot.models import meal_posting
+from stewpot.models import meal_posting, ai_html
 
 
 class StaticViewSitemap(sitemaps.Sitemap):
@@ -15,7 +15,7 @@ class StaticViewSitemap(sitemaps.Sitemap):
 
 class BlogSitemap(sitemaps.Sitemap):
     changefreq = "weekly"
-    priority = 0.5
+    priority = 0.2
 
     def items(self):
         return meal_posting.objects.all()
@@ -25,3 +25,17 @@ class BlogSitemap(sitemaps.Sitemap):
    
     def location(self, obj):
         return f'/share/post/{obj.id}'
+    
+class AIRecipesSitemap(sitemaps.Sitemap):
+    changefreq = "weekly"
+    priority = 0.3
+
+    def items(self):
+        return ai_html.objects.all()
+
+    def lastmod(self, obj):
+        return obj.created_on
+    
+    def location(self, obj):
+        return f'/view/ai/{obj.html_id}'
+
