@@ -37,5 +37,5 @@ class AIRecipesSitemap(sitemaps.Sitemap):
         return obj.created_on
     
     def location(self, obj):
-        return f'/view/ai/{obj.html_id}'
+        return f'/share/view/ai/{obj.html_id}'
 
