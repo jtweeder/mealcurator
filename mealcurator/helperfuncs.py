@@ -1,4 +1,4 @@
-from mealcurator.settings import AI_COMPLETION_MODEL
+from mealcurator.settings import AI_COMPLETION_MODEL, AI_CREATE_KEY
 from openai import OpenAI
 from bs4 import BeautifulSoup
 
@@ -17,7 +17,7 @@ def check_blank(input, default):
 class AIMealCurator:
     def __init__(self):
         self.model = AI_COMPLETION_MODEL
-        self.client = OpenAI()
+        self.client = OpenAI(api_key=AI_CREATE_KEY)
 
 
 class AICreateMeal(AIMealCurator):
