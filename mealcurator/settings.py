@@ -153,4 +153,5 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'admin@mealcurator.com'
 
 # OpenAI Model Settings
-AI_COMPLETION_MODEL = "gpt-3.5-turbo"
+AI_COMPLETION_MODEL = "gpt-4o-mini"
+AI_CREATE_KEY = os.getenv('OPENAI_API_KEY')
