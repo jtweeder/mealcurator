@@ -7,6 +7,13 @@ Source code for https://www.mealcurator.com
 
 A django project that is intended to allow for learning a new framework while fulfilling a need.  The application organizes recipes, allows meal planning, collects feedback, and in the future will provide recommendations to users.
 
+## Runtime Compatibility (Current)
+- Python: 3.12
+- Django: 5.0.x
+- PostgreSQL: 12
+
+> Note: PostgreSQL 12 requires staying on Django 5.0.x for now. The planned future path is PostgreSQL 14+ and then Django 6.x.
+
 # Contributions
 Contributions are welcome.  Feel free to start a discussion if you want to polish an idea, or tackle a listed issue.
 
