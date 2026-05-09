@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib import messages
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -10,7 +12,7 @@ from cooks.models import plan, plan_meal, plan_list
 from meals.models import meal_item, mstr_recipe, mstr_recipe_list
 from mealcurator import choices
 from mealcurator.helperfuncs import check_blank
-from .forms import create_cook_form
+from .forms import create_cook_form, account_update_form
 
 
 def register_cook(request):
@@ -37,10 +39,33 @@ def cook_profile(request):
         welcome_id = email
     if len(email) > 1 and len(name) > 1:
         welcome_id = f'{name} : {email}'
-    meal_plans = plan.objects.filter(owner=request.user, soft_delete=False)
+    meal_plans = (plan.objects
+                      .filter(owner=request.user, soft_delete=False)
+                      .prefetch_related('meals_on_plan__meal'))
+
+    plan_cards = []
+    for meal_plan in meal_plans:
+        recipe_titles = []
+        recipe_count = 0
+        for plan_recipe in meal_plan.meals_on_plan.all():
+            if plan_recipe.meal.dummy:
+                continue
+            recipe_count += 1
+            if len(recipe_titles) < 3:
+                recipe_titles.append(plan_recipe.meal.title)
+
+        plan_cards.append({
+            'id': meal_plan.id,
+            'name': meal_plan.name,
+            'description': meal_plan.description,
+            'recipe_titles': recipe_titles,
+            'recipe_count': recipe_count,
+        })
+
     context = {'username': user.username,
                'welcome': welcome_id,
-               'plans': meal_plans
+               'plans': meal_plans,
+               'plan_cards': plan_cards,
                }
     return render(request, 'registration/welcome.html', context=context)
 
@@ -48,7 +73,7 @@ def cook_profile(request):
 class make_plan(CreateView):
     login_required = True
     model = plan
-    fields = ['name']
+    fields = ['name', 'description']
     success_url = reverse_lazy('welcome')
     template_name_suffix = '_make'
 
@@ -191,6 +216,48 @@ def del_plan(request, plan_id):
                         owner=request.user).update(soft_delete=True)
     plan_list.objects.filter(owner=request.user, plan_id=plan_id).delete()
     return redirect('welcome')
+
+
+@login_required
+def account_management(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'update_profile':
+            form = account_update_form(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Account details updated.')
+                return redirect('account-management')
+        elif action == 'delete_account':
+            return redirect('account-delete-confirm')
+    else:
+        form = account_update_form(instance=request.user)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'registration/account_management.html', context)
+
+
+@login_required
+def account_delete_confirm(request):
+    if request.method == 'POST':
+        acknowledge_loss = request.POST.get('acknowledge_loss') == 'on'
+        confirm_text = request.POST.get('confirm_text', '').strip().upper()
+
+        if acknowledge_loss and confirm_text == 'DELETE':
+            user = request.user
+            logout(request)
+            user.delete()
+            messages.success(request, 'Your account and related data have been permanently deleted.')
+            return redirect('index')
+
+        messages.error(
+            request,
+            'Deletion not confirmed. Please acknowledge data loss and type DELETE to continue.'
+        )
+
+    return render(request, 'registration/account_delete_confirm.html')
 
 
 @xframe_options_sameorigin

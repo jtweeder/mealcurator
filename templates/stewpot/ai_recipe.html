@@ -7,18 +7,118 @@
 {% block css_style %}
 ul {
     list-style-type: square;
-  }
+}
+
+.ai-page {
+    max-width: 980px;
+    margin: 32px auto 40px;
+    padding: 0 20px;
+}
+
+.ai-intro {
+    max-width: 860px;
+    margin-bottom: 24px;
+}
+
+.ai-form-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 28px;
+    background-color: #fffffe;
+    border: 1px solid #d8d3cf;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
 .center-form {
     display: flex;
     justify-content: center;
     align-items: center;
+}
 
+.ai-form-card fieldset {
+    border: 1px solid #cfc8c4;
+    border-radius: 8px;
+    padding: 16px 16px 14px;
+    margin: 0 0 18px;
+}
+
+.ai-form-card legend {
+    font-family: 'Zilla Slab', serif;
+    font-size: 18px;
+    padding: 0 8px;
+}
+
+.ai-form-card label {
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 16px;
+}
+
+.ai-form-card textarea {
+    width: 100%;
+    min-height: 140px;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #c9c3bf;
+    border-radius: 6px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.loading-msg {
+    display: block;
+    margin-top: 8px;
+}
+
+.loading-msg[hidden] {
+    display: none;
+}
+
+.form-actions {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.preview-actions {
+    margin: 12px 0 20px;
+}
+
+.error-banner {
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border: 1px solid #b42318;
+    background-color: #fef3f2;
+    color: #7a271a;
+    border-radius: 8px;
+}
+
+.ai-save-form {
+    margin-top: 18px;
+}
+
+@media (max-width: 700px) {
+    .ai-page {
+        margin-top: 20px;
+        padding: 0 12px;
+    }
+
+    .ai-form-card {
+        padding: 18px 16px;
+    }
 }
 
 
 {% endblock css_style %}
 
 {% block page_content %}
+
+<div class="ai-page">
 
 {% if preview %}
 
@@ -31,8 +131,10 @@ Please review the generated recipe below and choose to save or discard it.
 <form action="{% url 'ai-recipe-create' %}", method="post">{% csrf_token %}
     <input type="hidden" name="title" value="{{ title }}">
     <input type="hidden" name="body" value="{{ body }}">
-    <input type="submit" name='discard' value="Discard">
-    <input type="submit" name='save' value="Save">
+    <div class="preview-actions">
+    <input type="submit" class="button" name='discard' value="Discard">
+    <input type="submit" class="button" name='save' value="Save">
+    </div>
 
 
 {{ body|safe }}
@@ -42,44 +144,36 @@ Please review the generated recipe below and choose to save or discard it.
 {% elif start %}
 
 <h3>AI Recipe Generator</h3>
-<p>Enter up to 5 ingredients, a cooking method, approximate cooking time, and any other information you would like to provide as context.  Hit submit and the AI will generate a unique recipe for you.
+{% if error_message %}
+<div class="error-banner"><strong>Error:</strong> {{ error_message }}</div>
+{% endif %}
+<div class="ai-intro">
+<p>Enter your ingredient list in a conversational way, then describe the recipe you want. Hit submit and AI will generate a recipe preview.
     <br><br>
     This feature is still in development and may not always generate a recipe, and may generate odd recipes.  Please read the generated recipe carefully before saving it.
 </p>
+</div>
 
 <div class="center-form">
-    <form action="{% url 'ai-recipe-create' %}" method="post">
+    <form class="ai-form-card" action="{% url 'ai-recipe-create' %}" method="post">
         {% csrf_token %}
         <fieldset>
-            <legend>Ingredients:</legend>
-            <label for="ing-1">Ingredient #1</label>
-            <input type="text" id="ing-1" name="ing-1" maxlength="20" placeholder="Optional 1st Ingredient"><br>
-            <label for="ing-2">Ingredient #2</label>
-            <input type="text" id="ing-2" name="ing-2" maxlength="20" placeholder="Optional 2nd Ingredient"><br>
-            <label for="ing-3">Ingredient #3</label>
-            <input type="text" id="ing-3" name="ing-3" maxlength="20" placeholder="Optional 3rd Ingredient"><br>
-            <label for="ing-4">Ingredient #4</label>
-            <input type="text" id="ing-4" name="ing-4" maxlength="20" placeholder="Optional 4th Ingredient"><br>
-            <label for="ing-5">Ingredient #5</label>
-            <input type="text" id="ing-5" name="ing-5" maxlength="20" placeholder="Optional 5th Ingredient">
-            <br>
+            <legend>Ingredients You Have</legend>
+            <label for="ingredients-text">Example: I have chicken thighs, black beans, salsa, shredded cheese, and tortillas.</label><br>
+            <textarea id="ingredients-text" name="ingredients_text" maxlength="1200" rows="6" cols="70" placeholder="I have the following ingredients...">{{ ingredients_text }}</textarea>
         </fieldset>
-        <br>
-        <strong>Optional details about the recipe you would like generated:</strong><br>
-        <label for="mode">Cooking Method:</label>
-        <input type="text" id="mode" name="mode" maxlength="30" placeholder="Preferred Cooking Method"><br>
-        <label for="time">Cooking Time:</label>
-        <input type="text" id="time" name="time" maxlength="30" placeholder="Estimated Prep Time for Meal"><br>
-        <label for="other">Other Information:</label>
-        <input type="text" id="other" name="other" maxlength="255" placeholder="Contextual information or Special Requests"><br>
-        <input type="submit" name='submit' value="Submit" onclick="this.style.display='none'; this.nextSibling.style.display='inline';" ><span style="display: none;">
-        <br>
+        <fieldset>
+            <legend>What You Want</legend>
+            <label for="request-text">Example: I want a mexican casserole dish for lunch that takes less than 20 minutes in the oven.</label><br>
+            <textarea id="request-text" name="request_text" maxlength="1200" rows="6" cols="70" placeholder="Describe recipe type, occasion, cooking method, timing, dietary needs, etc.">{{ request_text }}</textarea>
+        </fieldset>
+        <div class="form-actions">
+        <input type="submit" class="button" name='submit' value="Submit" onclick="this.hidden=true; this.nextElementSibling.hidden=false;" ><span class="loading-msg" hidden>
         <strong>Please Wait...Generating Recipe</strong>
-        <br>
         </span>
+        </div>
     </form>
 </div>
-<br>
 
 {% elif view %}
     <h3>{{ ai_recipe.title }}</h3>
@@ -90,13 +184,14 @@ Please review the generated recipe below and choose to save or discard it.
 
 <h3>Save This Recipe to one of your plans:</h3>
 <!--Create Drop down selection menu from plans object-->
-<form id="mealForm" action="{% url 'add_meal_to_plan' plans.0.id ai_recipe.meal.meal_id %}" method="get" data-url="{% url 'add_meal_to_plan' plan_id=0 meal_id=ai_recipe.meal.meal_id %}">
-    <select id="plan-select" name="plan_id" onchange="updatePlanId(this.value)">
+<form class="ai-save-form" id="mealForm" action="{% url 'add_meal_to_plan' plans.0.id ai_recipe.meal.meal_id %}" method="get" data-url="{% url 'add_meal_to_plan' plan_id=0 meal_id=ai_recipe.meal.meal_id %}">
+    <label for="plan-select">Choose a meal plan</label>
+    <select id="plan-select" name="plan_id" title="Choose a meal plan" onchange="updatePlanId(this.value)">
         {% for plan in plans %}
             <option value="{{ plan.id }}">{{ plan.name }}</option>
         {% endfor %}
     </select>
-    <button type="submit">Save</button>
+    <button type="submit" class="button">Save</button>
 </form>
 
 <script>
@@ -112,5 +207,6 @@ Please review the generated recipe below and choose to save or discard it.
 
 {% endif %}
 {% endif %}
+</div>
 {% endblock %}
 

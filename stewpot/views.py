@@ -5,8 +5,10 @@ from django.utils.html import format_html
 from meals.models import mstr_recipe, raw_recipe
 from stewpot.models import share_meal, meal_posting, ai_html
 from cooks.models import plan
-from mealcurator.helperfuncs import check_blank, AICreateMeal
+from mealcurator.helperfuncs import check_blank, AICreateMeal, AIRecipeError
 import time
+import uuid
+from openai import APIError, RateLimitError
 
 # TODO:  Let edits happen for things people shared
 # TODO:  Let someone add a shared recipe to a list/make a list
@@ -101,6 +103,25 @@ def recipe_ai_start(request):
     context = {'start': True}
     return render(request, template, context)
 
+def _build_ai_html_slug(title):
+    """Build a unique slug that fits ai_html.html_id max_length."""
+    max_len = ai_html._meta.get_field('html_id').max_length or 50
+    ts = str(int(time.time()))
+    base = slugify(title) or 'ai-recipe'
+
+    # Reserve room for hyphen + timestamp
+    reserve = len(ts) + 1
+    base_len = max(1, max_len - reserve)
+    slug = f'{base[:base_len]}-{ts}'
+
+    # Extremely unlikely collision handling while preserving max length
+    while ai_html.objects.filter(html_id=slug).exists():
+        rand = uuid.uuid4().hex[:6]
+        reserve = len(ts) + len(rand) + 2
+        base_len = max(1, max_len - reserve)
+        slug = f'{base[:base_len]}-{ts}-{rand}'
+
+    return slug
 
 @login_required
 @user_passes_test(staff_check)
@@ -111,31 +132,76 @@ def recipe_ai_create(request):
             return redirect('ai-recipe-start')
         
         if request.POST.get('submit') == 'Submit':
-            ing1 = request.POST.get('ing-1')
-            ing2 = request.POST.get('ing-2')
-            ing3 = request.POST.get('ing-3')
-            ing4 = request.POST.get('ing-4')
-            ing5 = request.POST.get('ing-5')
-            mode = request.POST.get('mode')
-            cook_time = request.POST.get('time')
-            other = request.POST.get('other')
+            ingredients_text = check_blank(request.POST.get('ingredients_text', ''), '').strip()
+            request_text = check_blank(request.POST.get('request_text', ''), '').strip()
 
-            ingredients = []
-            for ing in [ing1, ing2, ing3, ing4, ing5]:
-                if len(ing) > 0:
-                    ingredients.append(ing)
-        
-            ai_resp = AICreateMeal(ingredients, mode, cook_time, other)
-            title, body = ai_resp.clean_response()
-            context = {'title': title, 'body': body, 'preview': True}
-            template = 'stewpot/ai_recipe.html'
-            return render(request, template, context)
+            # Backward-compatible fallback if older form fields are submitted
+            if len(ingredients_text) == 0:
+                legacy_ingredients = [
+                    request.POST.get('ing-1', '').strip(),
+                    request.POST.get('ing-2', '').strip(),
+                    request.POST.get('ing-3', '').strip(),
+                    request.POST.get('ing-4', '').strip(),
+                    request.POST.get('ing-5', '').strip(),
+                ]
+                ingredients_text = ', '.join([x for x in legacy_ingredients if len(x) > 0])
+
+            if len(request_text) == 0:
+                mode = request.POST.get('mode', '').strip()
+                cook_time = request.POST.get('time', '').strip()
+                other = request.POST.get('other', '').strip()
+                request_text = ' '.join([x for x in [mode, cook_time, other] if len(x) > 0])
+
+            try:
+                ai_resp = AICreateMeal(ingredients_text, request_text)
+                title, body = ai_resp.clean_response()
+                context = {'title': title, 'body': body, 'preview': True}
+                template = 'stewpot/ai_recipe.html'
+                return render(request, template, context)
+            except RateLimitError as err:
+                err_text = str(err)
+                if 'insufficient_quota' in err_text:
+                    friendly_error = 'OpenAI quota exceeded for this API key. Please check billing, usage limits, and project key selection in your OpenAI account.'
+                else:
+                    friendly_error = 'OpenAI rate limit reached. Please wait a moment and try again.'
+
+                context = {
+                    'start': True,
+                    'error_message': friendly_error,
+                    'ingredients_text': ingredients_text,
+                    'request_text': request_text,
+                }
+                return render(request, 'stewpot/ai_recipe.html', context)
+            except APIError:
+                context = {
+                    'start': True,
+                    'error_message': 'OpenAI service is temporarily unavailable. Please try again shortly.',
+                    'ingredients_text': ingredients_text,
+                    'request_text': request_text,
+                }
+                return render(request, 'stewpot/ai_recipe.html', context)
+            except AIRecipeError as err:
+                context = {
+                    'start': True,
+                    'error_message': str(err),
+                    'ingredients_text': ingredients_text,
+                    'request_text': request_text,
+                }
+                return render(request, 'stewpot/ai_recipe.html', context)
+            except Exception:
+                context = {
+                    'start': True,
+                    'error_message': 'Recipe generation failed unexpectedly. Please verify your OpenAI API key and try again.',
+                    'ingredients_text': ingredients_text,
+                    'request_text': request_text,
+                }
+                return render(request, 'stewpot/ai_recipe.html', context)
         
         elif request.POST.get('save') == 'Save':
             # Create raw_recipe of ai-made recipe and then save the html to ai_html
             title = request.POST.get('title')
             body = request.POST.get('body')
-            slug = slugify(title+'-'+str(int(time.time())))  
+            slug = _build_ai_html_slug(title)
             rec_url = request.build_absolute_uri('/share/view/ai/') + slug
 
             ai_recipe_html = ai_html.objects.create(

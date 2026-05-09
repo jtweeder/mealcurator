@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, RequestFactory
+from bs4 import BeautifulSoup
+from unittest.mock import patch
 from . import models, views
 from bs4 import BeautifulSoup
 from unittest.mock import patch

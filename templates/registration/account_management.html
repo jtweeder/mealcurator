@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block css_style %}
+.account-wrap {
+    width: 95%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.account-card {
+    background-color: #fffffe;
+    border: 1px solid #000;
+    border-radius: 8px;
+    margin: 18px 0;
+    padding: 18px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.account-danger {
+    border-color: #cc0000;
+}
+
+.account-danger p {
+    color: #8b0000;
+}
+{% endblock css_style %}
+
+{% block page_content %}
+<div class="account-wrap">
+    <h1>Account Management</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <div class="account-card">
+        <h3>Update Profile</h3>
+        <form method="post" action="">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_profile">
+            <div class="form-grid">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
+    <div class="account-card">
+        <h3>Password</h3>
+        <p>Change your password using Django's secure password flow.</p>
+        <a class="button" href="{% url 'password_change' %}">Change Password</a>
+    </div>
+
+    <div class="account-card account-danger">
+        <h3>Delete Account</h3>
+        <p>This permanently deletes your account and all related data. This cannot be undone.</p>
+        <a class="button" href="{% url 'account-delete-confirm' %}">Continue to Delete Confirmation</a>
+    </div>
+
+    <a class="button" href="{% url 'welcome' %}">Back to Account Home</a>
+</div>
+{% endblock %}
