@@ -7,6 +7,8 @@ from mealcurator import choices
 class plan(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField('Meal Plan Name', max_length=255)
+    description = models.CharField('Meal Plan Description', max_length=500,
+                                   null=True, blank=True)
     date_created = models.DateTimeField(auto_now=True)
     soft_delete = models.BooleanField(default=False)
 

@@ -2,6 +2,7 @@ from fractions import Fraction
 import requests
 import random
 from bs4 import BeautifulSoup
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -10,6 +11,22 @@ from django.db import models
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from mealcurator import choices
+
+
+def _ensure_nltk_resources():
+    """Ensure required NLTK datasets are available for tokenization/lemmatization."""
+    resources = [
+        ('tokenizers/punkt_tab/english/', 'punkt_tab'),
+        ('corpora/stopwords', 'stopwords'),
+        ('corpora/wordnet', 'wordnet'),
+    ]
+
+    for resource_path, download_name in resources:
+        try:
+            nltk.data.find(resource_path)
+        except LookupError:
+            nltk.download(download_name, quiet=True)
+            nltk.data.find(resource_path)
 
 
 class raw_recipe(models.Model):
@@ -85,6 +102,7 @@ class raw_recipe(models.Model):
 
     def _make_tkns(self):
         # Returns JSON represtnation of lemented word list
+        _ensure_nltk_resources()
         words = [w for w in word_tokenize(self.soup.get_text().lower())
                  if w.isalpha()]
         raw_tkns = [w for w in words

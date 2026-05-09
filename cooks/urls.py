@@ -5,6 +5,8 @@ from . import views as cook_views
 urlpatterns = [
     path('register/', cook_views.register_cook, name='register'),
     path('register/welcome', cook_views.cook_profile, name='welcome'),
+    path('account', cook_views.account_management, name='account-management'),
+     path('account/delete-confirm', cook_views.account_delete_confirm, name='account-delete-confirm'),
     path('makeplan', cook_views.make_plan.as_view(), name='make-plan'),
     path('viewplans', cook_views.view_plans, name='view-plans'),
     path('viewplans/<int:plan_id>', cook_views.view_plan, name='view-plan'),

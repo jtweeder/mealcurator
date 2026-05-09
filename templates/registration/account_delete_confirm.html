@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block css_style %}
+.confirm-wrap {
+    width: 95%;
+    max-width: 760px;
+    margin: auto;
+}
+
+.confirm-card {
+    background-color: #fffffe;
+    border: 1px solid #cc0000;
+    border-radius: 8px;
+    margin: 20px 0;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-warning {
+    color: #8b0000;
+    font-weight: 600;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.confirm-actions .button {
+    margin: 0;
+}
+
+.confirm-field {
+    margin-top: 12px;
+}
+
+.confirm-field input[type="text"] {
+    width: 100%;
+    max-width: 280px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+{% endblock css_style %}
+
+{% block page_content %}
+<div class="confirm-wrap">
+    <h1>Confirm Account Deletion</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <div class="confirm-card">
+        <p class="confirm-warning">Warning: This action permanently deletes your account and all associated data. Once deleted, your data is lost forever and cannot be restored.</p>
+
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <div class="confirm-field">
+                <label>
+                    <input type="checkbox" name="acknowledge_loss">
+                    I understand all my account data will be permanently deleted and lost forever.
+                </label>
+            </div>
+
+            <div class="confirm-field">
+                <label for="confirm-text">Type DELETE to confirm:</label><br>
+                <input id="confirm-text" name="confirm_text" type="text" maxlength="20" autocomplete="off">
+            </div>
+
+            <div class="confirm-actions">
+                <button type="submit">Permanently Delete My Account</button>
+                <a class="button" href="{% url 'account-management' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

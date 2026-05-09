@@ -1,15 +1,35 @@
 {% extends "base.html" %}
 
 {% block page_content %}
-<h1>Create a Meal Plan</h1>
+<div class="planmake-wrap">
+  <h1>Create a Meal Plan</h1>
 
-<h2>Name Your New Meal Plan:</h2>
-<form action="" method="post">
+  <div class="planmake-card">
+    <h3>Plan Details</h3>
+    <form action="" method="post">
       {% csrf_token %}
-      <p>{{ form.name }}</p>
-    <input type="submit" value="Create Meal Plan">
-</form>
-<br>
+
+      <div class="planmake-grid">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {% if form.name.errors %}
+          <div class="field-error">{{ form.name.errors }}</div>
+        {% endif %}
+
+        <label for="id_description">Meal Plan Description (Optional)</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+          <div class="field-error">{{ form.description.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="planmake-actions">
+        <button type="submit" class="button">Create Meal Plan</button>
+        <a class="button" href="{% url 'welcome' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 
 
 {% endblock %}

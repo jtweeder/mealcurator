@@ -70,6 +70,18 @@ class cook_views(TransactionTestCase):
         response = views.view_plans(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_account_management(self):
+        request = self.factory.get('/cooks/account')
+        request.user = self.tst_user
+        response = views.account_management(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_account_delete_confirm(self):
+        request = self.factory.get('/cooks/account/delete-confirm')
+        request.user = self.tst_user
+        response = views.account_delete_confirm(request)
+        self.assertEqual(response.status_code, 200)
+
     def test_plan_create(self):
         self.assertEqual(self.tst_plan.__str__(), 'Test Meal Plan')
 

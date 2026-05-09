@@ -2,6 +2,7 @@
 <html lang=en>
 <head>
     <title>Meal Curator - {% block title %}Making Eating at Home Easier{% endblock %}</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" href="/flavicon.ico">
     <style>
@@ -112,6 +113,136 @@
             color: #16a32e;
             text-decoration: none;
         }
+
+                /* Shared page layouts: welcome + plan make */
+                .welcome-wrap {
+                        width: 95%;
+                        max-width: 1200px;
+                        margin: auto;
+                }
+
+                .section-card {
+                        background-color: #fffffe;
+                        border: 1px solid #000;
+                        border-radius: 8px;
+                        margin: 16px 0;
+                        padding: 16px;
+                        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                }
+
+                .section-actions {
+                        margin: 10px 0 16px;
+                }
+
+                .plan-grid {
+                        width: 100%;
+                        display: flex;
+                        flex-flow: row wrap;
+                        justify-content: flex-start;
+                        gap: 14px;
+                }
+
+                .plan-card {
+                        width: 280px;
+                        padding: 12px 10px;
+                }
+
+                .plan-title {
+                        display: block;
+                        text-align: center;
+                        font-size: 23px;
+                        margin-bottom: 6px;
+                }
+
+                .plan-desc {
+                        min-height: 0;
+                        font-size: 14px;
+                        margin: 4px 0 8px;
+                        text-align: center;
+                }
+
+                .plan-recipes {
+                        text-align: left;
+                        margin: 6px 0 8px;
+                }
+
+                .plan-recipes-item {
+                        font-size: 13px;
+                        line-height: 1.25;
+                        margin: 3px 0;
+                }
+
+                .plan-recipes-label {
+                        display: block;
+                        text-align: center;
+                        font-size: 15px;
+                }
+
+                .plan-actions {
+                        text-align: center;
+                        margin-top: 8px;
+                }
+
+                .plan-actions a {
+                        font-size: 14px;
+                        margin: 0 8px;
+                }
+
+                .planmake-wrap {
+                    width: 95%;
+                    max-width: 760px;
+                    margin: auto;
+                }
+
+                .planmake-card {
+                    background-color: #fffffe;
+                    border: 1px solid #000;
+                    border-radius: 8px;
+                    margin: 18px 0;
+                    padding: 18px;
+                    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                }
+
+                .planmake-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                    margin-bottom: 14px;
+                }
+
+                #id_name,
+                #id_description {
+                    width: 100%;
+                    max-width: 100%;
+                    font-size: 16px;
+                    font-family: 'Be Vietnam Pro', sans-serif;
+                    padding: 8px;
+                    box-sizing: border-box;
+                }
+
+                #id_description {
+                    min-height: 90px;
+                }
+
+                .field-help {
+                    margin-top: 0;
+                    font-size: 14px;
+                }
+
+                .field-error {
+                    color: #8b0000;
+                    font-size: 14px;
+                }
+
+                .planmake-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .planmake-actions .button {
+                    margin: 0;
+                }
         
         {% block css_style %}
         {% endblock css_style %}
@@ -140,7 +271,7 @@
         <li><a class="button" href="{% url 'howto' %}">How-To</a></li>
         <li><a class="button" href="{% url 'change_log' %}">Change-Log</a></li>
         <li><a class="button" href="{% url 'ccc' %}">Attribution/Credits</a></li>
-        <li><a class="button" href="https://github.com/jtweeder/mealcurator" target="_blank">Git Hub Repo</a></li>
+        <li><a class="button" href="https://github.com/jtweeder/mealcurator" target="_blank" rel="noopener">Git Hub Repo</a></li>
         </ul>
     </div>
     {% endblock %}
