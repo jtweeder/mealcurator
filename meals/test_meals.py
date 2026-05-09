@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, RequestFactory
 from . import models, views
+from bs4 import BeautifulSoup
+from unittest.mock import patch
 import uuid
 
 
@@ -27,8 +29,13 @@ class raw_recipe_test(TestCase):
         self.raw_rec = self.create_raw_recipe()
 
     def test_raw_recipe_find_text(self):
-        #  raw_rec = self.create_raw_recipe()
-        self.assertTrue(self.raw_rec.pull_mstr())
+        mock_soup = BeautifulSoup(
+            '<html><head><title>Mock Recipe</title></head><body>mock body</body></html>',
+            'html.parser'
+        )
+        with patch.object(models.raw_recipe, '_make_soup', return_value=mock_soup), \
+             patch.object(models.raw_recipe, '_make_tkns', return_value=(['mock', 'recipe'], ['mock', 'recipe'])):
+            self.assertTrue(self.raw_rec.pull_mstr())
 
     def test_raw_recipe_created(self):
         self.assertTrue(isinstance(self.raw_rec, models.raw_recipe))
