@@ -23,12 +23,43 @@
     margin-bottom: 12px;
 }
 
+.form-grid input[type="text"],
+.form-grid input[type="email"],
+.form-grid input[type="password"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+.account-card button {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 16px;
+    padding: 8px 12px;
+}
+
 .account-danger {
     border-color: #cc0000;
 }
 
 .account-danger p {
     color: #8b0000;
+}
+
+@media (max-width: 600px) {
+    .account-card {
+        padding: 14px;
+    }
+
+    .account-card .button,
+    .account-card button,
+    .account-wrap > .button {
+        display: block;
+        width: 100%;
+        margin: 8px 0 0;
+        text-align: center;
+    }
 }
 {% endblock css_style %}
 

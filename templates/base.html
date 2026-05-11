@@ -3,10 +3,13 @@
 <head>
     <title>Meal Curator - {% block title %}Making Eating at Home Easier{% endblock %}</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/flavicon.ico">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Antic+Slab&family=Be+Vietnam+Pro:wght@300&family=Zilla+Slab:ital,wght@0,400;0,600;1,500&display=swap');
+        * {
+            box-sizing: border-box;
+        }
         h1 {
             font-family: 'Antic Slab', serif;
             font-size: 64px;
@@ -38,7 +41,12 @@
         body {
             background-color: #fff2ee;
             color: #000;
+            margin: 0;
             }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
         table {
             margin-right: auto;
             margin-left: auto;
@@ -59,20 +67,32 @@
             font-family: 'Be Vietnam Pro', sans-serif;
             font-weight: 300;
             font-size: 18px;
+            display: inline-block;
             text-decoration: none;
             background-color: #fffffe;
             color: #000;
-            padding: 2px 6px 2px 6px;
+            padding: 6px 10px;
             border-top: 1px solid #CCCCCC;
             border-right: 1px solid #333333;
             border-bottom: 1px solid #333333;
             border-left: 1px solid #CCCCCC;
             margin: 6px;
+            text-align: center;
+        }
+
+        .navlist {
+            list-style: none;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px;
         }
 
         .navlist > li {
-            display: inline-block;
-            margin: 6px 2px 6px 2px;
+            display: block;
+            margin: 0;
         }
 
         .recCard {
@@ -131,6 +151,9 @@
                 }
 
                 .section-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
                         margin: 10px 0 16px;
                 }
 
@@ -179,13 +202,17 @@
                 }
 
                 .plan-actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 6px;
                         text-align: center;
                         margin-top: 8px;
                 }
 
                 .plan-actions a {
                         font-size: 14px;
-                        margin: 0 8px;
+                    margin: 0;
                 }
 
                 .planmake-wrap {
@@ -236,12 +263,75 @@
 
                 .planmake-actions {
                     display: flex;
+                    flex-wrap: wrap;
                     align-items: center;
                     gap: 8px;
                 }
 
                 .planmake-actions .button {
                     margin: 0;
+                }
+
+                @media (max-width: 900px) {
+                    h1 {
+                        font-size: 46px;
+                    }
+
+                    h2 {
+                        font-size: 28px;
+                    }
+
+                    h3 {
+                        font-size: 24px;
+                    }
+
+                    .plan-grid {
+                        justify-content: center;
+                    }
+
+                    .plan-card {
+                        width: min(100%, 340px);
+                    }
+                }
+
+                @media (max-width: 600px) {
+                    h1 {
+                        font-size: 36px;
+                        line-height: 1.15;
+                    }
+
+                    h2 {
+                        font-size: 24px;
+                    }
+
+                    h3 {
+                        font-size: 21px;
+                    }
+
+                    p {
+                        font-size: 16px;
+                    }
+
+                    .welcome-wrap,
+                    .planmake-wrap {
+                        width: 94%;
+                    }
+
+                    .section-card,
+                    .planmake-card {
+                        padding: 14px;
+                    }
+
+                    .section-actions .button,
+                    .planmake-actions .button {
+                        width: 100%;
+                        margin: 0;
+                    }
+
+                    .button {
+                        font-size: 16px;
+                        margin: 4px;
+                    }
                 }
         
         {% block css_style %}

@@ -23,6 +23,7 @@
 
 .confirm-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 14px;
 }
@@ -37,9 +38,21 @@
 
 .confirm-field input[type="text"] {
     width: 100%;
-    max-width: 280px;
+    max-width: 100%;
     padding: 8px;
     box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .confirm-card {
+        padding: 14px;
+    }
+
+    .confirm-actions button,
+    .confirm-actions .button {
+        width: 100%;
+        text-align: center;
+    }
 }
 {% endblock css_style %}
 
